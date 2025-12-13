@@ -14,19 +14,16 @@
 import fs from 'fs';
 import chalk from 'chalk';
 
-// Solo desarrolladores permitidos!
-global.owner = ['5492916450307', '5351524614', '5218711426787']
+global.owner = ['5492916450307']
 
-// Infos Basica
 global.sessionName = 'Sessions/Owner'
 global.version = '^3.0'
 global.pairing_code = true
 global.number_bot = ''
 global.prefa = '.'
 global.msgglobal = '[Error: *TypeError*] fetch failed'
-globalThis.dev = '© ⍴᥆ᥕᥱrᥱძ ᑲᥡ Ɗі᥈ოᥝᥰძ ❨◣_◢❩凸︎'
+globalThis.dev = '☄︎ ᴘᴏᴡᴇʀᴇᴅ ʙʏ sᴛᴇʟʟᴀʀ'
 
-// Webs
 global.api = {
   url: 'https://api.stellarwa.xyz',
   key: 'Diamond'
@@ -34,19 +31,15 @@ global.api = {
 
 global.bot = {
   api: 'https://api.stellarwa.xyz',
-  web: 'https://diamond.stellarwa.xyz'
+  web: 'https://bot.stellarwa.xyz'
 }
 
-// Moderadores (Staff)
 global.mods = [
-  '5492916450307', 
-  '5351524614',
- '5218711416787'
+  '5492916450307'
 ]
 
-// Mensajes de ejecuciones
 global.mess = {
-  socket: '💣 Este comando solo puede ser ejecutado por un Socket.',
-  admin: '💣 Este comando solo puede ser ejecutado por los Administradores del Grupo.',
-  botAdmin: '💣 Este comando solo puede ser ejecutado si el Socket es Administrador del Grupo.'
+  socket: '✎ Este comando solo puede ser ejecutado por un Socket.',
+  admin: '✎ Este comando solo puede ser ejecutado por los Administradores del Grupo.',
+  botAdmin: '✎ Este comando solo puede ser ejecutado si el Socket es Administrador del Grupo.'
 }
