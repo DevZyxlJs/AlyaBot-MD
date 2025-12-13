@@ -46,7 +46,15 @@ export default {
 
 const time = client.uptime ? formatearMs(Date.now() - client.uptime) : "Desconocido"
 
-      let menu = `🌱 Pronto...`.trim();
+      let menu = `*┏━ $namebot ━⊜*
+┃⋄ 📅 *Fecha* :: $fecha, $fecha2
+┃⋄ </> *Developer* :: $owner
+┃⋄ 🌾 *Tipo* :: $botType
+┃⋄ 🌱 *Usuarios* :: $users
+┃⋄ 🍃 *Sistema* :: $device
+┃⋄ 🦋 *Enlace* :: $link
+┃⋄ ☃️ *Uptime* :: $uptime
+┗━━◘`.trim();
 
       const replacements = {
         $owner: owner ? (!isNaN(owner.replace(/@s\.whatsapp\.net$/, '')) ? `@${owner.split('@')[0]}` : owner) : 'Oculto por privacidad',
