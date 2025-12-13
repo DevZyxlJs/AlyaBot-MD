@@ -24,9 +24,7 @@ export default {
 
     const basePath = path.join(dirname, '../../Sessions')
     const folders = {
-      Subs: 'Subs',
-      Mods: 'Mods',
-      Prems: 'Prems',
+      Subs: 'Subs'
     }
 
     const getBotsFromFolder = (folderName) => {
@@ -42,10 +40,8 @@ export default {
     }
 
     const subs = getBotsFromFolder(folders.Subs)
-    const mods = getBotsFromFolder(folders.Mods)
-    const prems = getBotsFromFolder(folders.Prems)
 
-    const categorizedBots = { Owner: [], Mod: [], Premium: [], Sub: [] }
+    const categorizedBots = { Owner: [], Sub: [] }
     const mentionedJid = []
 
     const formatBot = (number, label) => {
@@ -67,16 +63,6 @@ export default {
       }
     }
 
-    mods.forEach((num) => {
-      const line = formatBot(num, 'Mod')
-      if (line) categorizedBots.Mod.push(line)
-    })
-
-    prems.forEach((num) => {
-      const line = formatBot(num, 'Premium')
-      if (line) categorizedBots.Premium.push(line)
-    })
-
     subs.forEach((num) => {
       const line = formatBot(num, 'Sub')
       if (line) categorizedBots.Sub.push(line)
@@ -84,21 +70,16 @@ export default {
 
     const totalCounts = {
       Owner: global.db.data.settings[mainBotJid] ? 1 : 0,
-      Mod: mods.length,
-      Premium: prems.length,
       Sub: subs.length,
     }
 
-    const totalBots = totalCounts.Owner + totalCounts.Mod + totalCounts.Premium + totalCounts.Sub
+    const totalBots = totalCounts.Owner + totalCounts.Sub
     const totalInGroup =
       categorizedBots.Owner.length +
-      categorizedBots.Mod.length +
-      categorizedBots.Premium.length +
       categorizedBots.Sub.length
 
     let message = `ꕥ Números de Sockets activos *(${totalBots})*\n\n`
-    message += `❖ Principales › *${totalCounts.Owner + totalCounts.Mod}*\n`
-    message += `✰ Premiums › *${totalCounts.Premium}*\n`
+    message += `❖ Principales › *${totalCounts.Owner}*\n`
     message += `✿ Subs › *${totalCounts.Sub}*\n\n`
     message += `➭ *Bots en el grupo ›* ${totalInGroup}\n`
 
