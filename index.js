@@ -83,7 +83,7 @@ const userInfoSyt = () => {
 };
 
 console.log(chalk.bold.cyan('Made With | Stellar WaBot'))
-console.log(chalk.bold.cyan('Copyright (C) - ') + chalk.bold.red('Megumin Bot'))
+console.log(chalk.bold.cyan('Copyright (C) - ') + chalk.bold.red('Alya Bot'))
 
 const ramInGB = os.totalmem() / (1024 * 1024 * 1024)
 const freeRamInGB = os.freemem() / (1024 * 1024 * 1024)
