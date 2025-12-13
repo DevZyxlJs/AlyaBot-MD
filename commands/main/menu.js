@@ -27,9 +27,7 @@ export default {
       const canalId = botSettings.id || '120363420992828502@newsletter';
       const canalName = botSettings.nameid || '𐚁๋࣭⭑ֶָ֢ ѕтєℓℓαя ωα ⚡︎ ¢нαηηєℓ ₍ᐢ..ᐢ₎♡';
       const link = botSettings.link || bot.api;
-      
-      const menuConfig = botSettings.bodyMenu
-      const menuConfigg = botSettings.menu
+
       const prefix = botSettings.prefijo
 
       const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net';
@@ -48,7 +46,7 @@ export default {
 
 const time = client.uptime ? formatearMs(Date.now() - client.uptime) : "Desconocido"
 
-      let menu = `${menuConfig}\n\n${menuConfigg}`.trim();
+      let menu = `🌱 Pronto...`.trim();
 
       const replacements = {
         $owner: owner ? (!isNaN(owner.replace(/@s\.whatsapp\.net$/, '')) ? `@${owner.split('@')[0]}` : owner) : 'Oculto por privacidad',
