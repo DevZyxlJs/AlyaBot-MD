@@ -24,7 +24,6 @@
     "@babel/parser": "latest",
     "@whiskeysockets/baileys": "^7.0.0-rc.9",
     "awesome-phonenumber": "^4.4.0",
-    "sharp": "latest",
     "yargs": "^18.0.0",
     "boxen": "latest",
     "cors": "^2.8.5",
