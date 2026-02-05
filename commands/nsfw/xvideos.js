@@ -1,6 +1,5 @@
 import fetch from "node-fetch"
 import { getBuffer } from '../../lib/message.js'
-import sharp from 'sharp'
 
 export default {
   command: ["xvideos"],
