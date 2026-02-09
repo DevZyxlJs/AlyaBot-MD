@@ -165,6 +165,24 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 ### Patrocinadores del Proyecto
 
 <details>
+<summary><strong>☁️ Night</strong> — API</summary>
+
+<div align="center">
+  <a href="https://api.nightlight.qzz.io">
+    <img src="https://api.nightlight.qzz.io/favicon.ico" alt="Logo" height="125px">
+  </a>
+</div>
+
+### 🐢 Enlaces Principales
+| Servicio | Enlace |
+|------------|-----------|
+| Dashboard | [Abrir](https://api.nightlight.qzz.io) |
+| Store | [Abrir](https://api.nightlight.qzz.io/store) 
+| Soporte | [Visitar](https://api.nightlight.qzz.io/ticket)  
+
+</details>
+
+<details>
 <summary><strong>☁️ Stellar</strong> — API</summary>
 
 <div align="center">
