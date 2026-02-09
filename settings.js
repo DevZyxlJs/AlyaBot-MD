@@ -6,8 +6,9 @@ global.sessionName = 'Sessions/Owner'
 global.version = '^2.0'
 
 global.api = {
-  url: 'https://api.stellarwa.xyz',
+  url: 'https://api.nightlight.qzz.io',
   key: 'DiegoJadiBot',
+  url2: 'https://api.stellarwa.xyz',
   key2: '1bcd4698ce6c75217275c9607f01fd99'
 }
 
