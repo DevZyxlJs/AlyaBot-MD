@@ -18,7 +18,7 @@ function generateUniqueFilename(mime) {
 async function uploadToStellar(buffer, mime, token) {
   const form = new FormData()
   form.append('file', buffer, { filename: generateUniqueFilename(mime) })
-  const res = await axios.post(`${api.url}/api/cdn/upload`, form, {
+  const res = await axios.post(`${api.url2}/api/cdn/upload`, form, {
     headers: {
       ...form.getHeaders(),
       'x-upload-token': token
