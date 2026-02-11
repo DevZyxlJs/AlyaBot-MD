@@ -13,7 +13,7 @@ global.api = {
 }
 
 global.bot = {
-  api: 'https://api.stellarwa.xyz',
+  api: 'https://api.nightlight.qzz.io',
   web: 'https://stellarwa.xyz'
 }
 
