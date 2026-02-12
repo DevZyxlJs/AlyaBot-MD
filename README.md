@@ -227,7 +227,7 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 
 ### 🐢 Colaboradores
 <a href="https://api.stellarwa.xyz">
-  <img src="https://contrib.rocks/image?repo=DevZyxlJs/AlyaBot-MD&v3=true" />
+  <img src="https://contrib.rocks/image?repo=DevZyxlJs/AlyaBot-MD&v4=true" />
 </a>
 
 ### 🌱 Agradecimientos
