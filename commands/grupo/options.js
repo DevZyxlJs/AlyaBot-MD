@@ -6,7 +6,7 @@ export default {
     'antilink', 'antienlaces', 'antilinks',
     'rpg', 'economy', 'bye', 'despedidas', 'economia',
     'gacha',
-    'adminonly', 'goodbye', 'onlyadmin', 'pokes'
+    'adminonly', 'goodbye', 'onlyadmin'
   ],
   category: 'grupo',
   isAdmin: true,
@@ -32,8 +32,7 @@ export default {
       adminonly: 'adminonly',
       onlyadmin: 'adminonly',
       nsfw: 'nsfw',
-      gacha: 'gacha',
-      pokes: 'pokes'
+      gacha: 'gacha'
     }
 
     const featureNames = {
@@ -44,8 +43,7 @@ export default {
       rpg: 'los comandos de *Economía*',
       gacha: 'los comandos de *Gacha*',
       adminonly: 'el modo *Solo Admin*',
-      nsfw: 'los comandos *NSFW*',
-      pokes: 'los comandos *Pokemones*'
+      nsfw: 'los comandos *NSFW*'
     }
 
     const featureTitles = {
@@ -56,8 +54,7 @@ export default {
       rpg: 'Economía',
       gacha: 'Gacha',
       adminonly: 'AdminOnly',
-      nsfw: 'NSFW',
-      pokes: 'Pokemones'
+      nsfw: 'NSFW'
     }
 
     const normalizedKey = mapTerms[command] || command
