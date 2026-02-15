@@ -63,7 +63,7 @@ let phoneInput = "";
 console.log(chalk.blue.bold('\nI N I C I A N D O  .  .  .'));
 
 console.log(chalk.cyan(`
-      Stellar | Wa Bot
+      Alya | Wa Bot
      Powered by I'm Diego ~
 `));
 
