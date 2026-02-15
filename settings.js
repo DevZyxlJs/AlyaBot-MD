@@ -22,8 +22,8 @@ global.mods = [
   '5511998790420' // Tokito
 ]
 
-global.msgglobal = '[Error: *TypeError*] fetch failed'
-globalThis.dev = `ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɪ'ᴍ ᴅɪᴇɢᴏ ⚡︎`
+global.msgglobal = '✿⸝꙳.˖ Ocurrió un problema, contacte al creador'
+global.dev = `ʙᴜɪʟᴛ ᴀɴᴅ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɪ'ᴍ ᴅɪᴇɢᴏ ッ`
 
 global.mess = {
   socket: '(∩´͈ ᴖ `͈∩ ྀི) Este comando solo puede ser ejecutado por un Socket.',
