@@ -1,6 +1,5 @@
 import { getBuffer } from '../../lib/message.js';
 import fetch from 'node-fetch';
-import sharp from 'sharp';
 
 async function getVideoInfo(query) {
   try {
@@ -48,14 +47,7 @@ export default {
       }
 
       const audioBuffer = await getBuffer(download.url)
-      const documento = Math.random() < 0.4
-      let mensaje
-      if (documento && thumbBuffer && title) {
-        const thumbBuffer2 = await sharp(thumbBuffer).resize(300, 300).jpeg({ quality: 80 }).toBuffer()
-        mensaje = { document: audioBuffer, mimetype: 'audio/mpeg', fileName: `${title || 'audio'}.mp3`, jpegThumbnail: thumbBuffer2 }
-      } else {
         mensaje = { audio: audioBuffer, fileName: `${title || 'audio'}.mp3`, mimetype: 'audio/mpeg' }
-      }
       await client.sendMessage(m.chat, mensaje, { quoted: m })
     } catch (e) {
       await m.reply(msgglobal)
