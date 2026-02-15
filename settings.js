@@ -1,5 +1,6 @@
 import fs from 'fs';
-import chalk from 'chalk';
+import { watchFile, unwatchFile } from 'fs'
+import { fileURLToPath } from 'url'
 
 global.owner = ['5492916450307']
 global.sessionName = 'Sessions/Owner'
@@ -31,3 +32,9 @@ global.mess = {
   nsfw: '(•ૢ⚈͒⌄⚈͒•ૢ) Los comandos de *NSFW* están desactivados en este grupo.',
   comandooff: 'ღゝ◡╹ )ノ Estos comandos estan desactivados en este grupo.'
 }
+
+let file = fileURLToPath(import.meta.url)
+watchFile(file, () => {
+  unwatchFile(file)
+  import(`${file}?update=${Date.now()}`)
+})
