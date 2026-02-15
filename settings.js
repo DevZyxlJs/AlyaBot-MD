@@ -7,14 +7,7 @@ global.version = '^2.0'
 
 global.api = {
   url: 'https://api.nightlight.qzz.io',
-  key: 'DiegoJadiBot',
-  url2: 'https://api.stellarwa.xyz',
-  key2: '1bcd4698ce6c75217275c9607f01fd99'
-}
-
-global.bot = {
-  api: 'https://api.nightlight.qzz.io',
-  web: 'https://stellarwa.xyz'
+  key: 'DiegoJadiBot'
 }
 
 global.mods = [
@@ -31,20 +24,6 @@ global.mods = [
 
 global.msgglobal = '[Error: *TypeError*] fetch failed'
 globalThis.dev = `ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɪ'ᴍ ᴅɪᴇɢᴏ ⚡︎`
-
-global.APIs = { 
-sylphy: { url: "https://sylphy.xyz", key: "Stellar" },
-zenzxz: { url: "https://api.zenzxz.my.id", key: null }, 
-nekolabs: { url: "https://api.nekolabs.web.id", key: null },
-vreden: { url: "https://api.vreden.web.id", key: null },
-ootaizumi: { url: "https://api.ootaizumi.web.id", key: null },
-adonix: { url: "https://api-adonix.ultraplus.click", key: "Yuki-WaBot" },
-siputzx: { url: "https://api.siputzx.my.id", key: null },
-delirius: { url: "https://api.delirius.store", key: null },
-apifaa: { url: "https://api-faa.my.id", key: null },
-xyro: { url: "https://api.xyro.site", key: null },
-yupra: { url: "https://api.yupra.my.id", key: null }
-}
 
 global.mess = {
   socket: '(∩´͈ ᴖ `͈∩ ྀི) Este comando solo puede ser ejecutado por un Socket.',
