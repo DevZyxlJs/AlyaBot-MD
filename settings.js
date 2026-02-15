@@ -3,7 +3,6 @@ import chalk from 'chalk';
 
 global.owner = ['5492916450307']
 global.sessionName = 'Sessions/Owner'
-global.version = '^2.0'
 
 global.api = {
   url: 'https://api.nightlight.qzz.io',
