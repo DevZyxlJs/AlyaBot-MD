@@ -70,7 +70,7 @@ export default {
 ➤ 𝗜𝗡𝗙𝗢 𝗕𝗢𝗧
 ♡ *Socket ›* ${botType}
 ★ *Nombre ›* ${botname}
-❐ *Versión ›* ${version}`
+❐ *Versión ›* @latest`
 
     if (typeof sugg !== 'string' || !sugg.trim()) return
 
