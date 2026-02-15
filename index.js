@@ -10,14 +10,12 @@ import {
   jidDecode,
   DisconnectReason,
 } from "@whiskeysockets/baileys";
-import cfonts from 'cfonts';
 import pino from "pino";
 import qrcode from "qrcode-terminal";
 import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 import readlineSync from "readline-sync";
-import boxen from 'boxen';
 import readline from "readline";
 import { smsg } from "./lib/message.js";
 import db from "./lib/system/database.js";
@@ -62,17 +60,12 @@ let phoneInput = "";
     return s;
   }
 
-const { say } = cfonts
+console.log(chalk.blue.bold('\nI N I C I A N D O  .  .  .'));
 
-say('alya san', {
-align: 'center',           
-gradient: ['red', 'blue'] 
-})
-say('WhatsApp Bot', {
-font: 'console',
-align: 'center',
-gradient: ['blue', 'magenta']
-})
+console.log(chalk.cyan(`
+      Stellar | Wa Bot
+     Powered by I'm Diego ~
+`));
 
 const BOT_TYPES = [
   { name: 'SubBot', folder: './Sessions/Subs', starter: startSubBot }
@@ -223,7 +216,8 @@ return console.log(chalk.bold.white(chalk.bgMagenta(`[  ✿  ]  CÓDIGO DE VINCU
     }
 
     if (connection == "open") {
- console.log(boxen(chalk.bold(' ¡CONECTADO CON WHATSAPP! '), { borderStyle: 'round', borderColor: 'green', title: chalk.green.bold('● CONEXIÓN ●'), titleAlignment: 'center', float: 'center' }))
+     const userName = client.user.name || "Desconocido"
+         console.log(chalk.green.bold(`[ ✿ ]  Conectado a: ${userName}`))
     }
 
     if (isNewLogin) {
