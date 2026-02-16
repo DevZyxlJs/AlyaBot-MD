@@ -165,25 +165,6 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 ### Patrocinadores del Proyecto
 
 <details>
-<summary><strong>☁️ Stellar</strong> — API</summary>
-
-<div align="center">
-  <a href="https://api.stellarwa.xyz">
-    <img src="https://api.stellarwa.xyz/favicon.ico" alt="Logo" height="125px">
-  </a>
-</div>
-
-### 🐢 Enlaces Principales
-| Servicio | Enlace |
-|------------|-----------|
-| Dashboard | [Abrir](https://api.stellarwa.xyz) |
-| Store | [Abrir](https://api.stellarwa.xyz/store) 
-| Soporte | [Visitar](https://api.stellarwa.xyz/ticket)  
-| Estado de Servicios | [Ver](https://api.stellarwa.xyz/stats) 
-
-</details>
-
-<details>
 <summary><strong>☁️ Cafirexos</strong> — Hosting</summary>
 
 <div align="center">
