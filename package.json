@@ -32,6 +32,7 @@
     "gradient-string": "^2.0.2",
     "human-readable": "^0.2.1",
     "jimp": "latest",
+    "lodash": "latest",
     "moment-timezone": "^0.5.37",
     "moment": "^2.29.4",
     "node-fetch": "^2.6.1",
