@@ -1,5 +1,5 @@
-import { getBuffer } from '../../lib/message.js';
-import fetch from 'node-fetch';
+import { getBuffer } from '../../lib/message.js'
+import fetch from 'node-fetch'
 
 async function getVideoInfo(query) {
   try {
@@ -7,7 +7,7 @@ async function getVideoInfo(query) {
     const res = await fetch(endpoint).then(r => r.json())
     if (!res?.status || !res.data) return null
     return res.data
-  } catch (e) {
+  } catch {
     return null
   }
 }
@@ -20,16 +20,17 @@ export default {
       if (!args[0]) {
         return m.reply('《✧》Por favor, menciona el nombre o URL del video que deseas descargar')
       }
+
       const text = args.join(' ')
       const videoInfo = await getVideoInfo(text)
       if (!videoInfo) {
         return m.reply('《✧》 No se encontró información del video.')
       }
 
-      const { title, author, duration, views, url, thumbnail, download } = videoInfo
+      const { title, author, duration, views, url, image, dl } = videoInfo
       const vistas = (views || 0).toLocaleString()
-      const canal = author || 'Desconocido'
-      const thumbBuffer = await getBuffer(thumbnail)
+      const canal = author?.name || author || 'Desconocido'
+      const thumbBuffer = await getBuffer(image)
 
       const caption = `➥ Descargando › ${title}
 
@@ -42,12 +43,19 @@ export default {
 
       await client.sendMessage(m.chat, { image: thumbBuffer, caption }, { quoted: m })
 
-      if (!download?.url) {
+      if (!dl) {
         return m.reply('《✧》 No se pudo descargar el *audio*, intenta más tarde.')
       }
 
-      const audioBuffer = await getBuffer(download.url)
-        mensaje = { audio: audioBuffer, fileName: `${title || 'audio'}.mp3`, mimetype: 'audio/mpeg' }
+      const audioBuffer = await getBuffer(dl)
+      let mensaje
+
+        mensaje = {
+          audio: audioBuffer,
+          fileName: `${title || 'audio'}.mp3`,
+          mimetype: 'audio/mpeg'
+        }
+
       await client.sendMessage(m.chat, mensaje, { quoted: m })
     } catch (e) {
       await m.reply(msgglobal)
