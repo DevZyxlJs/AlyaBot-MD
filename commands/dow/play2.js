@@ -42,26 +42,32 @@ export default {
 
       await client.sendMessage(m.chat, { image: thumbBuffer, caption }, { quoted: m })
 
-      const endpoint = `${api.url}/dl/youtube?url=${encodeURIComponent(url)}&key=${api.key}`
-      const res = await fetch(endpoint).then(r => r.json())
+      const endpoint = `${api.url}/dl/ytmp4?url=${encodeURIComponent(url)}&key=${api.key}`
+      const res = await fetch(endpoint, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 15; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+          'Accept': 'application/json'
+        }
+      }).then(r => r.json())
 
-      if (!res?.success || !res.results) {
+      if (!res?.status || !res.result?.downloadUrl) {
         return m.reply('《✧》 No se pudo descargar el *video*, intenta más tarde.')
       }
 
-      const videoFormat = res.results.formats.find(f => f.type === 'video' && f.quality === '360p') || res.results.formats.find(f => f.type === 'video')
-      if (!videoFormat?.url) {
-        return m.reply('《✧》 No se encontró un formato de video válido.')
+      const scraped = {
+        title: res.result.title,
+        quality: res.result.quality,
+        size: res.result.size,
+        thumbnail: res.result.thumbnail,
+        url: res.result.downloadUrl
       }
 
-      const videoBuffer = await getBuffer(videoFormat.url)
-      let mensaje
-
-        mensaje = {
-          video: videoBuffer,
-          fileName: `${title || 'video'}.mp4`,
-          mimetype: 'video/mp4'
-        }
+      const videoBuffer = await getBuffer(scraped.url)
+      const mensaje = {
+        video: videoBuffer,
+        fileName: `${scraped.title || 'video'}.mp4`,
+        mimetype: 'video/mp4'
+      }
 
       await client.sendMessage(m.chat, mensaje, { quoted: m })
     } catch (e) {
