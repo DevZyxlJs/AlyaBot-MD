@@ -20,6 +20,7 @@ export default {
       ritual: Math.max(0, (user.ritualCooldown || 0) - now),
       work: Math.max(0, (user.workCooldown || 0) - now),
       rt: Math.max(0, (user.rtCooldown || 0) - now),
+      trade: Math.max(0, (user.tradeCooldown || 0) - now),
       slut: Math.max(0, (user.slutCooldown || 0) - now),
       steal: Math.max(0, (user.roboCooldown || 0) - now),
       fish: Math.max(0, (user.lastfish || 0) - now),
@@ -61,6 +62,7 @@ export default {
 ׅ  ׄ  ✿   ׅ り Mine » *${formatTime(cooldowns.mine)}*
 ׅ  ׄ  ✿   ׅ り Ritual » *${formatTime(cooldowns.ritual)}*
 ׅ  ׄ  ✿   ׅ り Ruleta » *${formatTime(cooldowns.rt)}*
+ׅ  ׄ  ✿   ׅ り Trading » *${formatTime(cooldowns.trade)}*
 ׅ  ׄ  ✿   ׅ り Steal » *${formatTime(cooldowns.steal)}*
 ׅ  ׄ  ✿   ׅ り Slot » *${formatTime(cooldowns.slot)}*
 ׅ  ׄ  ✿   ׅ り Fish » *${formatTime(cooldowns.fish)}*
