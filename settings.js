@@ -2,7 +2,7 @@ import fs from 'fs';
 import { watchFile, unwatchFile } from 'fs'
 import { fileURLToPath } from 'url'
 
-global.owner = ['5492916450307']
+global.owner = ['573019448245']
 global.sessionName = 'Sessions/Owner'
 
 global.api = {
@@ -11,7 +11,7 @@ global.api = {
 }
 
 global.mods = [
-  '5492916450307', // Creador
+  '573019448245', // Creador
   '51910471065', // Llilmer
   '5216671548329', // Legna
   '573196588149', // Destroy
