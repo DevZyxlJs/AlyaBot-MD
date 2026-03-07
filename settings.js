@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url'
 global.owner = ['5492916450307']
 global.sessionName = 'Sessions/Owner'
 
+// # NOTA: Debes registrarte en la API de Stellar y colocar tu API Key en global.api.key. Si quieres evitar que se agoten rápidamente tus solicitudes, puedes adquirir la versión Premium.
 global.api = {
   url: 'https://api.stellarwa.xyz',
   key: '' // Saca tu apikey aquí: https://api.stellarwa.xyz
