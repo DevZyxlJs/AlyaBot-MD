@@ -1,33 +1,28 @@
-import fetch from 'node-fetch';
 import { getDevice } from '@whiskeysockets/baileys';
 import fs from 'fs';
+import fetch from 'node-fetch';
 import axios from 'axios';
 import moment from 'moment-timezone';
-
-const COMMANDS_URL = 'https://rest.alyabotpe.xyz/src/commands.js'
+import { commands } from '../../lib/system/comandos.js';
 
 export default {
   command: ['allmenu', 'help', 'menu'],
   category: 'info',
   run: async (client, m, args, command, text, prefix) => {
     try {
-      const res = await fetch(COMMANDS_URL)
-      const commandsText = await res.text()
-      const commandsMatch = commandsText.match(/const commands = (\[[^]*?\]);/)
-      if (!commandsMatch)
-        throw new Error('No se pudo encontrar la variable `commands` en el archivo.')
 
-      const commands = eval(commandsMatch[1])
-      const now = new Date()
-      const colombianTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Bogota' }))
+      const now = new Date();
+      const colombianTime = new Date(
+        now.toLocaleString('en-US', { timeZone: 'America/Bogota' })
+      );
       const tiempo = colombianTime
         .toLocaleDateString('en-GB', {
           day: '2-digit',
           month: 'short',
           year: 'numeric',
         })
-        .replace(/,/g, '')
-      const tiempo2 = moment.tz('America/Bogota').format('hh:mm A')
+        .replace(/,/g, '');
+      const tiempo2 = moment.tz('America/Bogota').format('hh:mm A');
 
       const botId = client?.user?.id.split(':')[0] + '@s.whatsapp.net' || ''
       const botSettings = global.db.data.settings[botId] || {}
@@ -41,14 +36,17 @@ export default {
       const botType = isOficialBot
         ? 'Owner'
             : 'Sub Bot'
+
       const users = Object.keys(global.db.data.users).length
 
-     const time = client.uptime ? formatearMs(Date.now() - client.uptime) : "Desconocido"
+      const time = client.uptime
+        ? formatearMs(Date.now() - client.uptime)
+        : 'Desconocido';
       const device = getDevice(m.key.id);
 
-      let menu = `> *¡ʜᴏʟᴀ!* ${global.db.data.users[m.sender].name}, como está tu día?, mucho gusto mi nombre es *${botname2}* ʚ♡⃛ɞ(ू•ᴗ•ू❁)*
+      let menu = `> *¡ʜᴏʟᴀ!* ${m.pushName}, como está tu día?, mucho gusto mi nombre es *${botname2}* ʚ♡⃛ɞ(ू•ᴗ•ू❁)*
 
-   ⌒࣪᷼⏜͡  ۪  ࿚ꨪᰰ࿙  ࣭࣪⢏࣭۟⢢࣭ׄ᎐፝֟᎐࣭ׄ⡔࣭۟⡹࣭ׄ  ࿚ꨪᰰ࿙  ۪  ͡⏜ׄ᷼⌒
+   ⌒࣪᷼⏜͡  ۪  ࿚ꨪᰰ࿙  ࣭࣪⢏࣭۟⢢࣭ׄ᎐፝֟᎐࣭ׄ⡔࣭۟⡹࣭ׄ  ࿚ꨪᰰ࿙  ۪  ͡⏜ׄ᷼⌒
 
 : ̗̀〄 *ᴅᴇᴠᴇʟᴏᴘᴇʀ ::* ${owner ? (!isNaN(owner.replace(/@s\.whatsapp\.net$/, '')) ? `${global.db.data.users[owner].name}` : owner) : "Oculto por privacidad"}
 : ̗̀ꕥ *ᴛɪᴘᴏ ::* ${botType}
@@ -59,28 +57,29 @@ export default {
 : ̗̀❖ *ᴍɪ ᴛɪᴇᴍᴘᴏ ::* ${time}
 : ̗̀❖ *ᴜʀʟ ::* ${link}
 
-  ⌒࣪᷼⏜͡  ۪  ࿚ꨪᰰ࿙  ࣭࣪⢏࣭۟⢢࣭ׄ᎐፝֟᎐࣭ׄ⡔࣭۟⡹࣭ׄ  ࿚ꨪᰰ࿙  ۪  ͡⏜ׄ᷼⌒
+   ⌒࣪᷼⏜͡  ۪  ࿚ꨪᰰ࿙  ࣭࣪⢏࣭۟⢢࣭ׄ᎐፝֟᎐࣭ׄ⡔࣭۟⡹࣭ׄ  ࿚ꨪᰰ࿙  ۪  ͡⏜ׄ᷼⌒
 
+⋆｡ﾟ☁︎ ｡° *ᴄᴏᴍ꯭ᴀ꯭ɴᴅᴏs* ﾟ｡˚₊ 𓂃\n`;
 
-⋆｡ﾟ☁︎ ｡° *ᴄᴏᴍ꯭ᴀ꯭ɴᴅᴏs* ﾟ｡˚₊ 𓂃\n`
-
-      const categoryArg = args[0]?.toLowerCase()
-      const categories = {}
+      const categoryArg = args[0]?.toLowerCase();
+      const categories = {};
 
       for (const command of commands) {
-        const category = command.category || 'otros'
-        if (!categories[category]) categories[category] = []
-        categories[category].push(command)
+        const category = command.category || 'otros';
+        if (!categories[category]) categories[category] = [];
+        categories[category].push(command);
       }
 
       if (categoryArg && !categories[categoryArg]) {
-        return m.reply(`《✤》 La categoría *${categoryArg}* no fue encontrada.`)
+        return m.reply(
+          `《✤》 La categoría *${categoryArg}* no fue encontrada.`
+        );
       }
 
       for (const [category, cmds] of Object.entries(categories)) {
-        if (categoryArg && category.toLowerCase() !== categoryArg) continue
-        const catName = category.charAt(0).toUpperCase() + category.slice(1)
-         menu += `\n╭╼ׅࣶ፝֟╾╌ֵ╾͜─ํ͜┈ְ ࣭࣪⢏࣭ࣧ⢢࣭ׄ᎐፝֟͟͝᎐࣭ׄ⡔࣭ࣧ⡹࣭࣭ׄ࣪ ְ┈ํ͜─͜╼ꨪᰰ╾࣮╌╼ࣶׅ፝֟╾╮\n│❀ *${catName} ☆(ﾉ◕ヮ◕)ﾉ*\n├╾ׅ╴ׂ╌╶ׅ╌ׂ─ 〫─ׂ┄ׅ╴ׂ╌ׅ╶╼.  ╾ׅ╴ׂ╌╶ׅ╌ׂ\n`;
+        if (categoryArg && category.toLowerCase() !== categoryArg) continue;
+        const catName = category.charAt(0).toUpperCase() + category.slice(1);
+         menu += `\n╭╼ׅࣶ፝֟╾╌ֵ╾͜─ํ͜┈ְ ࣭࣪⢏࣭ࣧ⢢࣭ׄ᎐፝֟͟͝᎐࣭ׄ⡔࣭ࣧ⡹࣭࣭ׄ࣪ ְ┈ํ͜─͜╼ꨪᰰ╾࣮╌╼ࣶׅ፝֟╾╮\n│❀ *${catName} ☆(ﾉ◕ヮ◕)ﾉ*\n├╾ׅ╴ׂ╌╶ׅ╌ׂ─ 〫─ׂ┄ׅ╴ׂ╌ׅ╶╼.  ╾ׅ╴ׂ╌╶ׅ╌ׂ\n`;
         cmds.forEach((cmd) => {
           const cleanPrefix = prefix
           const aliases = cmd.alias
@@ -98,35 +97,77 @@ export default {
           menu += `╰╼ׅࣶ፝֟╾╌ֵ╾͜─ํ͜┈ְ ࣭࣪⢏࣭ࣧ⢢࣭ׄ᎐፝֟͟͝᎐࣭ׄ⡔࣭ࣧ⡹࣭ׄ ְ┈ํ͜─͜╼ꨪᰰ╾࣮╌╼ࣶׅ፝֟╾╯ \n`
       }
 
-menu += `\n> *${botname2} desarrollado por Diego* ૮(˶ᵔᵕᵔ˶)ა`
+      menu += `\n> *${botname2} desarrollado por Diego* ૮(˶ᵔᵕᵔ˶)ა`;
 
-let caption = menu
-
-if (banner.endsWith('.mp4') || banner.endsWith('.gif') || banner.endsWith('.webm')) {
-          await client.sendMessage(m.chat, { video: { url: banner }, caption }, { quoted: m })
-
-} else {
-    await client.sendMessage(m.chat, {
-      text: menu,
-      contextInfo: {
-        mentionedJid: [...menu.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net'),
-        externalAdReply: {
-          renderLargerThumbnail: true,
-          title: botname,
-          body: `${botname2}, Built With 💛 By Stellar`,
-          mediaType: 1,
-          thumbnailUrl: banner,
-         // thumbnail: banner,
-         // sourceUrl: redes
-        }
-      }
-    }, { quoted: m })
-
+/*let ppUser, yio;
+try {
+  ppUser = await client.profilePictureUrl(m.sender, 'image');
+} catch {
+  ppUser = 'https://bot.stellarwa.xyz/files/KOIpJ.jpeg';
 }
-    } catch (e) {
-      await m.reply(msgglobal)
+
+if (!args[0]) {
+yio = '✎ *Próximamente se remitirá el menú.*'
+} else {
+yio = `✎ *Próximamente se remitirá el menú ${args[0]}.*`
+}
+
+await client.reply(
+  m.chat,
+  yio,
+  m,
+  {
+    contextInfo: {
+      forwardingScore: 0,
+      isForwarded: false,
+      externalAdReply: {
+        title: '👋 Hola!!',
+        body: dev,
+        sourceUrl: link,
+        thumbnailUrl: ppUser
+      }
     }
   }
+);*/
+
+      let caption = menu;
+
+      if (
+        banner.endsWith('.mp4') ||
+        banner.endsWith('.gif') ||
+        banner.endsWith('.webm')
+      ) {
+        await client.sendMessage(
+          m.chat,
+          { video: { url: banner }, caption },
+          { quoted: m }
+        );
+      } else {
+
+       await client.sendMessage(
+          m.chat,
+          {
+            text: menu,
+            contextInfo: {
+              mentionedJid: [
+                ...menu.matchAll(/@([0-9]{5,16}|0)/g)
+              ].map((v) => v[1] + '@s.whatsapp.net'),
+              externalAdReply: {
+                renderLargerThumbnail: true,
+                title: botname,
+                body: `${botname2}, Built With 💛 By Stellar`,
+                mediaType: 1,
+                thumbnailUrl: banner,
+              },
+            },
+          },
+          { quoted: m }
+        );
+      }
+    } catch (e) {
+      await m.reply(msgglobal);
+    }
+  },
 };
 
 function formatearMs(ms) {
@@ -134,5 +175,7 @@ function formatearMs(ms) {
   const minutos = Math.floor(segundos / 60);
   const horas = Math.floor(minutos / 60);
   const dias = Math.floor(horas / 24);
-  return [dias && `${dias}d`, `${horas % 24}h`, `${minutos % 60}m`, `${segundos % 60}s`].filter(Boolean).join(" ");
+  return [dias && `${dias}d`, `${horas % 24}h`, `${minutos % 60}m`, `${segundos % 60}s`]
+    .filter(Boolean)
+    .join(' ');
 }
