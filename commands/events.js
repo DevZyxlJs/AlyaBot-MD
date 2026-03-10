@@ -1,15 +1,18 @@
 import chalk from 'chalk'
 import moment from 'moment-timezone'
+import fetch from 'node-fetch'
 
 export default async (client, m) => {
   client.ev.on('group-participants.update', async (anu) => {
     try {
-      const metadata = await client.groupMetadata(anu.id)
+      const metadata = await client.groupMetadata(anu.id) || {}
       const chat = global.db.data.chats[anu.id]
       const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
-      const primaryBotId = chat?.primaryBot
 
-      const isSelf = global.db.data.settings[botId]?.self ?? false
+      const primaryBotId = chat?.primaryBot || ''
+
+      const botSettings = global.db.data.settings[botId]
+      const isSelf = botSettings?.self ?? 0
       if (isSelf) return
 
       const now = new Date()
@@ -21,63 +24,72 @@ export default async (client, m) => {
       }).replace(/,/g, '')
       const tiempo2 = moment.tz('America/Bogota').format('hh:mm A')
 
-      const memberCount = metadata.participants.length
+      const memberCount = metadata.participants?.length || 0
+      const groupIcon = await client.profilePictureUrl(anu.id, 'image').catch(_ => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
 
       for (const p of anu.participants) {
-        const jid = p.phoneNumber
-        const phone = p.phoneNumber?.split('@')[0] || jid.split('@')[0]
-        const pp = await client.profilePictureUrl(jid, 'image').catch(_ => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
+        const phone = p.phoneNumber ? p.phoneNumber.split('@')[0] : ''
+        const name = await getUser(phone + "@s.whatsapp.net").name
+        const avatar = await client.profilePictureUrl(p.phoneNumber, 'image').catch(_ => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
 
         const fakeContext = {
           contextInfo: {        
             externalAdReply: {
-              title: global.db.data.settings[botId].namebot,
+              title: botSettings.namebot || '',
               body: dev,
               mediaUrl: null,
               description: null,
               previewType: 'PHOTO',
-              thumbnailUrl: global.db.data.settings[botId].icon,
-              sourceUrl: global.db.data.settings[client.user.id.split(':')[0] + "@s.whatsapp.net"].link,
+              thumbnailUrl: botSettings.icon || '',
+              sourceUrl: botSettings.link || '',
               mediaType: 1,
               renderLargerThumbnail: false
             },
-            mentionedJid: [jid]
+            mentionedJid: [p.phoneNumber]
           }
         }
 
         if (anu.action === 'add' && chat?.welcome && (!primaryBotId || primaryBotId === botId)) {
-          let caption;
+          let caption
           if (chat.welcomeMessage && chat.welcomeMessage.trim() !== '') {
             caption = chat.welcomeMessage
               .replace(/@user/g, `@${phone}`)
-              .replace(/@group/g, metadata.subject)
+              .replace(/@group/g, metadata.subject || '')
               .replace(/@desc/g, metadata.desc || 'Sin descripción')
               .replace(/@members/g, memberCount)
-              .replace(/@time/g, `${tiempo} ${tiempo2}`);
+              .replace(/@time/g, `${tiempo} ${tiempo2}`)
           } else {
             caption = `╭┈──̇─̇─̇────̇─̇─̇──◯◝
 ┊「 *Bienvenido (⁠ ⁠ꈍ⁠ᴗ⁠ꈍ⁠)* 」
 ┊︶︶︶︶︶︶︶︶︶︶︶
 ┊  *Usuario ›* @${phone}
-┊  *Grupo ›* ${metadata.subject}
+┊  *Grupo ›* ${metadata.subject || ''}
 ┊┈─────̇─̇─̇─────◯◝
 ┊➤ *Usa /menu para ver los comandos.*
 ┊➤ *Ahora somos ${memberCount} miembros.*
 ┊ ︿︿︿︿︿︿︿︿︿︿︿
 ╰─────────────────╯`
           }
-          await client.sendMessage(anu.id, { image: { url: pp }, caption, ...fakeContext })
+          const apiUrl = `${api.url}/generate/welcome-image?username=${name}&guildName=${metadata.subject || ''}&guildIcon=${encodeURIComponent(avatar)}&memberCount=${memberCount}&avatar=${encodeURIComponent(groupIcon)}&background=${encodeURIComponent (botSettings.banner)}`
+          const res = await fetch(apiUrl)
+          const contentType = res.headers.get('content-type') || ''
+          if (!contentType.startsWith('image/')) {
+            console.log('Error: la API devolvió', contentType)
+            return
+          }
+          const buffer = Buffer.from(await res.arrayBuffer())
+          await client.sendMessage(anu.id, { image: buffer, caption, ...fakeContext })
         }
 
         if ((anu.action === 'remove' || anu.action === 'leave') && chat?.goodbye && (!primaryBotId || primaryBotId === botId)) {
-          let caption;
+          let caption
           if (chat.byeMessage && chat.byeMessage.trim() !== '') {
             caption = chat.byeMessage
               .replace(/@user/g, `@${phone}`)
-              .replace(/@group/g, metadata.subject)
+              .replace(/@group/g, metadata.subject || '')
               .replace(/@desc/g, metadata.desc || 'Sin descripción')
               .replace(/@members/g, memberCount)
-              .replace(/@time/g, `${tiempo} ${tiempo2}`);
+              .replace(/@time/g, `${tiempo} ${tiempo2}`)
           } else {
             caption = `╭┈──̇─̇─̇────̇─̇─̇──◯◝
 ┊「 *Hasta pronto (⁠╥⁠﹏⁠╥⁠)* 」
@@ -89,27 +101,35 @@ export default async (client, m) => {
 ┊ ︿︿︿︿︿︿︿︿︿︿︿
 ╰─────────────────╯`
           }
-          await client.sendMessage(anu.id, { image: { url: pp }, caption, ...fakeContext })
+          const apiUrl = `${api.url}/generate/bye-image?username=${encodeURIComponent(name)}&guildName=${encodeURIComponent(metadata.subject || '')}&guildIcon=${encodeURIComponent(avatar)}&memberCount=${memberCount}&avatar=${encodeURIComponent(groupIcon)}&background=${botSettings.banner}`
+          const res = await fetch(apiUrl)
+          const contentType = res.headers.get('content-type') || ''
+          if (!contentType.startsWith('image/')) {
+            console.log('Error: la API devolvió', contentType)
+            return
+          }
+          const buffer = Buffer.from(await res.arrayBuffer())
+          await client.sendMessage(anu.id, { image: buffer, caption, ...fakeContext })
         }
 
         if (anu.action === 'promote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
-          const usuario = anu.author
+          const usuario = anu.author || ''
           await client.sendMessage(anu.id, {
             text: `「✎」 *@${phone}* ha sido promovido a Administrador por *@${usuario.split('@')[0]}.*`,
-            mentions: [jid, usuario]
+            mentions: [p.phoneNumber, usuario]
           })
         }
 
         if (anu.action === 'demote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
-          const usuario = anu.author
+          const usuario = anu.author || ''
           await client.sendMessage(anu.id, {
             text: `「✎」 *@${phone}* ha sido degradado de Administrador por *@${usuario.split('@')[0]}.*`,
-            mentions: [jid, usuario]
+            mentions: [p.phoneNumber, usuario]
           })
         }
       }
     } catch (err) {
-      console.log(chalk.gray(`[ EVENT  ]  → ${err}`))
+      console.log(chalk.gray(`[ EVENT ] → ${err}`))
     }
   })
 }
