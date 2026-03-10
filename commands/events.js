@@ -12,7 +12,7 @@ export default async (client, m) => {
       const primaryBotId = chat?.primaryBot || ''
 
       const botSettings = global.db.data.settings[botId]
-      const isSelf = botSettings?.self ?? 0
+      const isSelf = botSettings?.self
       if (isSelf) return
 
       const now = new Date()
