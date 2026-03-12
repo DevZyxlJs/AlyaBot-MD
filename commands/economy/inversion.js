@@ -67,6 +67,16 @@ user.tradeAmount = amount
       }
 
       user.coins += recompensa
+if (!user.tradeHistory) user.tradeHistory = []
+
+user.tradeHistory.push({
+  amount: amount,
+  reward: recompensa,
+  multiplier: multiplicador,
+  time: Date.now()
+})
+
+if (user.tradeHistory.length > 10) user.tradeHistory.shift()
       user.tradeEnd = 0
 
       await client.reply(chatId, mensaje, m, { mentions: [senderId] })
