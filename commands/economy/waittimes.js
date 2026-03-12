@@ -62,7 +62,7 @@ export default {
 ׅ  ׄ  ✿   ׅ り Mine » *${formatTime(cooldowns.mine)}*
 ׅ  ׄ  ✿   ׅ り Ritual » *${formatTime(cooldowns.ritual)}*
 ׅ  ׄ  ✿   ׅ り Ruleta » *${formatTime(cooldowns.rt)}*
-ׅ  ׄ  ✿   ׅ り Trading » *${formatTime(cooldowns.trade)}*
+ׅ  ׄ  ✿   ׅ り Invertir » *${formatTime(cooldowns.trade)}*
 ׅ  ׄ  ✿   ׅ り Steal » *${formatTime(cooldowns.steal)}*
 ׅ  ׄ  ✿   ׅ り Slot » *${formatTime(cooldowns.slot)}*
 ׅ  ׄ  ✿   ׅ り Fish » *${formatTime(cooldowns.fish)}*
