@@ -43,12 +43,14 @@ export default {
     if (user.coins < amount)
       return m.reply(`✎ No tienes suficientes *${currency}* para realizar la inversión.`)
 
-    user.coins -= amount
-    user.tradeCooldown = now + cooldown
-
     const tiempo = Math.floor(Math.random() * 60000) + 60000
 
-    m.reply(`《✧》 Inversión iniciada con *¥${amount.toLocaleString()} ${currency}*. Analizando mercado...`)
+user.coins -= amount
+user.tradeCooldown = now + cooldown
+user.tradeEnd = now + tiempo
+user.tradeAmount = amount
+
+    m.reply(`《✧》 Inversión iniciada con *¥${amount.toLocaleString()} ${currency}*. Resultado en *${msToTime(tiempo)}*.`)
 
     setTimeout(async () => {
 
@@ -65,6 +67,7 @@ export default {
       }
 
       user.coins += recompensa
+      user.tradeEnd = 0
 
       await client.reply(chatId, mensaje, m, { mentions: [senderId] })
 
