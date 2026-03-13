@@ -29,7 +29,7 @@ export default async (client, m) => {
 
       for (const p of anu.participants) {
         const phone = p.phoneNumber ? p.phoneNumber.split('@')[0] : ''
-        const name = await getUser(phone + "@s.whatsapp.net").name
+        const name = ""
         const avatar = await client.profilePictureUrl(p.phoneNumber, 'image').catch(_ => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
 
         const fakeContext = {
