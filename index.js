@@ -63,7 +63,7 @@ let phoneInput = "";
 console.log(chalk.blue.bold('\nI N I C I A N D O  .  .  .'));
 
 console.log(chalk.cyan(`
-      Alya | Wa Bot
+      Stellar | Wa Bot
      Powered by I'm Diego ~
 `));
 
@@ -244,7 +244,7 @@ return console.log(chalk.bold.white(chalk.bgMagenta(`[  ✿  ]  CÓDIGO DE VINCU
       m = await smsg(client, m)
       handler(client, m, messages)
     } catch (err) {
-      console.log(err)
+     // console.log(err)
     }
   })
 
