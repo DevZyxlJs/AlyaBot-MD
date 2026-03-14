@@ -4,6 +4,10 @@
   "description": "WhatsApp multi Device, updated with better performance",
   "main": "index.js",
   "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "start": "node index.js"
+  },
   "keywords": [
     "whatsapp-bot",
     "baileys-md",
