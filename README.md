@@ -179,7 +179,8 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 | Dashboard | [Abrir](https://api.stellarwa.xyz) |
 | Store | [Abrir](https://api.stellarwa.xyz/store) 
 | Soporte | [Visitar](https://api.stellarwa.xyz/ticket)  
-| Estado de Servicios | [Ver](https://api.stellarwa.xyz/stats) | Canal | [Abrir](https://stellarwa.xyz/channel/api)  
+| Estado de Servicios | [Ver](https://api.stellarwa.xyz/stats) | 
+| Canal | [Abrir](https://stellarwa.xyz/channel/api) |
 
 </details>
 
