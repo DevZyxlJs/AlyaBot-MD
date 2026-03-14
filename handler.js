@@ -171,7 +171,7 @@ if (botprimaryId && botprimaryId !== selfId) {
   }
 
     if (m.chat && !m.chat.endsWith('g.us')) {
-    const allowedInPrivateForUsers = ['report', 'reporte', 'sug', 'suggest', 'invite', 'invitar', 'setusername', 'setpfp', 'setimage', 'setstatus', 'reload', 'setname', 'setbotname', 'setmenubanner', 'setbanner', 'setbotcurrency', 'setbotchannel', 'setchannel', 'setbotowner', 'setlink', 'setbotlink', 'setbotprefix', 'seticon']
+    const allowedInPrivateForUsers = ['report', 'reporte', 'sug', 'suggest', 'invite', 'invitar', 'setusername', 'setpfp', 'setimage', 'setstatus', 'reload', 'setname', 'setbotname', 'setmenubanner', 'setbanner', 'setbotcurrency', 'setbotchannel', 'setchannel', 'setbotowner', 'setlink', 'setbotlink', 'setbotprefix', 'seticon', 'code']
     const owners = global.db.data.settings[selfId].owner
     if (
       sender !== owners &&
