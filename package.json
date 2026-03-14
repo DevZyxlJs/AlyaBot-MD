@@ -1,13 +1,9 @@
 {
   "name": "alya",
   "version": "2.0",
-  "description": "Bot WhatsApp",
+  "description": "WhatsApp multi Device, updated with better performance",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "format": "prettier --write .",
-    "start": "node index.js"
-  },
   "keywords": [
     "whatsapp-bot",
     "baileys-md",
@@ -32,7 +28,6 @@
     "gradient-string": "^2.0.2",
     "human-readable": "^0.2.1",
     "jimp": "latest",
-    "lodash": "latest",
     "moment-timezone": "^0.5.37",
     "moment": "^2.29.4",
     "node-fetch": "^2.6.1",
@@ -40,6 +35,7 @@
     "node-webpmux": "^3.2.0",
     "grapheme-splitter": "^1.0.4",
     "pino": "^8.8.0",
+    "qrcode": "latest",
     "qrcode-terminal": "^0.12.0",
     "readline-sync": "^1.4.10",
     "syntax-error": "^1.4.0",
