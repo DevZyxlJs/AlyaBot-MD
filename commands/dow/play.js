@@ -1,16 +1,6 @@
-import { getBuffer } from '../../lib/message.js'
+import ytsearch from 'yt-search'
+import { getBuffer } from '../../lib/message.ts'
 import fetch from 'node-fetch'
-
-async function getVideoInfo(query) {
-  try {
-    const endpoint = `${global.api.url}/dl/youtubeplay?query=${encodeURIComponent(query)}&key=${global.api.key}`
-    const res = await fetch(endpoint).then(r => r.json())
-    if (!res?.status || !res.data) return null
-    return res.data
-  } catch {
-    return null
-  }
-}
 
 export default {
   command: ['play', 'mp3', 'ytmp3', 'ytaudio', 'playaudio'],
@@ -22,12 +12,15 @@ export default {
       }
 
       const text = args.join(' ')
-      const videoInfo = await getVideoInfo(text)
-      if (!videoInfo) {
+      const searchResult = await ytsearch(text)
+      if (!searchResult.videos || !searchResult.videos.length) {
         return m.reply('《✧》 No se encontró información del video.')
       }
 
-      const { title, author, duration, views, url, image, dl } = videoInfo
+      const randomIndex = Math.floor(Math.random() * searchResult.videos.length)
+      const video = searchResult.videos[randomIndex]
+
+      const { title, author, timestamp: duration, views, url, image } = video
       const vistas = (views || 0).toLocaleString()
       const canal = author?.name || author || 'Desconocido'
       const thumbBuffer = await getBuffer(image)
@@ -43,18 +36,18 @@ export default {
 
       await client.sendMessage(m.chat, { image: thumbBuffer, caption }, { quoted: m })
 
-      if (!dl) {
+      const dlEndpoint = `${global.api.url}/dl/ytmp3v2?url=${encodeURIComponent(url)}&key=${global.api.key}`
+      const resDl = await fetch(dlEndpoint).then(r => r.json())
+      if (!resDl?.status || !resDl.data?.dl) {
         return m.reply('《✧》 No se pudo descargar el *audio*, intenta más tarde.')
       }
 
-      const audioBuffer = await getBuffer(dl)
-      let mensaje
-
-        mensaje = {
-          audio: audioBuffer,
-          fileName: `${title || 'audio'}.mp3`,
-          mimetype: 'audio/mpeg'
-        }
+      const audioBuffer = await getBuffer(resDl.data.dl)
+      const mensaje = {
+        audio: audioBuffer,
+        mimetype: 'audio/mpeg',
+        fileName: resDl.data.fileName || `${title}.mp3`
+      }
 
       await client.sendMessage(m.chat, mensaje, { quoted: m })
     } catch (e) {
