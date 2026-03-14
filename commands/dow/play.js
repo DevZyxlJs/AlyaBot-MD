@@ -1,5 +1,5 @@
 import ytsearch from 'yt-search'
-import { getBuffer } from '../../lib/message.ts'
+import { getBuffer } from '../../lib/message.js'
 import fetch from 'node-fetch'
 
 export default {
