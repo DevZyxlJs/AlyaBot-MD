@@ -33,6 +33,15 @@ global.mess = {
   comandooff: 'ღゝ◡╹ )ノ Estos comandos estan desactivados en este grupo.'
 }
 
+global.my = {
+ch: "120363420992828502@newsletter", 
+name: "Stellar",
+ch2: "120363405689107729@newsletter", 
+name2: "Api",
+ch3: "120363401404146384@newsletter",
+name3: "Yuki"
+}
+
 let file = fileURLToPath(import.meta.url)
 watchFile(file, () => {
   unwatchFile(file)
