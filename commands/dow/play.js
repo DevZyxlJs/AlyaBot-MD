@@ -17,8 +17,8 @@ export default {
         return m.reply('《✧》 No se encontró información del video.')
       }
 
-      const randomIndex = Math.floor(Math.random() * searchResult.videos.length)
-      const video = searchResult.videos[randomIndex]
+      // const randomIndex = Math.floor(Math.random() * searchResult.videos.length)
+      const video = searchResult.videos[0]
 
       const { title, author, timestamp: duration, views, url, image } = video
       const vistas = (views || 0).toLocaleString()
