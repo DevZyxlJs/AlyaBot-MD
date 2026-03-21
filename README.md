@@ -212,8 +212,5 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
   <img src="https://contrib.rocks/image?repo=DevZyxlJs/AlyaBot-MD" />
 </a>
 
-### 🌱 Agradecimientos
-[![Carlos](https://github.com/AzamiJs.png?size=100)](https://github.com/AzamiJs)
-
 ### 🦩 Propietario
 [![ZyxlJs](https://github.com/DevZyxlJs.png?size=120)](https://zyxljs.stellarwa.xyz) 
