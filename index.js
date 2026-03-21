@@ -19,7 +19,7 @@ import readlineSync from "readline-sync";
 import readline from "readline";
 import { smsg } from "./lib/message.js";
 import db from "./lib/system/database.js";
-import { startSubBot } from './lib/subs.js';
+import { startSubBot } from './commands/socket/subbot.js';
 import { exec, execSync } from "child_process";
 
 const log = {
