@@ -271,3 +271,15 @@ return console.log(chalk.bold.white(chalk.bgMagenta(`[  ✿  ]  CÓDIGO DE VINCU
     console.log(chalk.gray('[ ✿  ]  Base de datos cargada correctamente.'))
   await startBot()
 })()
+
+process.on('uncaughtException', (err) => {
+  const msg = err?.message || '';
+  if (msg.includes('rate-overlimit') || msg.includes('timed out') || msg.includes('Connection Closed')) return;
+  console.error(chalk.red('[uncaughtException]'), msg.slice(0, 120));
+});
+
+process.on('unhandledRejection', (reason) => {
+  const msg = String(reason?.message || reason || '');
+  if (msg.includes('rate-overlimit') || msg.includes('timed out') || msg.includes('Connection Closed')) return;
+  console.error(chalk.red('[unhandledRejection]'), msg.slice(0, 120));
+});
