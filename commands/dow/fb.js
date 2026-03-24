@@ -56,7 +56,7 @@ export default {
         )
       }
     } catch (e) {
-      await m.reply('✿ Error al procesar el enlace de Facebook.')
+      await m.reply('✿ Error al procesar el enlace de Facebook.' + e)
     }
   }
 }
