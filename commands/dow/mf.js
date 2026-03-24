@@ -37,9 +37,9 @@ export default {
         },
         { quoted: m },
       )
-    m.reply('✅')
+    m.react('✅')
     } catch (error) {
-      m.reply('❌')
+      m.react('❌')
       console.error(error)
       await m.reply('✎ Hubo un problema al procesar tu enlace de Mediafire.')
     }
