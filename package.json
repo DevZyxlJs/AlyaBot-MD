@@ -23,7 +23,7 @@
   "dependencies": {
     "@babel/parser": "latest",
     "@whiskeysockets/baileys": "github:this-xys/baileys",
-    "cloudst": "^1.0.1",
+    "cloudst": "^1.0.5",
     "yargs": "^18.0.0",
     "axios": "^0.24.0",
     "chalk": "^4.1.2",
