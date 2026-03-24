@@ -1,38 +1,34 @@
-import fetch from 'node-fetch';
+import { ai } from 'cloudst'
 
 export default {
   command: ['ia', 'chatgpt'],
   category: 'ai',
   run: async (client, m, args, command) => {
-
-    const text = args.join(' ').toLowerCase()
+    const text = args.join(' ').trim()
 
     if (!text) {
       return m.reply(`✎ Escriba una *petición* para que *ChatGPT* le responda.`)
     }
 
-    const apiUrl = `${api.url}/ai/chatgpt?text=${encodeURIComponent(text)}&key=${api.key}`
-
     try {
-     const txc = `✎ *ChatGPT* está procesando tu respuesta...`;
+      const txc = `✎ *ChatGPT* está procesando tu respuesta...`
       const { key } = await client.sendMessage(
         m.chat,
         { text: txc },
         { quoted: m },
       )
 
-      const res = await fetch(apiUrl)
-      const json = await res.json()
+      const res = await ai.chat(text)
 
-      if (!json || !json.result) {
+      if (!res || !res.result) {
         return client.reply(m.chat, '✎ No se pudo obtener una *respuesta* válida')
       }
 
-      const response = `${json.result}`.trim()
+      const response = `${res.result}`.trim()
       await client.sendMessage(m.chat, { text: response, edit: key })
     } catch (error) {
       console.error(error)
-      await m.reply(msgglobal)
+      await m.reply('✎ Hubo un problema al procesar tu petición.')
     }
   },
-};
+}
