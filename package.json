@@ -25,7 +25,6 @@
     "@whiskeysockets/baileys": "github:this-xys/baileys",
     "cloudst": "github:DevZyxlJs/cloudst",
     "yargs": "^18.0.0",
-    "better-sqlite3": "latest",
     "axios": "^0.24.0",
     "chalk": "^4.1.2",
     "fluent-ffmpeg": "^2.1.2",
