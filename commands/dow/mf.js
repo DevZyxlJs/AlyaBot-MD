@@ -23,7 +23,8 @@ export default {
         `> • *Nombre ::* ${res.filename}\n` +
         `> • *Tipo ::* ${res.filetype}\n` +
         `> • *Tamaño ::* ${res.filesize}\n` +
-        `> • *Subido ::* ${res.uploaded}`
+        `> • *Subido ::* ${res.uploaded}\n\n` +
+        `${dev}`
 
     await client.sendContextInfoIndex(m.chat, info, {}, m, true)
 
