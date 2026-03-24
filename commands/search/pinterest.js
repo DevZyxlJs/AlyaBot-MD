@@ -52,7 +52,7 @@ export default {
       }
     } catch (e) {
       console.error('Error en Pinterest:', e)
-      await client.reply(m.chat, '✿ Error al procesar la búsqueda en Pinterest.', m)
+      await client.reply(m.chat, '✿ Error al procesar la búsqueda en Pinterest.' + e, m)
     }
   },
 }
