@@ -3,8 +3,7 @@ import { pinterestSearch } from 'cloudst'
 export default {
   command: ['pinterest', 'pin'],
   category: 'search',
-  run: async (client, m, args) => {
-    const text = args.join(' ')
+  run: async (client, m, args, command, text, prefix) => {
 
     if (!text) {
       return m.reply('✿ Ingresa un *término* de búsqueda en Pinterest.')
