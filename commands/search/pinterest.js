@@ -31,11 +31,11 @@ export default {
         )
       } else {
         const results = await pinterestSearch(text, 5)
-        if (!results.status || !results.data) {
+        if (!results) {
           return m.reply(`✿ No se encontraron resultados para *${text}*`)
         }
 
-        const result = results.data[Math.floor(Math.random() * results.data.length)]
+        const result = results.data[0]
         const message =
           `ꕥ Pinterest Search\n\n` +
           `${result.title ? `✿ Título › *${result.title}*\n` : ''}` +
