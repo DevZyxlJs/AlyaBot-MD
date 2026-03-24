@@ -11,7 +11,7 @@ export default {
     }
 
     try {
-      const results = await pinterestSearch(text, 5)
+      const results = await pinterestSearch('carros', 3)
 
       console.log('Resultados Pinterest:', results)
 
