@@ -6,8 +6,8 @@ export default {
   run: async (client, m, args, command) => {
     const url = args[0]?.trim()
 
-    if (!url) {
-      return m.reply(`✎ Escriba un *enlace de Mediafire* para descargar.`)
+    if (!url || !url.includes('mediafire.com')) {
+      return m.reply(`✎ Escriba un *enlace válido de Mediafire* para descargar.`)
     }
 
     try {
@@ -24,14 +24,23 @@ export default {
         return client.reply(m.chat, '✎ No se pudo obtener una *descarga* válida.')
       }
 
-      const response = `✎ *Archivo encontrado*\n\n` +
-        `• Nombre: ${res.filename}\n` +
-        `• Tipo: ${res.filetype}\n` +
-        `• Tamaño: ${res.filesize}\n` +
-        `• Subido: ${res.uploaded}\n\n` +
-        `⇲ Descarga: ${res.download}`
+      const info = `✎ *Archivo encontrado*\n\n` +
+        `> • *Nombre ::* ${res.filename}\n` +
+        `> • *Tipo ::* ${res.filetype}\n` +
+        `> • *Tamaño ::* ${res.filesize}\n` +
+        `> • *Subido ::* ${res.uploaded}`
 
-      await client.sendMessage(m.chat, { text: response, edit: key })
+      await client.sendMessage(m.chat, { text: info, edit: key })
+
+      await client.sendMessage(
+        m.chat,
+        {
+          document: { url: res.download },
+          mimetype: 'application/octet-stream',
+          fileName: res.filename,
+        },
+        { quoted: m },
+      )
     } catch (error) {
       console.error(error)
       await m.reply('✎ Hubo un problema al procesar tu enlace de Mediafire.')
