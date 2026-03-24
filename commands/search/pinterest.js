@@ -14,7 +14,7 @@ export default {
     try {
       if (isPinterestUrl) {
         const results = await pinterestSearch(text, 1)
-        if (!results.status || !results.data.length) {
+        if (!results.status || !results.data?.length) {
           return m.reply('✿ No se pudo procesar el enlace de Pinterest.')
         }
 
@@ -31,11 +31,11 @@ export default {
         )
       } else {
         const results = await pinterestSearch(text, 5)
-        if (!results) {
+        if (!results.status || !results.data?.length) {
           return m.reply(`✿ No se encontraron resultados para *${text}*`)
         }
 
-        const result = results.data[0]
+        const result = results.data[0] 
         const message =
           `ꕥ Pinterest Search\n\n` +
           `${result.title ? `✿ Título › *${result.title}*\n` : ''}` +
@@ -52,7 +52,7 @@ export default {
       }
     } catch (e) {
       console.error('Error en Pinterest:', e)
-      await client.reply(m.chat, '✿ Error al procesar la búsqueda en Pinterest.' + e, m)
+      await client.reply(m.chat, '✿ Error al procesar la búsqueda en Pinterest.', m)
     }
   },
 }
