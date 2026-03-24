@@ -5,51 +5,31 @@ export default {
   category: 'search',
   run: async (client, m, args) => {
     const text = args.join(' ')
-    const isPinterestUrl = /^https?:\/\/(www\.)?pinterest\.com/.test(text)
 
     if (!text) {
-      return m.reply('✿ Ingresa un *término* de búsqueda o un enlace de *Pinterest*.')
+      return m.reply('✿ Ingresa un *término* de búsqueda en Pinterest.')
     }
 
     try {
-      if (isPinterestUrl) {
-        const results = await pinterestSearch(text, 1)
-        if (!results.status || !results.data?.length) {
-          return m.reply('✿ No se pudo procesar el enlace de Pinterest.')
-        }
-
-        const result = results.data[0]
-        const mediaUrl = result.hd || result.mini
-        if (!mediaUrl) {
-          return m.reply('✿ No se encontró un recurso válido en el enlace.')
-        }
-
-        await client.sendMessage(
-          m.chat,
-          { image: { url: mediaUrl }, caption: result.title || 'Sin título' },
-          { quoted: m }
-        )
-      } else {
-        const results = await pinterestSearch(text, 5)
-        if (!results.status || !results.data?.length) {
-          return m.reply(`✿ No se encontraron resultados para *${text}*`)
-        }
-
-        const result = results.data[0] 
-        const message =
-          `ꕥ Pinterest Search\n\n` +
-          `${result.title ? `✿ Título › *${result.title}*\n` : ''}` +
-          `${result.description ? `❀ Descripción › *${result.description}*\n` : ''}` +
-          `${result.full_name ? `❑ Autor › *${result.full_name}*\n` : ''}` +
-          `${result.likes ? `♡ Likes › *${result.likes}*\n` : ''}` +
-          `${result.created ? `✤ Publicado › *${result.created}*` : ''}`
-
-        await client.sendMessage(
-          m.chat,
-          { image: { url: result.hd || result.mini }, caption: message },
-          { quoted: m }
-        )
+      const results = await pinterestSearch(text, 5)
+      if (!results.status || !results.data?.length) {
+        return m.reply(`✿ No se encontraron resultados para *${text}*`)
       }
+
+      const result = results.data[0] // primer resultado
+      const message =
+        `ꕥ Pinterest Search\n\n` +
+        `${result.title ? `✿ Título › *${result.title}*\n` : ''}` +
+        `${result.description ? `❀ Descripción › *${result.description}*\n` : ''}` +
+        `${result.full_name ? `❑ Autor › *${result.full_name}*\n` : ''}` +
+        `${result.likes ? `♡ Likes › *${result.likes}*\n` : ''}` +
+        `${result.created ? `✤ Publicado › *${result.created}*` : ''}`
+
+      await client.sendMessage(
+        m.chat,
+        { image: { url: result.hd || result.mini }, caption: message },
+        { quoted: m }
+      )
     } catch (e) {
       console.error('Error en Pinterest:', e)
       await client.reply(m.chat, '✿ Error al procesar la búsqueda en Pinterest.', m)
