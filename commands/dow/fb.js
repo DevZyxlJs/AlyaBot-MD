@@ -5,6 +5,7 @@ export default {
   command: ['fb', 'facebook'],
   category: 'downloader',
   run: async (client, m, args) => {
+   try {
     if (!args.length) {
       return m.reply('✎ Ingrese un enlace de *Facebook*')
     }
@@ -14,7 +15,6 @@ export default {
       return m.reply('✿ Por favor, envía un link de Facebook válido')
     }
 
-    try {
       const results = await fbDownloader(url)
       if (!results || !Array.isArray(results) || !results.length) {
         return m.reply('✿ No se pudo obtener el video de Facebook.')
