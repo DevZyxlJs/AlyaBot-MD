@@ -30,7 +30,7 @@ export default {
           { quoted: m }
         )
       } else {
-        const results = await pinterestSearch(text, 15)
+        const results = await pinterestSearch(text, 5)
         if (!results.status || !results.data.length) {
           return m.reply(`✿ No se encontraron resultados para *${text}*`)
         }
