@@ -31,7 +31,7 @@ export default {
         )
       } else {
         const results = await pinterestSearch(text, 5)
-        if (!results.status || !results.data.length) {
+        if (!results.status || !results.data) {
           return m.reply(`✿ No se encontraron resultados para *${text}*`)
         }
 
