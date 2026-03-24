@@ -11,14 +11,12 @@ export default {
     }
 
     try {
-      const results = await pinterestSearch('carros', 3)
-
-      console.log('Resultados Pinterest:', results)
+      const results = await pinterestSearch(text, 3)
 
       if (!results.status || !results.data || results.data.length === 0) {
         return client.sendMessage(
           m.chat,
-          { text: '✿ No se encontraron resultados.\n\n' + JSON.stringify(results, null, 2) },
+          { text: '✿ No se encontraron resultados.' },
           { quoted: m }
         )
       }
@@ -38,8 +36,8 @@ export default {
         { quoted: m }
       )
     } catch (e) {
-      console.error('Error en Pinterest:', e)
-      await client.reply(m.chat, '✿ Error al procesar la búsqueda en Pinterest.\n' + e, m)
+     // console.error('Error en Pinterest:', e)
+      await client.reply(m.chat, msgglobal, m)
     }
   },
 }
