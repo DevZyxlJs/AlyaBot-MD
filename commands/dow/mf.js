@@ -11,12 +11,7 @@ export default {
     }
 
     try {
-      const txc = `✎ Procesando tu enlace de *Mediafire*...`
-      const { key } = await client.sendMessage(
-        m.chat,
-        { text: txc },
-        { quoted: m },
-      )
+      m.react('⏱️')
 
       const res = await mediafiredl(url)
 
@@ -30,7 +25,7 @@ export default {
         `> • *Tamaño ::* ${res.filesize}\n` +
         `> • *Subido ::* ${res.uploaded}`
 
-      await client.sendMessage(m.chat, { text: info, edit: key })
+    await client.sendContextInfoIndex(m.chat, info, {}, m, true)
 
       await client.sendMessage(
         m.chat,
@@ -41,7 +36,9 @@ export default {
         },
         { quoted: m },
       )
+    m.reply('✅')
     } catch (error) {
+      m.reply('❌')
       console.error(error)
       await m.reply('✎ Hubo un problema al procesar tu enlace de Mediafire.')
     }
