@@ -1,6 +1,6 @@
 import ytsearch from 'yt-search'
 import { getBuffer } from '../../lib/message.js'
-import { ytplay } from 'cloudst'
+import fetch from 'node-fetch'
 
 export default {
   command: ['play', 'mp3', 'ytmp3', 'ytaudio', 'playaudio'],
@@ -17,7 +17,9 @@ export default {
         return m.reply('《✧》 No se encontró información del video.')
       }
 
+      // const randomIndex = Math.floor(Math.random() * searchResult.videos.length)
       const video = searchResult.videos[0]
+
       const { title, author, timestamp: duration, views, url, image } = video
       const vistas = (views || 0).toLocaleString()
       const canal = author?.name || author || 'Desconocido'
@@ -34,18 +36,22 @@ export default {
 
       await client.sendMessage(m.chat, { image: thumbBuffer, caption }, { quoted: m })
 
-      const result = await ytplay(url, '128k') // o '320k' según prefieras
+      const dlEndpoint = `${global.api.url}/dl/ytmp3v2?url=${encodeURIComponent(url)}&key=${global.api.key}`
+      const resDl = await fetch(dlEndpoint).then(r => r.json())
+      if (!resDl?.status || !resDl.data?.dl) {
+        return m.reply('《✧》 No se pudo descargar el *audio*, intenta más tarde.')
+      }
 
-      const audioBuffer = await getBuffer(result.cdnUrl)
+      const audioBuffer = await getBuffer(resDl.data.dl)
       const mensaje = {
         audio: audioBuffer,
         mimetype: 'audio/mpeg',
-        fileName: result.fileName || `${title}.mp3`
+        fileName: resDl.data.fileName || `${title}.mp3`
       }
 
       await client.sendMessage(m.chat, mensaje, { quoted: m })
     } catch (e) {
-      await m.reply('《✧》 Error al procesar la descarga.')
+      await m.reply(msgglobal)
     }
   }
 }
