@@ -13,7 +13,7 @@ export default {
       const results = await pinterestSearch(text, 5)
 
       if (!results.status || !results.data || !results.data.length) {
-        return m.reply(`✿ No se encontraron resultados para *${text}*\n\n> ${results}`)
+        return m.reply(`✿ No se encontraron resultados para *${text}*\n\n> ${results.data}`)
       }
 
       const result = results.data[0]
