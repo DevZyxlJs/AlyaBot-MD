@@ -19,7 +19,7 @@ export default {
         return client.reply(m.chat, '✎ No se pudo obtener una *descarga* válida.')
       }
 
-      const info = `✎ *Archivo encontrado*\n\n` +
+      const info = 'ꕥ `MEDIAFIRE DL` (✿◡‿◡)\n\n' +
         `> • *Nombre ::* ${res.filename}\n` +
         `> • *Tipo ::* ${res.filetype}\n` +
         `> • *Tamaño ::* ${res.filesize}\n` +
