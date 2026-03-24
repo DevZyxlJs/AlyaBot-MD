@@ -12,11 +12,12 @@ export default {
 
     try {
       const results = await pinterestSearch(text, 5)
-      if (!results.status || !results.data?.length) {
-        return m.reply(`✿ No se encontraron resultados para *${text}*`)
+
+      if (!results.status || !results.data || !results.data.length) {
+        return m.reply(`✿ No se encontraron resultados para *${text}*\n\n> ${results}`)
       }
 
-      const result = results.data[0] // primer resultado
+      const result = results.data[0]
       const message =
         `ꕥ Pinterest Search\n\n` +
         `${result.title ? `✿ Título › *${result.title}*\n` : ''}` +
