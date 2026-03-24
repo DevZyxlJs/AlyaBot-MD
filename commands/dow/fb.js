@@ -1,11 +1,10 @@
-import fetch from 'node-fetch'
+import { fbDownloader } from 'cloudst'
+import { getBuffer } from '../../lib/message.js'
 
 export default {
   command: ['fb', 'facebook'],
   category: 'downloader',
   run: async (client, m, args, command) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
-
     if (!args.length) {
       return m.reply('✎ Ingrese uno o varios enlaces de *Facebook*')
     }
@@ -20,10 +19,11 @@ export default {
         const medias = []
         for (const url of urls.slice(0, 10)) {
           try {
-            const apiUrl = `${api.url}/dl/facebookv3?url=${url}&key=${api.key}`
-            const res = await fetch(apiUrl)
-            if (!res.ok) throw new Error(`HTTP ${res.status}`)
-            const buffer = await res.buffer()
+            const results = await fbDownloader(url)
+            if (!results || !results.length) continue
+
+            const best = results[results.length - 1]
+            const buffer = await getBuffer(best.url)
 
             medias.push({
               type: 'video',
@@ -33,6 +33,7 @@ export default {
             continue
           }
         }
+
         if (medias.length) {
           await client.sendAlbumMessage(m.chat, medias, { quoted: m })
         } else {
@@ -40,10 +41,13 @@ export default {
         }
       } else {
         const url = urls[0]
-        const apiUrl = `${api.url}/dl/facebookv3?url=${url}&key=${api.key}`
-        const res = await fetch(apiUrl)
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const buffer = await res.buffer()
+        const results = await fbDownloader(url)
+        if (!results || !results.length) {
+          return m.reply('✿ No se pudo obtener el video de Facebook.')
+        }
+
+        const best = results[results.length - 1]
+        const buffer = await getBuffer(best.url)
 
         await client.sendMessage(
           m.chat,
@@ -52,7 +56,7 @@ export default {
         )
       }
     } catch (e) {
-      await m.reply(msgglobal)
+      await m.reply('✿ Error al procesar el enlace de Facebook.')
     }
   }
 }
