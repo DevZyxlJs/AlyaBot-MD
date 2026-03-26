@@ -25,7 +25,7 @@
     "@whiskeysockets/baileys": "github:this-xys/baileys",
     "yargs": "^18.0.0",
     "axios": "^0.24.0",
-    "cloudst": "^1.0.5",
+    "cloudst": "^1.0.6",
     "chalk": "^4.1.2",
     "fluent-ffmpeg": "^2.1.2",
     "form-data": "^4.0.0",
