@@ -1,8 +1,6 @@
 > [!NOTE]
 > **Este proyecto está en constante evolución. Estamos comprometidos en ofrecer a nuestra comunidad un Bot increíble. Te invitamos a instalarlo y para estar al tanto de todas las novedades. [¡Únete a nuestro canal oficial!](https://stellarwa.xyz/channel)**
 
-<img src="https://voker.dix.lat/api/stats?user=DevZyxlJs&mode=repo&theme=synthwave&style=neon&animate=true&show_owner=true&show_icons=true&hide_border=false&accent=ff7edb&bg=2b213a&text=f8d8ff&border=3d2f56&repo=AlyaBot-MD" width="4000" />
-
 <p align="center"> 
 <img src="https://files.catbox.moe/9kt3ne.jpg" alt="AlyaBot-MD" style="width: 75%; height: auto; max-width: 100px;">
 
