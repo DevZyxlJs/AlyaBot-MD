@@ -1,9 +1,9 @@
 import fs from 'fs';
-import { resolveLidToRealJid } from "../../lib/utils.ts"
+import { resolveLidToRealJid } from "../../cloud/utils.ts"
 
 async function loadCharacters() {
   try {
-    return JSON.parse(fs.readFileSync('./lib/characters.json', 'utf-8'))
+    return JSON.parse(fs.readFileSync('./cloud/characters.json', 'utf-8'))
   } catch {
     return {}
   }

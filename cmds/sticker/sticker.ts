@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
 import fetch from 'node-fetch';
-import exif from '../../lib/exif.ts';
+import exif from '../../cloud/exif.ts';
 const { writeExif } = exif;
 
 export default {
@@ -50,7 +50,7 @@ export default {
         fs.unlinkSync(stickerPath);
       };
       const convertToGif = async (inputPath) => {
-        const gifPath = `./lib/system/tmp/conv-${Date.now()}.gif`;
+        const gifPath = `./cloud/system/tmp/conv-${Date.now()}.gif`;
         await new Promise((resolve, reject) => {
           const p = spawn('ffmpeg', ['-y', '-i', inputPath, '-vf', 'fps=10,scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=0x00000000', '-loop', '0', gifPath]);
           let err = '';
@@ -63,7 +63,7 @@ export default {
         return gifPath;
       };
       const processWithFFmpeg = async (inputPath, isVideo = false) => {
-        const outputPath = `./lib/system/tmp/sticker-${Date.now()}.webp`;
+        const outputPath = `./cloud/system/tmp/sticker-${Date.now()}.webp`;
         const vf = buildFFmpegFilters(effects);
         let args = [];
         if (isVideo) {
@@ -90,7 +90,7 @@ export default {
       };
       const handleWebpBuffer = async (buffer) => {
         const animated = isAnimatedWebp(buffer);
-        const inputPath = `./lib/system/tmp/in-${Date.now()}.webp`;
+        const inputPath = `./cloud/system/tmp/in-${Date.now()}.webp`;
         fs.writeFileSync(inputPath, buffer);
         if (animated && effects.length > 0) {
           try {
@@ -113,7 +113,7 @@ export default {
           await handleWebpBuffer(buffer);
         } else {
           const ext = /png/i.test(mime) ? 'png' : /jpe?g/i.test(mime) ? 'jpg' : /gif/i.test(mime) ? 'gif' : 'img';
-          const inputPath = `./lib/system/tmp/in-${Date.now()}.${ext}`;
+          const inputPath = `./cloud/system/tmp/in-${Date.now()}.${ext}`;
           fs.writeFileSync(inputPath, buffer);
           await processWithFFmpeg(inputPath, /gif/i.test(mime));
           fs.unlinkSync(inputPath);
@@ -123,7 +123,7 @@ export default {
           return m.reply('《✧》 El video no puede ser muy largo');
         }        
         let buffer = await quoted.download();
-        const inputPath = `./lib/system/tmp/video-${Date.now()}.mp4`;
+        const inputPath = `./cloud/system/tmp/video-${Date.now()}.mp4`;
         fs.writeFileSync(inputPath, buffer);
         await processWithFFmpeg(inputPath, true);
         fs.unlinkSync(inputPath);
@@ -139,12 +139,12 @@ export default {
           await handleWebpBuffer(buffer);
         } else if (url.match(/\.(jpe?g|png|gif)(\?.*)?$/i)) {
           const ext = url.match(/\.gif/i) ? 'gif' : 'img';
-          const inputPath = `./lib/system/tmp/url-${Date.now()}.${ext}`;
+          const inputPath = `./cloud/system/tmp/url-${Date.now()}.${ext}`;
           fs.writeFileSync(inputPath, buffer);
           await processWithFFmpeg(inputPath, /gif/i.test(url));
           fs.unlinkSync(inputPath);
         } else if (url.match(/\.(mp4|mov|avi|mkv|webm)(\?.*)?$/i)) {
-          const inputPath = `./lib/system/tmp/urlvid-${Date.now()}.mp4`;
+          const inputPath = `./cloud/system/tmp/urlvid-${Date.now()}.mp4`;
           fs.writeFileSync(inputPath, buffer);
           await processWithFFmpeg(inputPath, true);
           fs.unlinkSync(inputPath);

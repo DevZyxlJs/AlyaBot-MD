@@ -1,4 +1,4 @@
-import { resolveLidToRealJid } from "../../lib/utils.ts"
+import { resolveLidToRealJid } from "../../cloud/utils.ts"
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url'

@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 
 async function loadCharacters() {
   try {
-    const data = await fs.readFile('./lib/characters.json', 'utf-8')
+    const data = await fs.readFile('./cloud/characters.json', 'utf-8')
     return JSON.parse(data)
   } catch {
     throw new Error('ꕥ No se pudo cargar el archivo characters.json.')

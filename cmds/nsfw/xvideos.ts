@@ -1,5 +1,5 @@
 import fetch from "node-fetch"
-import { getBuffer } from '../../lib/message.ts'
+import { getBuffer } from '../../cloud/message.ts'
 
 export default {
   command: ["xvideos"],

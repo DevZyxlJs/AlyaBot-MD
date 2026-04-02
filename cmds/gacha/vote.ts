@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 
-const charactersFilePath = './lib/characters.json'
+const charactersFilePath = './cloud/characters.json'
 const cooldownTime = 60 * 60 * 1000
 let characterVotes = new Map()
 

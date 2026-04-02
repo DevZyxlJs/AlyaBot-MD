@@ -1,6 +1,6 @@
 import yts from 'yt-search'
 import fetch from 'node-fetch'
-import { getBuffer } from '../../lib/message.ts'
+import { getBuffer } from '../../cloud/message.ts'
 
 export default {
   command: ['play2', 'mp4', 'ytmp4', 'ytvideo', 'playvideo'],

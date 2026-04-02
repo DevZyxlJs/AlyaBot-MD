@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 function obtenerCharacterValue(name) {
-  const characterDataPath = './lib/characters.json'
+  const characterDataPath = './cloud/characters.json'
   if (!fs.existsSync(characterDataPath)) return 'Valor no disponible'
   const characterData = JSON.parse(fs.readFileSync(characterDataPath, 'utf-8'))
   const character = characterData.find((char) => char.name === name)

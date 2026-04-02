@@ -1,4 +1,4 @@
-import { resolveLidToRealJid } from "../../lib/utils.ts"
+import { resolveLidToRealJid } from "../../cloud/utils.ts"
 
 export default {
   command: ['warn'],

@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 
-const charactersFilePath = './lib/characters.json';
+const charactersFilePath = './cloud/characters.json';
 
 async function loadCharacters() {
   const data = await fs.readFile(charactersFilePath, 'utf-8');
