@@ -3,7 +3,7 @@ import fs from 'fs';
 export default {
   command: ['getpack', 'pack', 'stickerpack'],
   category: 'stickers',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     try {
       if (!args.length) {
         return m.reply('《✧》Especifica el nombre del paquete de stickers.')

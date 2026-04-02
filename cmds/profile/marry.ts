@@ -5,7 +5,7 @@ let proposals = {}
 export default {
   command: ['marry'],
   category: 'profile',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const chatId = m.chat
     const proposer = m.sender
     const mentioned = m.mentionedJid

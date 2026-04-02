@@ -1,7 +1,7 @@
 export default {
   command: ['deldescription', 'deldesc'],
   category: 'profile',
-  async run(sock, m) => {
+  async run(sock, m) {
     const user = await getUser(m.sender)
     if (!user.description) return m.reply(`ꕥ No tienes una descripción establecida.`)
 

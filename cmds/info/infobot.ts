@@ -16,7 +16,7 @@ function rTime(seconds) {
 export default {
   command: ['infobot', 'infosocket', 'info'],
   category: 'info',
-  async run(sock, m) => {
+  async run(sock, m) {
     const botId = sock.user.id.split(':')[0] + "@s.whatsapp.net"
     const botSettings = await getSettings(botId)
 

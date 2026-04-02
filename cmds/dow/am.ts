@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 export default {
   command: ['am', 'applemusic'],
   category: 'downloader',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     try {
       if (!args[0]) {
         return m.reply('✎ Por favor, menciona el nombre de la canción que deseas descargar de Apple Music')

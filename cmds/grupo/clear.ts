@@ -41,7 +41,7 @@ async function deleteChatUser(chatId, userId) {
 export default {
   command: ['clear'],
   category: 'grupo',
-  async run(sock, m, command, args) => {
+  async run(sock, m, command, args) {
     const chatData = await getChat(m.chat);
     if (!chatData) return m.reply('ꕥ No se encontraron datos del grupo');
 

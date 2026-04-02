@@ -19,7 +19,7 @@ const weightedRandom = (colors, weights) => {
 export default {
   command: ['rt', 'roulette', 'ruleta'],
   category: 'rpg',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const chatId = m.chat
     const senderId = m.sender
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'

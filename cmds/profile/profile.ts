@@ -4,7 +4,7 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['profile', 'perfil'],
   category: 'profile',
-  async run(sock, m) => {
+  async run(sock, m) {
     const texto = m.mentionedJid
     const who2 = texto.length > 0 ? texto[0] : m.quoted ? m.quoted.sender : m.sender
     const userId = await resolveLidToRealJid(who2, sock, m.chat);

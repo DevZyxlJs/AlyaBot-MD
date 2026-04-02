@@ -10,7 +10,7 @@ const msToTime = (duration) => {
 export default {
   command: ['slut'],
   category: 'rpg',
-    async run(sock, m, args, command, text, prefix) => {
+    async run(sock, m, args, command, text, prefix) {
     const chatId = m.chat
     const senderId = m.sender
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'

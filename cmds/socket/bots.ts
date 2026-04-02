@@ -8,7 +8,7 @@ const dirname = path.dirname(filename);
 export default {
   command: ['bots', 'sockets'],
   category: 'socket',
-  async run(sock, m) => {
+  async run(sock, m) {
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const bot = await getSettings(botId)
     const from = m.key.remoteJid

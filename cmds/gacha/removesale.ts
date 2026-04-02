@@ -1,7 +1,7 @@
 export default {
   command: ['removesale', 'removerventa'],
   category: 'gacha',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     try {
     const chatId = m.chat
     const userId = m.sender

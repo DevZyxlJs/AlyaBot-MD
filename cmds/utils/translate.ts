@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 export default {
   command: ['translate'],
   category: 'utils',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const quoted = m.quoted ? m.quoted : m
     const txt = args.slice(1).join(' ')
     const text = txt || quoted.text?.split(' ').join(' ')

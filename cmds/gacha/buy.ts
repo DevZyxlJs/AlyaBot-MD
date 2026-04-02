@@ -21,7 +21,7 @@ function formatDate(timestamp) {
 export default {
   command: ['claim', 'c'],
   category: 'gacha',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const chatId = m.chat
     const userId = m.sender
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'

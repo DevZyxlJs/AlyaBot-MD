@@ -47,7 +47,7 @@ function findSimilarCharacter(name, characters) {
 export default {
   command: ['charimage', 'wimage', 'cimage'],
   category: 'gacha',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const chatId = m.chat
     
     const chatConfig = await getChat(chatId)

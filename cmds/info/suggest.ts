@@ -1,7 +1,7 @@
 export default {
   command: ['report', 'reporte', 'sug', 'suggest'],
   category: 'info',
-  async run(sock, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) {
     const texto = args.join(' ').trim()
     const now = Date.now()
 

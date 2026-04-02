@@ -3,7 +3,7 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  async run(sock, m, args, command, text, usedPrefix) => {
+  async run(sock, m, args, command, text, usedPrefix) {
     const groupInfo = await sock.groupMetadata(m.chat);
     const ownerGroup = groupInfo.owner || m.chat.split('-')[0] + '@s.whatsapp.net';
     const ownerBot = global.owner + '@s.whatsapp.net';

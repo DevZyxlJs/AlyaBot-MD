@@ -30,7 +30,7 @@ async function removeBgFromUrl(url) {
 export default {
   command: ['removebg'],
   category: 'utils',
-  async run(sock, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) {
     const q = m.quoted || m
     const mime = (q.msg || q).mimetype || ''
     if (!mime.startsWith('image/')) {

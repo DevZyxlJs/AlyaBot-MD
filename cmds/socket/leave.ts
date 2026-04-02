@@ -1,7 +1,7 @@
 export default {
   command: ['leave'],
   category: 'socket',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const settings = await getSettings(botId)
     const owner = settings.owner

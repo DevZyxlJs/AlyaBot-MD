@@ -3,7 +3,7 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['count', 'mensajes', 'messages', 'msgcount'],
   category: 'rpg',
-  async run(sock, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) {
     const chatId = m.chat
     const chatData = await getChat(m.chat)
 

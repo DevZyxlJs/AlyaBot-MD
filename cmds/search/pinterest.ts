@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 export default {
   command: ['pinterest', 'pin'],
   category: 'search',
-  async run(sock, m, args, from) => {
+  async run(sock, m, args, from) {
     const text = args.join(' ')
     const isPinterestUrl = /^https?:\/\//.test(text)
 

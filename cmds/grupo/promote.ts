@@ -3,7 +3,7 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  async run(sock, m) => {
+  async run(sock, m) {
     const mentioned = await m.mentionedJid
     const who = mentioned.length > 0 ? mentioned[0] : m.quoted ? await m.quoted.sender : false
 

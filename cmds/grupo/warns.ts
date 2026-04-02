@@ -4,7 +4,7 @@ export default {
   command: ['warns'],
   category: 'group',
   isAdmin: true,
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const chat = await getChat(m.chat)
     const mentioned = m.mentionedJid
     const who2 =

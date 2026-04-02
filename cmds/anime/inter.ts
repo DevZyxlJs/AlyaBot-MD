@@ -276,7 +276,7 @@ export default {
     'peek',
   ],
   category: 'anime',
-  async run(sock, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) {
     const currentCommand = commandAliases[command] || command
     if (!captions[currentCommand]) return
 

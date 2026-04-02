@@ -1,7 +1,7 @@
 export default {
   command: ['delmeta', 'delstickermeta'],
   category: 'stickers',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     try {
       const userData = await getUser(m.sender);
       if ((!userData.metadatos || userData.metadatos === '') && (!userData.metadatos2 || userData.metadatos2 === '')) {

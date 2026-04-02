@@ -4,7 +4,7 @@ import {getBuffer} from '../../core/message.ts';
 export default {
   command: ['ytsearch', 'search'],
   category: 'internet',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     if (!args || !args[0]) {
       return m.reply(
         '✿ Ingrese el *título* de un *vídeo*.',

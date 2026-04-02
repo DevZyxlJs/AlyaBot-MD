@@ -29,7 +29,7 @@ async function uploadToCatbox(buffer, mime) {
 export default {
   command: ['seticon'],
   category: 'socket',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const idBot = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const config = await getSettings(idBot)
     const owner = config.owner ? config.owner : '' || ''

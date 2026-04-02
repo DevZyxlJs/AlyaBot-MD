@@ -3,7 +3,7 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  async run(sock, m) => {
+  async run(sock, m) {
     const q = m.quoted ? m.quoted : m
     const mime = (q.msg || q).mimetype || q.mediaType || ''
 

@@ -4,7 +4,7 @@ export default {
   command: ['delwarn'],
   category: 'group',
   isAdmin: true,
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const chat = await getChat(m.chat)
     const mentioned = m.mentionedJid || []
     const who2 = mentioned.length > 0 ? mentioned[0] : (m.quoted ? m.quoted.sender : false)

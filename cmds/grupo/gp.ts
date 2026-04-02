@@ -1,7 +1,7 @@
 export default {
   command: ['gp', 'groupinfo'],
   category: 'grupo',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const from = m.chat
     const groupMetadata = m.isGroup ? await sock.groupMetadata(from).catch(() => {}) : ''
     if (!groupMetadata) return m.reply("No se pudo obtener la información del grupo.")

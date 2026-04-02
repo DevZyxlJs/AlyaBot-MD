@@ -11,7 +11,7 @@ function getDefaultHostId() {
 export default {
   command: ['status'],
   category: 'info',
-  async run(sock, m) => {
+  async run(sock, m) {
 
     const users = await getUser()
     const hostId = getDefaultHostId()

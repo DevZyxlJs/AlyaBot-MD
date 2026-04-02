@@ -1,7 +1,7 @@
 export default {
   command: ['ppt'],
   category: 'rpg',
-  async run(sock, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) {
     const chatId = m.chat
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)

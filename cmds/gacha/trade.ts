@@ -5,7 +5,7 @@ const findCharacterByName = (name, characters) => {
 export default {
   command: ['trade', 'cambiar'],
   category: 'gacha',
-  async run(sock, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) {
     const chatId = m.chat
     const userId = m.sender
     

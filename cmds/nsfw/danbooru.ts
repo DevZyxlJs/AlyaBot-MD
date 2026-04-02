@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 export default {
   category: 'nsfw',
   command: ['danbooru', 'dbooru'],
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const chatId = m.chat
      const chat = await getChat(m.chat)
 

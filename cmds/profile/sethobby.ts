@@ -1,7 +1,7 @@
 export default {
   command: ['setpasatiempo', 'sethobby'],
   category: 'profile',
-    async run(sock, m, args, command, text, prefix) => {
+    async run(sock, m, args, command, text, prefix) {
     const user = await getUser(m.sender)
     const input = args.join(' ').trim()
 

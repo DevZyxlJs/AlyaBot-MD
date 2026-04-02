@@ -23,7 +23,7 @@ async function getGroupName(sock, chatId) {
 export default {
   command: ['invite', 'invitar'],
   category: 'info',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const grupo = m.isGroup ? await getGroupName(sock, m.chat) : 'Chat privado'
 
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'

@@ -30,7 +30,7 @@ function obtenerTiempoRestante(expira) {
 export default {
   command: ['haremshop', 'tiendawaifus', 'wshop'],
   category: 'gacha',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     try {
     const chatId = m.chat
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'

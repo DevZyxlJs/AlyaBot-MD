@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 export default {
   command: ['r34', 'r34vid', 'rule34', 'rule34vid', 'rule', 'rulevid'],
   category: 'nsfw',
-  async run(sock, m, args, command) => {
+  async run(sock, m, args, command) {
     try {
       const chatId = m.chat
      const chat = await getChat(m.chat)

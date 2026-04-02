@@ -12,7 +12,7 @@ async function loadCharacters() {
 export default {
   command: ['serieinfo', 'animeinfo', 'ainfo'],
   category: 'gacha',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const chatId = m.chat
     const chatData = await getChat(chatId)
 

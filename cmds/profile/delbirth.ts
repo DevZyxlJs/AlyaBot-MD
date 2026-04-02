@@ -1,7 +1,7 @@
 export default {
   command: ['delbirth'],
   category: 'profile',
-  async run(sock, m) => {
+  async run(sock, m) {
     const user = await getUser(m.sender)
     if (!user.birth) return m.reply(`ꕥ No tienes una fecha de nacimiento establecida.`)
 

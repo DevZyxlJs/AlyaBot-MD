@@ -3,7 +3,7 @@ import { getBuffer } from '../../core/message.ts'
 
 export default {
   command: ["xvideos"],
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
 
      const chat = await getChat(m.chat)
 

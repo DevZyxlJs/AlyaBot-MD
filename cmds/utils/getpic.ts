@@ -3,7 +3,7 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['pfp', 'getpic'],
   category: 'utils',
-  async run(sock, m) => {
+  async run(sock, m) {
     const mentioned = m.mentionedJid
     const who2 = mentioned.length > 0 ? mentioned[0] : m.quoted ? m.quoted.sender : false
     const who = await resolveLidToRealJid(who2, sock, m.chat);

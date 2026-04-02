@@ -1,7 +1,7 @@
 export default {
   command: ['delchar', 'delwaifu', 'deletechar'],
   category: 'gacha',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     const chatId = m.chat
     const userId = m.sender
 

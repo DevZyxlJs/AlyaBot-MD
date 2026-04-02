@@ -5,7 +5,7 @@ import {jidDecode} from '@whiskeysockets/baileys';
 export default {
   command: ['logout'],
   category: 'socket',
-    async run(sock, m, args, command, text, prefix) => {
+    async run(sock, m, args, command, text, prefix) {
     const rawId = sock.user?.id || ''
     const decoded = jidDecode(rawId)
     const cleanId = decoded?.user || rawId.split('@')[0]

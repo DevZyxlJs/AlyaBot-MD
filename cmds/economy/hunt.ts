@@ -1,7 +1,7 @@
 export default {
   command: ['cazar', 'hunt'],
   category: 'rpg',
-    async run(sock, m, args, command, text, prefix) => {
+    async run(sock, m, args, command, text, prefix) {
     const chat = await getChat(m.chat)
     const user = await getChatUser(m.chat, m.sender)
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'

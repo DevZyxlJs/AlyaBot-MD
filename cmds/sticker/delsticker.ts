@@ -1,7 +1,7 @@
 export default {
   command: ['stickerdel', 'delsticker'],
   category: 'stickers',
-  async run(sock, m, args) => {
+  async run(sock, m, args) {
     try {
       if (!args.length) {
         return m.reply('《✧》Especifica el nombre del paquete.')
