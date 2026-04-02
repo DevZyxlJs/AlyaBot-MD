@@ -8,7 +8,7 @@ import {
 } from '@whiskeysockets/baileys';
 import NodeCache from 'node-cache';
 import handler from '../../handler.ts';
-import events from '../../commands/events.ts';
+import events from '../../cmds/events.ts';
 import qrcode from "qrcode";
 import pino from 'pino';
 import fs from 'fs';
