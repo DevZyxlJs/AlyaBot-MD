@@ -17,8 +17,8 @@ import fs from "fs";
 import path from "path";
 import readlineSync from "readline-sync";
 import readline from "readline";
-import { smsg } from "./cloud/message.ts";
-import database from "./cloud/system/database.ts";
+import { smsg } from "./core/message.ts";
+import database from "./core/system/database.ts";
 import { startSubBot } from './cmds/socket/subbot.ts';
 import { exec, execSync } from "child_process";
 

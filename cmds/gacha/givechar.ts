@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs'
-import { resolveLidToRealJid } from "../../cloud/utils.ts"
+import { resolveLidToRealJid } from "../../core/utils.ts"
 
 function formatDate(timestamp) {
   const date = new Date(timestamp)
@@ -63,7 +63,7 @@ export default {
       return m.reply(`ꕥ No tienes el personaje *${characterName}* en tu inventario.`)
 
     try {
-      const characterDetails = JSON.parse(readFileSync('./cloud/characters.json', 'utf8'))
+      const characterDetails = JSON.parse(readFileSync('./core/characters.json', 'utf8'))
       const original = characterDetails.find((c) => c.name.toLowerCase() === characterName)
       
       if (!original)

@@ -1,4 +1,4 @@
-import { resolveLidToRealJid } from "../../cloud/utils.ts"
+import { resolveLidToRealJid } from "../../core/utils.ts"
 
 let proposals = {}
 

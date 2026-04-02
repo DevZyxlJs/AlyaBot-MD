@@ -26,7 +26,7 @@ const obtenerImagen = async (keyword) => {
 
 const obtenerPersonajes = () => {
   try {
-    const contenido = fs.readFileSync('./cloud/characters.json', 'utf-8')
+    const contenido = fs.readFileSync('./core/characters.json', 'utf-8')
     return JSON.parse(contenido)
   } catch (error) {
     console.error('[Error] characters.json:', error)

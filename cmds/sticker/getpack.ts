@@ -63,7 +63,7 @@ export default {
           const exif = Buffer.concat([exifAttr, jsonBuff]);
           exif.writeUIntLE(jsonBuff.length, 14, 4);
           img.exif = exif;
-          const tmpOut = `./cloud/system/tmp/pack-sticker-${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
+          const tmpOut = `./core/system/tmp/pack-sticker-${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
           await img.save(tmpOut);
           const stickerBuf = fs.readFileSync(tmpOut);
           fs.unlinkSync(tmpOut);

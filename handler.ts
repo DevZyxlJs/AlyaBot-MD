@@ -4,11 +4,11 @@ import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import gradient from 'gradient-string';
-import seeCommands from './cloud/system/commandLoader.ts';
+import seeCommands from './core/system/commandLoader.ts';
 import level from './cmds/level.ts';
 import antilink from './cmds/antilink.ts';
 import antistatus from './cmds/antistatus.ts';
-import { getGroupAdmins } from './cloud/message.ts';
+import { getGroupAdmins } from './core/message.ts';
 
 seeCommands()
 

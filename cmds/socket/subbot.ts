@@ -15,7 +15,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import chalk from 'chalk';
-import { smsg } from '../../cloud/message.ts';
+import { smsg } from '../../core/message.ts';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);

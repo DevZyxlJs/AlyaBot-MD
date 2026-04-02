@@ -1,5 +1,5 @@
 import yts from 'yt-search';
-import {getBuffer} from '../../cloud/message.ts';
+import {getBuffer} from '../../core/message.ts';
 
 export default {
   command: ['ytsearch', 'search'],

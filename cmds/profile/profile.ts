@@ -1,5 +1,5 @@
 import moment from 'moment-timezone';
-import { resolveLidToRealJid } from "../../cloud/utils.ts"
+import { resolveLidToRealJid } from "../../core/utils.ts"
 
 export default {
   command: ['profile', 'perfil'],

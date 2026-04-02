@@ -1,5 +1,5 @@
 import fetch from "node-fetch"
-import { getBuffer } from '../../cloud/message.ts'
+import { getBuffer } from '../../core/message.ts'
 
 export default {
   command: ["xnxx"],

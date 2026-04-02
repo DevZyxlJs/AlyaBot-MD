@@ -3,7 +3,7 @@ import fs from 'fs';
 import fetch from 'node-fetch';
 import axios from 'axios';
 import moment from 'moment-timezone';
-import { commands } from '../../cloud/system/comandos.ts';
+import { commands } from '../../core/system/comandos.ts';
 
 export default {
   command: ['allmenu', 'help', 'menu'],

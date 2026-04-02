@@ -23,7 +23,7 @@ const obtenerImagen = async (keyword) => {
   return null;
 };
 
-const charactersFilePath = './cloud/characters.json'
+const charactersFilePath = './core/characters.json'
 
 async function loadCharacters() {
   try {
