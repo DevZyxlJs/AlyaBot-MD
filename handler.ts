@@ -5,9 +5,9 @@ import fs from 'fs';
 import path from 'path';
 import gradient from 'gradient-string';
 import seeCommands from './lib/system/commandLoader.ts';
-import level from './commands/level.ts';
-import antilink from './commands/antilink.ts';
-import antistatus from './commands/antistatus.ts';
+import level from './cmds/level.ts';
+import antilink from './cmds/antilink.ts';
+import antistatus from './cmds/antistatus.ts';
 import { getGroupAdmins } from './lib/message.ts';
 
 seeCommands()
