@@ -3,7 +3,7 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['topcount', 'topmensajes', 'topmsgcount', 'topmessages'],
   category: 'rpg',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const chatId = m.chat
     const chatData = await getChat(m.chat)
     const chatDatas = await getChatUser(m.chat)
@@ -61,6 +61,6 @@ export default {
       report += `\n> Para ver la siguiente página › *${prefix + command} ${page + 1}*`
     }
 
-    await client.reply(chatId, report, m)
+    await sock.reply(chatId, report, m)
   }
 }

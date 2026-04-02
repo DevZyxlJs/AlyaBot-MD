@@ -1,8 +1,8 @@
 export default {
   command: ['leave'],
   category: 'socket',
-  run: async (client, m, args) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+  async run(sock, m, args) => {
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const settings = await getSettings(botId)
     const owner = settings.owner
     const isSocketOwner = [
@@ -16,7 +16,7 @@ export default {
     const groupId = args[0] || m.chat
 
     try {
-      await client.groupLeave(groupId)
+      await sock.groupLeave(groupId)
     } catch (e) {
       return m.reply(msgglobal)
     }

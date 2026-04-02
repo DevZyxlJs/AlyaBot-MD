@@ -3,7 +3,7 @@ import { getBuffer } from '../../core/message.ts'
 
 export default {
   command: ["xnxx"],
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
 
      const chat = await getChat(m.chat)
 
@@ -42,7 +42,7 @@ export default {
 𖣣ֶㅤ֯⌗ ✿  ׄ ⬭ *Duración ::* ${videoInfo.duration}
 𖣣ֶㅤ֯⌗ ✿  ׄ ⬭ *Ver en ::* ${videoInfo.url}`
 
-    await client.sendContextInfoIndex(m.chat, caption, {}, m, true, {})
+    await sock.sendContextInfoIndex(m.chat, caption, {}, m, true, {})
 
 }
 
@@ -59,7 +59,7 @@ export default {
 
       const videoDownloadLink = downloadJson.resultado.videos.low
 
-      await client.sendMessage(m.chat, {
+      await sock.sendMessage(m.chat, {
         video: { url: videoDownloadLink },
         mimetype: "video/mp4"
       }, { quoted: m })

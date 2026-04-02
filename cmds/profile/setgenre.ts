@@ -1,7 +1,7 @@
 export default {
   command: ['setgenre'],
   category: 'profile',
-    run: async (client, m, args, command, text, prefix) => {
+    async run(sock, m, args, command, text, prefix) => {
     const user = await getUser(m.sender)
     const input = args.join(' ').toLowerCase()
 

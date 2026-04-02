@@ -3,10 +3,10 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['balance', 'bal'],
   category: 'rpg',
-    run: async (client, m, args, command, text, prefix) => {
+    async run(sock, m, args, command, text, prefix) => {
     const chatId = m.chat
     const chatData = await getChat(m.chat)
-    const botId = client.user.id.split(':')[0] + "@s.whatsapp.net"
+    const botId = sock.user.id.split(':')[0] + "@s.whatsapp.net"
     const botSettings = await getSettings(botId)
     const monedas = botSettings.currency
 
@@ -15,7 +15,7 @@ export default {
 
     const mentioned = m.mentionedJid
     const who2 = mentioned.length > 0 ? mentioned[0] : (m.quoted ? m.quoted.sender : m.sender)
-    const who = await resolveLidToRealJid(who2, client, m.chat);
+    const who = await resolveLidToRealJid(who2, sock, m.chat);
 
     const user = await getChatUser(m.chat, who)
     const user2 = await getUser(who)
@@ -32,6 +32,6 @@ export default {
 
 > Para proteger tus *${monedas}*, depósitalas en el banco usando *${prefix}dep*`
 
-    await client.reply(m.chat, bal, m)
+    await sock.reply(m.chat, bal, m)
   }
 };

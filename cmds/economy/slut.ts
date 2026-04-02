@@ -10,10 +10,10 @@ const msToTime = (duration) => {
 export default {
   command: ['slut'],
   category: 'rpg',
-    run: async (client, m, args, command, text, prefix) => {
+    async run(sock, m, args, command, text, prefix) => {
     const chatId = m.chat
     const senderId = m.sender
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const chatData = await getChat(m.chat)
 
@@ -84,7 +84,7 @@ export default {
       }
     }
 
-   await client.reply(
+   await sock.reply(
       m.chat, `「✿」 ${message}`, m)
   }
 };

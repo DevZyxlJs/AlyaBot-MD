@@ -12,7 +12,7 @@ async function loadCharacters() {
 export default {
   command: ['slist', 'serielist', 'animelist'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const chatData = await getChat(chatId)
 
@@ -45,7 +45,7 @@ export default {
         paginatedSources.map(([source, count]) => `› *${source}* (${count})`).join('\n') +
         `\n\n> ⌦ Página *${page}* de *${totalPages}*`
 
-      await client.reply(chatId, message, m)
+      await sock.reply(chatId, message, m)
     } catch (error) {
       await m.reply(msgglobal)
     }

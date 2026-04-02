@@ -3,10 +3,10 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['steal', 'rob', 'robar'],
   category: 'rpg',
-  run: async (client, m) => {
+  async run(sock, m) => {
     try {
     const chatId = m.chat
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const monedas = botSettings.currency
     const chatData = await getChat(m.chat)
@@ -16,7 +16,7 @@ export default {
 
     const mentioned = m.mentionedJid || []
     const who2 = mentioned[0] || (m.quoted ? m.quoted.sender : null)
-    const target = await resolveLidToRealJid(who2, client, m.chat);
+    const target = await resolveLidToRealJid(who2, sock, m.chat);
 
     if (!who2 || target === m.sender)
       return m.reply(`《✤》 Debes mencionar a quien quieras robarle *${monedas}*.`)
@@ -53,7 +53,7 @@ export default {
    await updateChatUser(m.chat, m.sender, 'coins', senderData.coins)
    await updateChatUser(m.chat, target, 'coins', targetData.coins)
 
-await client.reply(
+await sock.reply(
   chatId,
   `✐ Le robaste *¥${cantidadRobada.toLocaleString()} ${monedas}* a *${na.name || target.split('@')[0]}*.`,
   m,

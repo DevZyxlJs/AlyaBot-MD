@@ -14,7 +14,7 @@ function normalizeToJid(phone) {
   return base ? `${base}@s.whatsapp.net` : null
 }
 
-export async function resolveLidToRealJid(lid, client, groupChatId) {
+export async function resolveLidToRealJid(lid, sock, groupChatId) {
   const input = lid?.toString().trim()
   if (!input || !groupChatId?.endsWith('@g.us')) return input
 
@@ -27,7 +27,7 @@ export async function resolveLidToRealJid(lid, client, groupChatId) {
 
   if (!metadata) {
     try {
-      metadata = await client.groupMetadata(groupChatId)
+      metadata = await sock.groupMetadata(groupChatId)
       groupMetadataCache.set(groupChatId, { metadata, timestamp: Date.now() })
     } catch {
       return lidCache.set(input, input), input

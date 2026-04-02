@@ -276,7 +276,7 @@ export default {
     'peek',
   ],
   category: 'anime',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const currentCommand = commandAliases[command] || command
     if (!captions[currentCommand]) return
 
@@ -308,7 +308,7 @@ export default {
       const json = await response.json()
       const { result } = json
 
-      await client.sendMessage(
+      await sock.sendMessage(
         m.chat,
         {
           video: { url: result },

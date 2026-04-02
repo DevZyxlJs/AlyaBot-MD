@@ -5,7 +5,7 @@ const findCharacterByName = (name, characters) => {
 export default {
   command: ['trade', 'cambiar'],
   category: 'gacha',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const chatId = m.chat
     const userId = m.sender
     
@@ -82,7 +82,7 @@ export default {
 
 ${dev}`
 
-      await client.reply(
+      await sock.reply(
         chatId,
         solicitudMessage,
         m,

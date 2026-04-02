@@ -183,24 +183,24 @@ async function startBot() {
     maxIdleTimeMs: 60000,
   })
 
-  global.client = clientt;
-  client.isInit = false
-  client.ev.on("creds.update", saveCreds)
+  global.sock = clientt;
+  sock.isInit = false
+  sock.ev.on("creds.update", saveCreds)
 
 if (usarCodigo && !state.creds.registered) {
 setTimeout(async () => {
 try {
-const pairing = await client.requestPairingCode(numero);
+const pairing = await sock.requestPairingCode(numero);
 const codeBot = pairing?.match(/.{1,4}/g)?.join("-") || pairing
 return console.log(chalk.bold.white(chalk.bgMagenta(`[  ✿  ]  CÓDIGO DE VINCULACIÓN:`)), chalk.bold.white(chalk.white(codeBot)));
 } catch {}
 }, 3000);
 }
 
-  client.sendText = (jid, text, quoted = "", options) =>
-    client.sendMessage(jid, { text: text, ...options }, { quoted })
+  sock.sendText = (jid, text, quoted = "", options) =>
+    sock.sendMessage(jid, { text: text, ...options }, { quoted })
 
-  client.ev.on("connection.update", async (update) => {
+  sock.ev.on("connection.update", async (update) => {
      const { qr, connection, lastDisconnect, isNewLogin, receivedPendingNotifications, } = update
 
     if (qr && !usarCodigo) {
@@ -239,12 +239,12 @@ return console.log(chalk.bold.white(chalk.bgMagenta(`[  ✿  ]  CÓDIGO DE VINCU
         exec("rm -rf ./Sessions/Owner/*")
         process.exit(0)
       } else {
-        client.end(`Motivo de desconexión desconocido : ${reason}|${connection}`)
+        sock.end(`Motivo de desconexión desconocido : ${reason}|${connection}`)
       }
     }
 
     if (connection == "open") {
-     const userName = client.user.name || "Desconocido"
+     const userName = sock.user.name || "Desconocido"
          console.log(chalk.green.bold(`[ ✿ ]  Conectado a: ${userName}`))
     }
 
@@ -253,12 +253,12 @@ return console.log(chalk.bold.white(chalk.bgMagenta(`[  ✿  ]  CÓDIGO DE VINCU
     }
     if (receivedPendingNotifications == "true") {
       log.warn("Por favor espere aproximadamente 1 minuto...")
-      client.ev.flush()
+      sock.ev.flush()
     }
 })
 
   let m
-  client.ev.on("messages.upsert", async ({ messages }) => {
+  sock.ev.on("messages.upsert", async ({ messages }) => {
     try {
       m = messages[0]
       if (!m.message) return
@@ -267,22 +267,22 @@ return console.log(chalk.bold.white(chalk.bgMagenta(`[  ✿  ]  CÓDIGO DE VINCU
           ? m.message.ephemeralMessage.message
           : m.message
       if (m.key && m.key.remoteJid === "status@broadcast") return
-      if (!client.public && !m.key.fromMe && messages.type === "notify") return
+      if (!sock.public && !m.key.fromMe && messages.type === "notify") return
       if (m.key.id.startsWith("BAE5") && m.key.id.length === 16) return
-      m = await smsg(client, m)
-      handler(client, m, messages)
+      m = await smsg(sock, m)
+      handler(sock, m, messages)
     } catch (err) {
      // console.log(err)
     }
   })
 
   try {
-  await events(client, m)
+  await events(sock, m)
   } catch (err) {
    console.log(chalk.gray(`[ BOT  ]  → ${err}`))
   }
 
-  client.decodeJid = (jid) => {
+  sock.decodeJid = (jid) => {
     if (!jid) return jid
     if (/:\d+@/gi.test(jid)) {
       let decode = jidDecode(jid) || {}

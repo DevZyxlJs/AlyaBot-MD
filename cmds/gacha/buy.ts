@@ -21,10 +21,10 @@ function formatDate(timestamp) {
 export default {
   command: ['claim', 'c'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const userId = m.sender
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const chatConfig = await getChat(chatId)
     const botSettings = await getSettings(botId)
     const monedas = botSettings.currency
@@ -139,6 +139,6 @@ export default {
     ]
 
     const final = frases[Math.floor(Math.random() * frases.length)]
-    await client.reply(chatId, `✐ ${final} _(${duration}s)_`, m)
+    await sock.reply(chatId, `✐ ${final} _(${duration}s)_`, m)
   },
 }

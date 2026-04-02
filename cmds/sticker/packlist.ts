@@ -1,7 +1,7 @@
 export default {
   command: ['packlist', 'stickerpacks'],
   category: 'stickers',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
       const stickerPackData = await getStickersPack(m.sender)
       const packs = stickerPackData.packs || []
@@ -22,7 +22,7 @@ export default {
         text += `> » Modificado: \`${formatDate(pack.lastModified || pack.id)}\`\n`
         text += `> » Estado: \`${estado}\`\n\n`
       })
-      await client.sendMessage(m.chat, { text, mentions: [m.sender] }, { quoted: m })
+      await sock.sendMessage(m.chat, { text, mentions: [m.sender] }, { quoted: m })
     } catch (e) {
       m.reply(msgglobal)
     }

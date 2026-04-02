@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 export default {
   command: ['translate'],
   category: 'utils',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const quoted = m.quoted ? m.quoted : m
     const txt = args.slice(1).join(' ')
     const text = txt || quoted.text?.split(' ').join(' ')
@@ -22,7 +22,7 @@ export default {
 
       if (!json?.data) return m.reply('🌽 No se pudo traducir el texto.')
 
-      await client.sendMessage(m.chat, { text: json.data }, { quoted: m })
+      await sock.sendMessage(m.chat, { text: json.data }, { quoted: m })
     } catch {
       await m.reply(msgglobal)
     }

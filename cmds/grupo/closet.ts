@@ -12,10 +12,10 @@ function parseTime(str) {
   }
 }
 
-async function ejecutarAccion(client, chatId, action) {
+async function ejecutarAccion(sock, chatId, action) {
   if (action === 'open') {
-    await client.groupSettingUpdate(chatId, 'not_announcement')
-    await client.reply(chatId, `✎ El grupo ha sido abierto automáticamente.`)
+    await sock.groupSettingUpdate(chatId, 'not_announcement')
+    await sock.reply(chatId, `✎ El grupo ha sido abierto automáticamente.`)
   }
   const chat = await getChat(chatId)
   let acciones = typeof chat.scheduledActions === 'string'
@@ -25,7 +25,7 @@ async function ejecutarAccion(client, chatId, action) {
   await updateChat(chatId, 'scheduledActions', acciones)
 }
 
-async function scheduleGroupAction(chatId, action, ms, client) {
+async function scheduleGroupAction(chatId, action, ms, sock) {
   const expiresAt = Date.now() + ms
   const task = { action, expiresAt }
   const chat = await getChat(chatId)
@@ -34,7 +34,7 @@ async function scheduleGroupAction(chatId, action, ms, client) {
     : chat.scheduledActions || []
   tasks.push(task)
   await updateChat(chatId, 'scheduledActions', tasks)
-  setTimeout(() => ejecutarAccion(client, chatId, action), ms)
+  setTimeout(() => ejecutarAccion(sock, chatId, action), ms)
 }
 
 export default {
@@ -42,21 +42,21 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  run: async (client, m, args) => {
-    const groupMetadata = await client.groupMetadata(m.chat)
+  async run(sock, m, args) => {
+    const groupMetadata = await sock.groupMetadata(m.chat)
     const groupAnnouncement = groupMetadata.announce
     if (!args.length) {
       await updateChat(m.chat, 'scheduledActions', [])
       if (groupAnnouncement === true) {
-        return client.reply(m.chat, `《✤》 El grupo ya está cerrado.`, m)
+        return sock.reply(m.chat, `《✤》 El grupo ya está cerrado.`, m)
       }
-      await client.groupSettingUpdate(m.chat, 'announcement')
-      return client.reply(m.chat, `✎ El grupo ha sido cerrado correctamente.`, m)
+      await sock.groupSettingUpdate(m.chat, 'announcement')
+      return sock.reply(m.chat, `✎ El grupo ha sido cerrado correctamente.`, m)
     }
     const ms = parseTime(args[0])
-    if (!ms) return client.reply(m.chat, `✎ Formato inválido. Usa ej: 1min, 6h, 2d, 1mes`, m)
-    await client.groupSettingUpdate(m.chat, 'announcement')
-    await client.reply(m.chat, `✎ El grupo estará cerrado por ${args[0]}.`, m)
-    await scheduleGroupAction(m.chat, 'open', ms, client)
+    if (!ms) return sock.reply(m.chat, `✎ Formato inválido. Usa ej: 1min, 6h, 2d, 1mes`, m)
+    await sock.groupSettingUpdate(m.chat, 'announcement')
+    await sock.reply(m.chat, `✎ El grupo estará cerrado por ${args[0]}.`, m)
+    await scheduleGroupAction(m.chat, 'open', ms, sock)
   }
 }

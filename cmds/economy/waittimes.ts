@@ -1,9 +1,9 @@
 export default {
   command: ['waittimes', 'cooldowns', 'economyinfo', 'einfo'],
   category: 'rpg',
-  run: async (client, m) => {
+  async run(sock, m) => {
     const chatId = m.chat
-    const botId = client.user.id.split(':')[0] + "@s.whatsapp.net"
+    const botId = sock.user.id.split(':')[0] + "@s.whatsapp.net"
     const botSettings = await getSettings(botId)
 
     const chatData = await getChat(m.chat)

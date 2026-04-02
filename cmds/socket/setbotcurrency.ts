@@ -1,8 +1,8 @@
 export default {
   command: ['setbotcurrency'],
   category: 'socket',
-  run: async (client, m, args, command, text, prefix) => {
-    const idBot = client.user.id.split(':')[0] + '@s.whatsapp.net'
+  async run(sock, m, args, command, text, prefix) => {
+    const idBot = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const config = await getSettings(idBot)
     const owner = config.owner ? config.owner : '' || ''
     const isOwner2 = [idBot, ...global.owner.map((number) => number + '@s.whatsapp.net')].includes(m.sender)

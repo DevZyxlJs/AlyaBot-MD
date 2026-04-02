@@ -3,13 +3,13 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['count', 'mensajes', 'messages', 'msgcount'],
   category: 'rpg',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const chatId = m.chat
     const chatData = await getChat(m.chat)
 
     const mentioned = m.mentionedJid
     const who2 = mentioned.length > 0 ? mentioned[0] : (m.quoted ? m.quoted.sender : m.sender)
-    const who = await resolveLidToRealJid(who2, client, m.chat)
+    const who = await resolveLidToRealJid(who2, sock, m.chat)
 
    const user = await getChatUser(m.chat, who)
     if (!user)
@@ -40,7 +40,7 @@ export default {
       report += `\t» Mensajes: \`${d.msgs || 0}\`, Comandos: \`${d.cmds || 0}\`\n`
     }
 
-await client.reply(
+await sock.reply(
   chatId,
   report,
   m,

@@ -2,7 +2,7 @@ export default {
   command: ['setbye'],
   category: 'grupo',
   isAdmin: true,
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const chatId = m.chat;
     const chat = await getChat(m.chat)
 

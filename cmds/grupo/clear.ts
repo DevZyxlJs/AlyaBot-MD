@@ -41,11 +41,11 @@ async function deleteChatUser(chatId, userId) {
 export default {
   command: ['clear'],
   category: 'grupo',
-  run: async (client, m, command, args) => {
+  async run(sock, m, command, args) => {
     const chatData = await getChat(m.chat);
     if (!chatData) return m.reply('ꕥ No se encontraron datos del grupo');
 
-    const metadata = await client.groupMetadata(m.chat);
+    const metadata = await sock.groupMetadata(m.chat);
     const isAdmin = m.isGroup && metadata.participants.find(p => p.id === m.sender)?.admin;
     const text = m.text.toLowerCase();
     const isDeleteMode = text.includes('delete');
@@ -173,7 +173,7 @@ export default {
         clearCache('chatuser', m.chat);
       }
 
-      await client.reply(m.chat, details, m);
+      await sock.reply(m.chat, details, m);
     } catch (e) {
     //  console.error('Error en comando clear:', e);
       m.reply(msgglobal + e);

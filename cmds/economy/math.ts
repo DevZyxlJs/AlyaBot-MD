@@ -43,7 +43,7 @@ const generarProblema = (dificultad) => {
   }
 }
 
-async function run(client, m, args, command, text, prefix) {
+async function run(sock, m, args, command, text, prefix) {
   const chatId = m.chat
   const db = await getChat(m.chat)
   const user = await getUser(m.sender)
@@ -61,11 +61,11 @@ async function run(client, m, args, command, text, prefix) {
 
     const respuestaUsuario = args[0]
     if (!respuestaUsuario) {
-      return client.reply(chatId, `《✤》 Debes escribir tu respuesta.`, m)
+      return sock.reply(chatId, `《✤》 Debes escribir tu respuesta.`, m)
     }
 
     const respuestaCorrecta = juego.respuesta
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const primaryBotId = db.primaryBot
 
     if (!primaryBotId || primaryBotId === botId) {
@@ -75,16 +75,16 @@ async function run(client, m, args, command, text, prefix) {
         await updateUser(m.sender, 'exp', user.exp)
         clearTimeout(juego.tiempoLimite)
         delete global.math[chatId]
-        return client.reply(chatId, `✎ Respuesta correcta.\n> *Ganaste ›* ${expaleatorio} Exp`, m)
+        return sock.reply(chatId, `✎ Respuesta correcta.\n> *Ganaste ›* ${expaleatorio} Exp`, m)
       } else {
         juego.intentos += 1
         if (juego.intentos >= 3) {
           clearTimeout(juego.tiempoLimite)
           delete global.math[chatId]
-          return client.reply(chatId, '《✤》 Te quedaste sin intentos. Suerte a la próxima.', m)
+          return sock.reply(chatId, '《✤》 Te quedaste sin intentos. Suerte a la próxima.', m)
         } else {
           const intentosRestantes = 3 - juego.intentos
-          return client.reply(chatId, `《✤》 Respuesta incorrecta, te quedan ${intentosRestantes} intentos.`, m)
+          return sock.reply(chatId, `《✤》 Respuesta incorrecta, te quedan ${intentosRestantes} intentos.`, m)
         }
       }
     }
@@ -93,16 +93,16 @@ async function run(client, m, args, command, text, prefix) {
 
   if (command === 'math') {
     if (juego?.juegoActivo) {
-      return client.reply(chatId, '✿ Ya hay un juego activo. Espera a que termine.', m)
+      return sock.reply(chatId, '✿ Ya hay un juego activo. Espera a que termine.', m)
     }
 
     const dificultad = args[0]?.toLowerCase()
     if (!limits[dificultad]) {
-      return client.reply(chatId, '❀ Especifica una dificultad válida: *facil, medio, dificil, imposible, imposible2*', m)
+      return sock.reply(chatId, '❀ Especifica una dificultad válida: *facil, medio, dificil, imposible, imposible2*', m)
     }
 
     const { problema, resultado } = generarProblema(dificultad)
-    const problemMessage = await client.reply(chatId, `「✎」 Tienes 1 minuto para resolver:\n\n> ❖ *${problema}*\n\n_✿ Usa » *${prefix}responder* para responder!_`, m)
+    const problemMessage = await sock.reply(chatId, `「✎」 Tienes 1 minuto para resolver:\n\n> ❖ *${problema}*\n\n_✿ Usa » *${prefix}responder* para responder!_`, m)
 
     global.math[chatId] = {
       juegoActivo: true,
@@ -114,7 +114,7 @@ async function run(client, m, args, command, text, prefix) {
       tiempoLimite: setTimeout(() => {
         if (global.math[chatId]?.juegoActivo) {
           delete global.math[chatId]
-          client.reply(chatId, '《✤》 Tiempo agotado. El juego ha terminado.', m)
+          sock.reply(chatId, '《✤》 Tiempo agotado. El juego ha terminado.', m)
         }
       }, 60000)
     }

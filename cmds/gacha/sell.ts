@@ -1,10 +1,10 @@
 export default {
   command: ['sell', 'vender'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const userId = m.sender
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
 
     const botSettings = await getSettings(botId)
     const currency = botSettings.currency
@@ -65,7 +65,7 @@ export default {
 
 ${dev}`
 
-      await client.reply(chatId, mensaje, m, { mentions: [userId] })
+      await sock.reply(chatId, mensaje, m, { mentions: [userId] })
     } catch (e) {
       console.error(e)
       await m.reply(msgglobal)

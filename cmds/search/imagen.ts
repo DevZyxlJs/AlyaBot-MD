@@ -3,10 +3,10 @@ import fetch from 'node-fetch';
 export default {
   command: ['imagen', 'img', 'image'],
   category: 'search',
-  run: async (client, m, args, from) => {
+  async run(sock, m, args, from) => {
     const text = args.join(' ')
     if (!text) {
-      return client.reply(
+      return sock.reply(
         m.chat,
         `✿ Ingresa un término de búsqueda.`,
         m,
@@ -63,7 +63,7 @@ const bannedWords = [
 
       const buffer = await res.buffer()
 
-      await client.sendMessage(m.chat, { image: buffer }, { quoted: m })
+      await sock.sendMessage(m.chat, { image: buffer }, { quoted: m })
     } catch (e) {
      // console.error(e)
       await m.reply(msgglobal)

@@ -1,7 +1,7 @@
 export default {
   command: ['delpack'],
   category: 'stickers',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
       if (!args.length) {
         return m.reply('《✧》Especifica el nombre del paquete de stickers.')

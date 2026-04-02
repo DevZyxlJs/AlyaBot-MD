@@ -1,9 +1,9 @@
 export default {
   command: ['economyboard', 'eboard', 'baltop'],
   category: 'rpg',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const chatId = m.chat
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const monedas = botSettings.currency
 

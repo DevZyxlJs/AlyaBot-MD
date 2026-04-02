@@ -3,9 +3,9 @@ import { delay } from "@whiskeysockets/baileys"
 export default {
   command: ['slot'],
   category: 'rpg',
-      run: async (client, m, args, command, text, prefix) => {
+      async run(sock, m, args, command, text, prefix) => {
     const chat = await getChat(m.chat)
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const bot = await getSettings(botId)
     const currency = bot.currency
     const user = await getChatUser(m.chat, m.sender)
@@ -14,7 +14,7 @@ export default {
 
     const remainingTime = user.lastslot - Date.now()
     if (remainingTime > 0) {
-      return client.reply(m.chat, `ꕥ Debes esperar *${formatTime(remainingTime)}* antes de volver a jugar.`, m)
+      return sock.reply(m.chat, `ꕥ Debes esperar *${formatTime(remainingTime)}* antes de volver a jugar.`, m)
     }
 
    // user.lastslot ||= 0
@@ -32,7 +32,7 @@ export default {
       return { x, y, z }
     }
     const initialText = 'ꕤ | *SLOTS* \n────────\n'
-    let { key } = await client.sendMessage(m.chat, { text: initialText }, { quoted: m })
+    let { key } = await sock.sendMessage(m.chat, { text: initialText }, { quoted: m })
     const animateSlots = async () => {
       for (let i = 0; i < 5; i++) {
         const { x, y, z } = getRandomEmojis()
@@ -42,7 +42,7 @@ ${x[0]} : ${y[0]} : ${z[0]}
 ${x[1]} : ${y[1]} : ${z[1]}
 ${x[2]} : ${y[2]} : ${z[2]}
 ────────`
-        await client.sendMessage(m.chat, { text: animationText, edit: key }, { quoted: m })
+        await sock.sendMessage(m.chat, { text: animationText, edit: key }, { quoted: m })
         await delay(300)
       }
     }
@@ -72,7 +72,7 @@ ${x[1]} : ${y[1]} : ${z[1]}
 ${x[2]} : ${y[2]} : ${z[2]}
 ────────
 ${resultado}`
-    await client.sendMessage(m.chat, { text: finalText, edit: key }, { quoted: m })
+    await sock.sendMessage(m.chat, { text: finalText, edit: key }, { quoted: m })
   }
 }
 

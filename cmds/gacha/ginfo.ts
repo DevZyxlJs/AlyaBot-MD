@@ -1,7 +1,7 @@
 export default {
   command: ['gachainfo', 'ginfo', 'infogacha'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const userId = m.sender
     
@@ -53,6 +53,6 @@ export default {
 ׅ  ׄ  ❀   ׅ り Personajes reclamados » *${personajes.length}*
 ׅ  ׄ  ⛁   ׅ り Valor total » *${valorTotal.toLocaleString()}*`
 
-    await client.sendContextInfoIndex(m.chat, mensaje, {}, m, true, {})
+    await sock.sendContextInfoIndex(m.chat, mensaje, {}, m, true, {})
   }
 }

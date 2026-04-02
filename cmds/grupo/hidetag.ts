@@ -2,15 +2,15 @@ export default {
   command: ['hidetag', 'tag'],
   category: 'grupo',
   isAdmin: true,
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const text = args.join(' ')
-    const groupMetadata = m.isGroup ? await client.groupMetadata(m.chat).catch(() => null) : null
+    const groupMetadata = m.isGroup ? await sock.groupMetadata(m.chat).catch(() => null) : null
     const groupParticipants = groupMetadata?.participants || []
 
     const mentions = groupParticipants
       .map(p => p.jid || p.id || p.lid || p.phoneNumber)
       .filter(Boolean)
-      .map(id => client.decodeJid(id))
+      .map(id => sock.decodeJid(id))
 
     if (!m.quoted && !text) {
       return m.reply(`《✤》 Ingresa un texto o responde a uno`)
@@ -45,7 +45,7 @@ try {
     const options = { quoted: null, mentions }
 
     if (/image/.test(mime)) {
-      return client.sendMessage(
+      return sock.sendMessage(
         m.chat,
         hasText
           ? { image: media, caption: text, ...options }
@@ -54,7 +54,7 @@ try {
     }
 
     if (/video/.test(mime)) {
-      return client.sendMessage(
+      return sock.sendMessage(
         m.chat,
         hasText
           ? { video: media, mimetype: 'video/mp4', caption: text, ...options }
@@ -63,14 +63,14 @@ try {
     }
 
     if (/audio/.test(mime)) {
-      return client.sendMessage(
+      return sock.sendMessage(
         m.chat,
         { audio: media, mimetype: 'audio/mp4', fileName: 'hidetag.mp3', ...options }
       )
     }
 
     if (/sticker/.test(mime)) {
-      return client.sendMessage(
+      return sock.sendMessage(
         m.chat,
         { sticker: media, ...options }
       )
@@ -80,7 +80,7 @@ try {
     return m.reply('《✤》 Ingresa un texto o responde a un mensaje.')
   }
 
-  return client.sendMessage(
+  return sock.sendMessage(
     m.chat,
     { text: finalText, mentions },
     { quoted: null }

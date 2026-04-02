@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 export default {
   command: ['sp', 'spotify'],
   category: 'downloader',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
       if (!args[0]) {
         return m.reply('✎ Por favor, menciona el nombre o URL de la canción que deseas descargar de Spotify')
@@ -44,7 +44,7 @@ export default {
 
       let yi = songInfo.image || songInfo.cover
 
-      await client.sendMessage(m.chat, { image: { url: yi }, caption }, { quoted: m })
+      await sock.sendMessage(m.chat, { image: { url: yi }, caption }, { quoted: m })
 
       const resAudio = await fetch(`${api.url}/dl/spotify?url=${encodeURIComponent(url)}&key=${api.key}`)
       const resultAudio = await resAudio.json()
@@ -64,7 +64,7 @@ export default {
         fileName: `${songInfo.name}.mp3`
       }
 
-      await client.sendMessage(m.chat, mensaje, { quoted: m })
+      await sock.sendMessage(m.chat, mensaje, { quoted: m })
 
     } catch (e) {
       await m.reply(msgglobal)

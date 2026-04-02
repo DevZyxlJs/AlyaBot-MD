@@ -4,7 +4,7 @@ export default {
   command: ['warn'],
   category: 'group',
   isAdmin: true,
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chat = await getChat(m.chat)
     const mentioned = m.mentionedJid
     const who2 = mentioned.length > 0
@@ -12,7 +12,7 @@ export default {
       : m.quoted
       ? m.quoted.sender
       : false
-    const targetId = await resolveLidToRealJid(who2, client, m.chat);
+    const targetId = await resolveLidToRealJid(who2, sock, m.chat);
 
     const reason = mentioned.length > 0
       ? args.slice(1).join(' ') || 'Sin razón.'
@@ -61,7 +61,7 @@ export default {
 
       if (total >= warnLimit && expulsar) {
         try {
-          await client.groupParticipantsUpdate(m.chat, [targetId], 'remove')
+          await sock.groupParticipantsUpdate(m.chat, [targetId], 'remove')
           
           const deleted = deletedb('user', targetId)
           const deletedChat = deletedb('chatuser', m.chat, targetId)
@@ -78,7 +78,7 @@ export default {
         message += `\n\n> ❖ El usuario ha alcanzado el límite de advertencias.`
       }
 
-      await client.reply(m.chat, message, m, { mentions: [targetId] })
+      await sock.reply(m.chat, message, m, { mentions: [targetId] })
     } catch (e) {
       console.error(e)
       m.reply(msgglobal + e)

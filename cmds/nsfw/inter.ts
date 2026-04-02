@@ -67,7 +67,7 @@ export default {
     'tijeras','footjob','cummouth','cumshot','handjob','lickass','lickdick'
   ],
   category: 'nsfw',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const chat = await getChat(m.chat);
     if (!chat.nsfw) return m.reply(mess.nsfw);
 
@@ -97,7 +97,7 @@ export default {
       const json = await response.json();
       const { result } = json;
 
-      await client.sendMessage(
+      await sock.sendMessage(
         m.chat,
         {
           video: { url: result },

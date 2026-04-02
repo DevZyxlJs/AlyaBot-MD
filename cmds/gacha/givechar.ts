@@ -24,7 +24,7 @@ function formatDate(timestamp) {
 export default {
   command: ['givechar', 'givewaifu', 'regalar'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const senderId = m.sender
     
@@ -39,7 +39,7 @@ export default {
     if (!who2) 
       return m.reply('《✤》 Menciona al usuario o responde a su mensaje junto con el nombre del personaje.')
     
-    const mentionedJid = await resolveLidToRealJid(who2, client, m.chat)
+    const mentionedJid = await resolveLidToRealJid(who2, sock, m.chat)
 
     if (mentionedJid === senderId)
       return m.reply('✐ No puedes regalarte un personaje a ti mismo.')
@@ -96,7 +96,7 @@ export default {
 
       const message = `✐ *${reservedCharacter.name}* ha sido regalado a *@${mentionedJid.split('@')[0]}*.`
 
-      await client.reply(chatId, message, m, { mentions: [mentionedJid] })
+      await sock.reply(chatId, message, m, { mentions: [mentionedJid] })
       
     } catch (e) {
       console.error(e)

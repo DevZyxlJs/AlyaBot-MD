@@ -1,9 +1,9 @@
 export default {
   command: ['gp', 'groupinfo'],
   category: 'grupo',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const from = m.chat
-    const groupMetadata = m.isGroup ? await client.groupMetadata(from).catch(() => {}) : ''
+    const groupMetadata = m.isGroup ? await sock.groupMetadata(from).catch(() => {}) : ''
     if (!groupMetadata) return m.reply("No se pudo obtener la información del grupo.")
 
     const groupName = groupMetadata.subject
@@ -13,7 +13,7 @@ export default {
     const chat = await getChat(m.chat)
     const chatUsers = await getChatUser(m.chat)
 
-    const botId = client.user.id.split(':')[0] + "@s.whatsapp.net"
+    const botId = sock.user.id.split(':')[0] + "@s.whatsapp.net"
     const botSettings = await getSettings(botId)
 
     const botname = botSettings.namebot2
@@ -78,7 +78,7 @@ export default {
       const mentionOw = groupMetadata.owner ? groupMetadata.owner : ''
       const mentions = [rawPrimary, mentionOw].filter(Boolean)
 
-      await client.reply(m.chat, message.trim(), m, { mentions })
+      await sock.reply(m.chat, message.trim(), m, { mentions })
     } catch (e) {
       await m.reply(msgglobal)
     }

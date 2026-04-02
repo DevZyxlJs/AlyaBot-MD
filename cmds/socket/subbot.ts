@@ -31,7 +31,7 @@ const cleanJid = (jid = '') => jid.replace(/:\d+/, '').split('@')[0];
 
 export async function startSubBot(
   m,
-  client,
+  sock,
   caption = '',
   isCode = false,
   phone = '',
@@ -68,7 +68,7 @@ export async function startSubBot(
   sock.commandTriggered = isCommand;
   sock.triggerSender = senderId;
   sock.triggerChatId = chatId;
-  sock.triggerClient = client;
+  sock.triggerClient = sock;
   sock.triggerIsCode = isCode;
   sock.sessionFolder = sessionFolder;
   
@@ -109,7 +109,7 @@ export async function startSubBot(
 
       if (sock.commandTriggered && !hasSentMessage && sock.triggerClient && sock.triggerChatId) {
 
-       await client.sendMessage(m.chat, { text: `✎ Has conectado un nuevo Socket de tipo *Gratuito*.` }, { quoted: m })
+       await sock.sendMessage(m.chat, { text: `✎ Has conectado un nuevo Socket de tipo *Gratuito*.` }, { quoted: m })
 
         fs.writeFileSync(sentFlagFile, '1'); 
         sock.commandTriggered = false;
@@ -134,7 +134,7 @@ export async function startSubBot(
             ),
           );
           setTimeout(() => {
-            startSubBot(m, client, caption, isCode, phone, chatId, isCommand);
+            startSubBot(m, sock, caption, isCode, phone, chatId, isCommand);
           }, 3000);
         } else {
           console.log(
@@ -159,17 +159,17 @@ export async function startSubBot(
         ].includes(reason)
       ) {
         setTimeout(() => {
-          startSubBot(m, client, caption, isCode, phone, chatId, isCommand);
+          startSubBot(m, sock, caption, isCode, phone, chatId, isCommand);
         }, 3000);
         return;
       }
 
       setTimeout(() => {
-        startSubBot(m, client, caption, isCode, phone, chatId, isCommand);
+        startSubBot(m, sock, caption, isCode, phone, chatId, isCommand);
       }, 3000);
     }
 
-    if (qr && isCode && phone && client && chatId && commandFlags[senderId]) {
+    if (qr && isCode && phone && sock && chatId && commandFlags[senderId]) {
       try {
         let codeGen = await sock.requestPairingCode(phone);
         codeGen = codeGen.match(/.{1,4}/g)?.join("-") || codeGen;
@@ -178,8 +178,8 @@ export async function startSubBot(
         delete commandFlags[senderId];
         setTimeout(async () => {
           try {
-            await client.sendMessage(chatId, { delete: msg.key });
-            await client.sendMessage(chatId, { delete: msgCode.key });
+            await sock.sendMessage(chatId, { delete: msg.key });
+            await sock.sendMessage(chatId, { delete: msgCode.key });
           } catch {}
         }, 60000);
       } catch (err) {
@@ -187,13 +187,13 @@ export async function startSubBot(
       }
     }
     
-    if (qr && !isCode && client && chatId && commandFlags[senderId]) {
+    if (qr && !isCode && sock && chatId && commandFlags[senderId]) {
       try {
-        const msgQR = await client.sendMessage(m.chat, { image: await qrcode.toBuffer(qr, { scale: 8 }), caption }, { quoted: m });
+        const msgQR = await sock.sendMessage(m.chat, { image: await qrcode.toBuffer(qr, { scale: 8 }), caption }, { quoted: m });
         delete commandFlags[senderId];
         setTimeout(async () => {
           try {
-            await client.sendMessage(chatId, { delete: msgQR.key });
+            await sock.sendMessage(chatId, { delete: msgQR.key });
           } catch {}
         }, 60000);
       } catch (err) {
@@ -225,10 +225,10 @@ export async function startSubBot(
   return sock;
 }
 
-async function joinChannels(client) {
+async function joinChannels(sock) {
   for (const value of Object.values(global.my)) {
     if (typeof value === 'string' && value.endsWith('@newsletter')) {
-      await client.newsletterFollow(value).catch(err => console.log(chalk.gray(`\n[ ✿ ] Error al seguir el canal ${value}`)));
+      await sock.newsletterFollow(value).catch(err => console.log(chalk.gray(`\n[ ✿ ] Error al seguir el canal ${value}`)));
     }
   }
 }
@@ -236,12 +236,12 @@ async function joinChannels(client) {
 export default {
   command: ['code', 'qr'],
   category: 'socket',
-  run: async (client, m, args, command) => {
+  async run(sock, m, args, command) => {
     let user = await getUser(m.sender);
     let time = user.Subs + 120000 || '';
     
     if (new Date() - user.Subs < 120000) {
-      return client.reply(
+      return sock.reply(
         m.chat,
         `❖ Debes esperar *${msToTime(time - new Date())}* para volver a intentar vincular un socket.`,
         m,
@@ -258,7 +258,7 @@ export default {
 
     const maxSubs = 20;
     if (subsCount >= maxSubs) {
-      return client.reply(
+      return sock.reply(
         m.chat,
         '✎ No se han encontrado espacios disponibles para registrar un `Sub-Bot`.',
         m,
@@ -276,7 +276,7 @@ export default {
     const caption = isCode ? rtx : rtx2;
     const phone = args[0] ? args[0].replace(/\D/g, '') : m.sender.split('@')[0];
 
-    await startSubBot(m, client, caption, isCode, phone, m.chat, isCommand);
+    await startSubBot(m, sock, caption, isCode, phone, m.chat, isCommand);
     user.Subs = new Date() * 1;
 
     await updateUser(m.sender, 'Subs', user.Subs);

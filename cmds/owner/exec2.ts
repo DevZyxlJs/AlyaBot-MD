@@ -5,10 +5,10 @@ const exec = promisify(cp.exec)
 export default {
   command: ['r'],
   isOwner: true,
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const cmd = args.join(' ').trim()
     if (!cmd) {
-      return // client.reply(m.chat, '❌ Escribe un comando para ejecutar.\nEjemplo: .r ls', m)
+      return // sock.reply(m.chat, '❌ Escribe un comando para ejecutar.\nEjemplo: .r ls', m)
     }
     let result
     try {
@@ -18,10 +18,10 @@ export default {
     }
     const { stdout, stderr } = result
     if (stdout?.trim()) {
-      client.reply(m.chat, stdout.trim(), m)
+      sock.reply(m.chat, stdout.trim(), m)
     }
     if (stderr?.trim()) {
-      client.reply(m.chat, stderr.trim(), m)
+      sock.reply(m.chat, stderr.trim(), m)
     }
   }
 }

@@ -30,10 +30,10 @@ function obtenerTiempoRestante(expira) {
 export default {
   command: ['haremshop', 'tiendawaifus', 'wshop'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
     const chatId = m.chat
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     
     const chatConfig = await getChat(chatId)
     

@@ -2,13 +2,13 @@ import chalk from 'chalk'
 import moment from 'moment-timezone'
 import fetch from 'node-fetch'
 
-export default async (client, m) => {
-  client.ev.on('group-participants.update', async (anu) => {
+export default async (sock, m) => {
+  sock.ev.on('group-participants.update', async (anu) => {
     try {
-      const metadata = await client.groupMetadata(anu.id) || {}
+      const metadata = await sock.groupMetadata(anu.id) || {}
       const chat = await getChat(anu.id)
 
-      const botId = client?.user?.id ? client.user.id.split(':')[0] + '@s.whatsapp.net' : ''
+      const botId = sock?.user?.id ? sock.user.id.split(':')[0] + '@s.whatsapp.net' : ''
       const primaryBotId = chat?.primaryBot || ''
 
       const botSettings = await getSettings(botId)
@@ -25,12 +25,12 @@ export default async (client, m) => {
       const tiempo2 = moment.tz('America/Bogota').format('hh:mm A')
 
       const memberCount = metadata.participants?.length || 0
-      const groupIcon = await client.profilePictureUrl(anu.id, 'image').catch(_ => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
+      const groupIcon = await sock.profilePictureUrl(anu.id, 'image').catch(_ => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
 
       for (const p of anu.participants) {
         const phone = p.phoneNumber ? p.phoneNumber.split('@')[0] : ''
         const name = await getUser(phone + "@s.whatsapp.net").name
-        const avatar = await client.profilePictureUrl(p.phoneNumber, 'image').catch(_ => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
+        const avatar = await sock.profilePictureUrl(p.phoneNumber, 'image').catch(_ => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
 
         const fakeContext = {
           contextInfo: {        
@@ -78,7 +78,7 @@ export default async (client, m) => {
             return
           }
           const buffer = Buffer.from(await res.arrayBuffer())
-          await client.sendMessage(anu.id, { image: buffer, caption, ...fakeContext })
+          await sock.sendMessage(anu.id, { image: buffer, caption, ...fakeContext })
         }
 
         if ((anu.action === 'remove' || anu.action === 'leave') && chat?.goodbye && (!primaryBotId || primaryBotId === botId)) {
@@ -109,12 +109,12 @@ export default async (client, m) => {
             return
           }
           const buffer = Buffer.from(await res.arrayBuffer())
-          await client.sendMessage(anu.id, { image: buffer, caption, ...fakeContext })
+          await sock.sendMessage(anu.id, { image: buffer, caption, ...fakeContext })
         }
 
         if (anu.action === 'promote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
           const usuario = anu.author || ''
-          await client.sendMessage(anu.id, {
+          await sock.sendMessage(anu.id, {
             text: `「✎」 *@${phone}* ha sido promovido a Administrador por *@${usuario.split('@')[0]}.*`,
             mentions: [p.phoneNumber, usuario]
           })
@@ -122,7 +122,7 @@ export default async (client, m) => {
 
         if (anu.action === 'demote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
           const usuario = anu.author || ''
-          await client.sendMessage(anu.id, {
+          await sock.sendMessage(anu.id, {
             text: `「✎」 *@${phone}* ha sido degradado de Administrador por *@${usuario.split('@')[0]}.*`,
             mentions: [p.phoneNumber, usuario]
           })

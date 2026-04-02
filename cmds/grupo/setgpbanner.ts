@@ -3,7 +3,7 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  run: async (client, m) => {
+  async run(sock, m) => {
     const q = m.quoted ? m.quoted : m
     const mime = (q.msg || q).mimetype || q.mediaType || ''
 
@@ -14,7 +14,7 @@ export default {
     if (!img) return m.reply('✎ No se pudo descargar la imagen.')
 
     try {
-      await client.updateProfilePicture(m.chat, img)
+      await sock.updateProfilePicture(m.chat, img)
       m.reply('✐ La imagen del grupo se actualizó con éxito.')
     } catch {
       m.reply(msgglobal)

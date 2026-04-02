@@ -5,7 +5,7 @@ import { getBuffer } from '../../core/message.ts'
 export default {
   command: ['play2', 'mp4', 'ytmp4', 'ytvideo', 'playvideo'],
   category: 'downloader',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
       if (!args[0]) {
         return m.reply('《✧》Por favor, menciona el nombre o URL del video que deseas descargar')
@@ -40,7 +40,7 @@ export default {
 
 𐙚 ❀ ｡ ↻ El archivo se está enviando, espera un momento... ˙𐙚`
 
-      await client.sendMessage(m.chat, { image: thumbBuffer, caption }, { quoted: m })
+      await sock.sendMessage(m.chat, { image: thumbBuffer, caption }, { quoted: m })
 
       const endpoint = `${api.url}/dl/ytmp4?url=${encodeURIComponent(url)}&key=${api.key}`
       const res = await fetch(endpoint, {
@@ -66,7 +66,7 @@ if (size && parseInt(size) > 60 * 1024 * 1024) {
         mimetype: 'video/mp4'
       }
 
-      await client.sendMessage(m.chat, mensaje, { quoted: m })
+      await sock.sendMessage(m.chat, mensaje, { quoted: m })
     } catch (e) {
       await m.reply(msgglobal)
     }

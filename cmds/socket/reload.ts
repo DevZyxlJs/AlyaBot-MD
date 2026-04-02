@@ -6,8 +6,8 @@ import {jidDecode} from '@whiskeysockets/baileys';
 export default {
   command: ['reload'],
   category: 'socket',
-  run: async (client, m, args) => {
-    const rawId = client.user?.id || ''
+  async run(sock, m, args) => {
+    const rawId = sock.user?.id || ''
     const decoded = jidDecode(rawId)
     const cleanId = decoded?.user || rawId.split('@')[0]
 
@@ -21,7 +21,7 @@ export default {
       return m.reply('《✧》 Este comando solo puede ser usado desde una instancia de Sub-Bot.')
     }
 
-    const botId = client?.user?.id.split(':')[0] + '@s.whatsapp.net' || ''
+    const botId = sock?.user?.id.split(':')[0] + '@s.whatsapp.net' || ''
     const botSettings = await getSettings(botId) || {}
 
     const caption = `✤ *Sesión del bot reiniciada correctamente!*.`
@@ -30,9 +30,9 @@ export default {
     const chatId = m.chat
 
    // setTimeout(() => {
-        startSubBot(m, client, caption, false, phone, chatId, {}, true)
+        startSubBot(m, sock, caption, false, phone, chatId, {}, true)
    // }, 3000)
 
-    await client.reply(m.chat, caption, m)
+    await sock.reply(m.chat, caption, m)
   },
 };

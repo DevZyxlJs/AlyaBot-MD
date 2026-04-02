@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 export default {
   command: ['r34', 'r34vid', 'rule34', 'rule34vid', 'rule', 'rulevid'],
   category: 'nsfw',
-  run: async (client, m, args, command) => {
+  async run(sock, m, args, command) => {
     try {
       const chatId = m.chat
      const chat = await getChat(m.chat)
@@ -14,7 +14,7 @@ export default {
       )
 
       if (!args[0]) 
-        return client.reply(m.chat, `✿ Debes especificar tags para buscar.`, m)
+        return sock.reply(m.chat, `✿ Debes especificar tags para buscar.`, m)
 
       const tag = args[0].replace(/\s+/g, '_')
       let mediaList = []
@@ -44,7 +44,7 @@ export default {
       }
 
       if (!mediaList.length) 
-        return client.reply(m.chat, `❀ No se encontraron resultados para ${tag}`, m)
+        return sock.reply(m.chat, `❀ No se encontraron resultados para ${tag}`, m)
 
       let filtered = []
       if (command === 'r34' || command === 'rule34' || command === 'rule') {
@@ -54,14 +54,14 @@ export default {
       }
 
       if (!filtered.length) 
-        return client.reply(m.chat, `❀ No se encontraron ${command === 'r34' ? 'imágenes' : 'videos'} para ${tag}`, m)
+        return sock.reply(m.chat, `❀ No se encontraron ${command === 'r34' ? 'imágenes' : 'videos'} para ${tag}`, m)
 
       const media = filtered[0]
 
       if (command === 'r34vid' || command === 'rule34vid' || command === 'rulevid') {
-        await client.sendMessage(m.chat, { video: { url: media }, mentions: [m.sender] }, { quoted: m })
+        await sock.sendMessage(m.chat, { video: { url: media }, mentions: [m.sender] }, { quoted: m })
       } else {
-        await client.sendMessage(m.chat, { image: { url: media }, mentions: [m.sender] }, { quoted: m })
+        await sock.sendMessage(m.chat, { image: { url: media }, mentions: [m.sender] }, { quoted: m })
       }
 
     } catch (e) {

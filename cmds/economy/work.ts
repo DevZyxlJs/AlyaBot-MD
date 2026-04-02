@@ -1,10 +1,10 @@
 export default {
   command: ['w', 'work'],
   category: 'rpg',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const chat = await getChat(m.chat)
     const user = await getChatUser(m.chat, m.sender)
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net';
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net';
     const botSettings = await getSettings(botId)
     const monedas = botSettings.currency;
 
@@ -25,7 +25,7 @@ export default {
    await updateChatUser(m.chat, m.sender, 'coins', user.coins)
    await updateChatUser(m.chat, m.sender, 'workCooldown', user.workCooldown)
 
-        await client.reply(m.chat, `「✿」 ${pickRandom(trabajo)} *¥${rsl.toLocaleString()} ${monedas}*.`, m)
+        await sock.reply(m.chat, `「✿」 ${pickRandom(trabajo)} *¥${rsl.toLocaleString()} ${monedas}*.`, m)
   }
 };
 

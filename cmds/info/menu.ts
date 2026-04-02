@@ -8,7 +8,7 @@ import { commands } from '../../core/system/comandos.ts';
 export default {
   command: ['allmenu', 'help', 'menu'],
   category: 'info',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     try {
 
       const now = new Date();
@@ -24,7 +24,7 @@ export default {
         .replace(/,/g, '');
       const tiempo2 = moment.tz('America/Bogota').format('hh:mm A');
 
-      const botId = client?.user?.id.split(':')[0] + '@s.whatsapp.net' || '';
+      const botId = sock?.user?.id.split(':')[0] + '@s.whatsapp.net' || '';
       const botSettings = await getSettings(botId);
       const botname = botSettings.namebot || '';
       const botname2 = botSettings.namebot2 || '';
@@ -33,7 +33,7 @@ export default {
       const link = botSettings.link || '';
 
       const isOficialBot =
-        botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net';
+        botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net';
       const botType = isOficialBot
         ? 'Owner'
         : 'Sub Bot';
@@ -41,8 +41,8 @@ export default {
       const userr = await getUser();
       const users = Object.keys(userr).length || 0;
 
-      const time = client.uptime
-        ? formatearMs(Date.now() - client.uptime)
+      const time = sock.uptime
+        ? formatearMs(Date.now() - sock.uptime)
         : 'Desconocido';
       const device = getDevice(m.key.id);
 
@@ -111,7 +111,7 @@ export default {
 
 /*let ppUser, yio;
 try {
-  ppUser = await client.profilePictureUrl(m.sender, 'image');
+  ppUser = await sock.profilePictureUrl(m.sender, 'image');
 } catch {
   ppUser = 'https://bot.stellarwa.xyz/files/KOIpJ.jpeg';
 }
@@ -122,7 +122,7 @@ yio = '✎ *Próximamente se remitirá el menú.*'
 yio = `✎ *Próximamente se remitirá el menú ${args[0]}.*`
 }
 
-await client.reply(
+await sock.reply(
   m.chat,
   yio,
   m,
@@ -147,14 +147,14 @@ await client.reply(
         banner.endsWith('.gif') ||
         banner.endsWith('.webm')
       ) {
-        await client.sendMessage(
+        await sock.sendMessage(
           m.chat,
           { video: { url: banner }, caption },
           { quoted: m }
         );
       } else {
 
-       await client.sendMessage(
+       await sock.sendMessage(
           m.chat,
           {
             text: menu,

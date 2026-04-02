@@ -30,11 +30,11 @@ async function removeBgFromUrl(url) {
 export default {
   command: ['removebg'],
   category: 'utils',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const q = m.quoted || m
     const mime = (q.msg || q).mimetype || ''
     if (!mime.startsWith('image/')) {
-      return client.reply(
+      return sock.reply(
         m.chat,
         `✿ Por favor, responde a una imagen con el comando *${prefix + command}* para removerle el fondo.`,
         m
@@ -48,7 +48,7 @@ export default {
 
       const bufferNoBg = await removeBgFromUrl(originalUrl)
 
-      await client.sendMessage(m.chat, { image: bufferNoBg }, { quoted: m })
+      await sock.sendMessage(m.chat, { image: bufferNoBg }, { quoted: m })
 
     } catch (e) {
       await m.reply(`${msgglobal}`)

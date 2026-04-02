@@ -78,11 +78,11 @@ async function uploadAuto(buffer: Buffer, mime: string): Promise<{ link: string,
 export default {
   command: ["tourl"],
   category: "utils",
-  run: async (client: any, m: any, args: string[], command: string, text: string, prefix: string) => {
+  async run(sock: any, m: any, args: string[], command: string, text: string, prefix: string) => {
     const q = m.quoted || m
     const mime = (q.msg || q).mimetype || ""
     if (!mime) {
-      return client.reply(
+      return sock.reply(
         m.chat,
         `✿ Responde a una imagen o video con *${prefix + command}  [servidor]* para convertirlo en URL.\n\n` +
         `Servidores disponibles:\n` +
@@ -122,7 +122,7 @@ export default {
         `ׅ  ׄ  ✿   ׅ り *Tipo ›* ${mime.split("/")[1].toUpperCase() || "UNKNOWN"}\n` +
         `ׅ  ׄ  ✿   ׅ り *Solicitado por ›* ${userName}\n\n${dev}`
 
-      await client.sendContextInfoIndex(m.chat, upload, {}, m, true, {
+      await sock.sendContextInfoIndex(m.chat, upload, {}, m, true, {
         thumbnail: media
       })
     } catch (e) {

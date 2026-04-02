@@ -3,12 +3,12 @@ import GraphemeSplitter from 'grapheme-splitter'
 export default {
   command: ['setbotprefix'],
   category: 'socket',
-  run: async (client, m, args, command, text, prefix) => {
-    const idBot = client.user.id.split(':')[0] + '@s.whatsapp.net'
+  async run(sock, m, args, command, text, prefix) => {
+    const idBot = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const config = await getSettings(idBot)
     const owner = config.owner ? config.owner : '' || ''
     const isOwner2 = [idBot, ...(config.owner ? [config.owner] : []), ...global.owner.map(num => num + '@s.whatsapp.net')].includes(m.sender)
-    if (!isOwner2) return client.reply(m.chat, mess.socket, m)
+    if (!isOwner2) return sock.reply(m.chat, mess.socket, m)
 
     const value = args.join(' ').trim()
     const defaultPrefix = ["#", "/"]
@@ -30,7 +30,7 @@ export default {
       config.prefijo = defaultPrefix
 
    await updateSettings(idBot, 'prefijo', config.prefijo)
-      return client.reply(m.chat, `❖ Se han restaurado los prefijos predeterminados: *${defaultPrefix.join(' ')}*`, m)
+      return sock.reply(m.chat, `❖ Se han restaurado los prefijos predeterminados: *${defaultPrefix.join(' ')}*`, m)
     }
 
     if (value.toLowerCase() === 'noprefix') {
@@ -50,16 +50,16 @@ export default {
     }
 
     if (lista.length === 0) {
-      return client.reply(m.chat, '✿ No se detectaron prefijos válidos. Debes incluir al menos un símbolo o emoji.', m)
+      return sock.reply(m.chat, '✿ No se detectaron prefijos válidos. Debes incluir al menos un símbolo o emoji.', m)
     }
 
     if (lista.length > 6) {
-      return client.reply(m.chat, '✿ Máximo 6 prefijos permitidos.', m)
+      return sock.reply(m.chat, '✿ Máximo 6 prefijos permitidos.', m)
     }
 
     config.prefijo = lista
 
    await updateSettings(idBot, 'prefijo', config.prefijo)
-    return client.reply(m.chat, `✤ Se cambió el prefijo del Socket a *${lista.join(' ')}* correctamente.`, m)
+    return sock.reply(m.chat, `✤ Se cambió el prefijo del Socket a *${lista.join(' ')}* correctamente.`, m)
   },
 }

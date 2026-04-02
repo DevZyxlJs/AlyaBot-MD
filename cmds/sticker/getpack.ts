@@ -3,7 +3,7 @@ import fs from 'fs';
 export default {
   command: ['getpack', 'pack', 'stickerpack'],
   category: 'stickers',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
       if (!args.length) {
         return m.reply('《✧》Especifica el nombre del paquete de stickers.')
@@ -72,7 +72,7 @@ export default {
           return { sticker: buffer, isAnimated: false, isLottie: false, emojis: ['🎭'] };
         }
       }));
-      await client.sendMessage(m.chat, { stickerPack: { name: pack.name, publisher: `${pack.author} (${name})`, description: pack.desc, cover, stickers: stickerResults }}, { quoted: m })
+      await sock.sendMessage(m.chat, { stickerPack: { name: pack.name, publisher: `${pack.author} (${name})`, description: pack.desc, cover, stickers: stickerResults }}, { quoted: m })
       await m.react('✔️')
     } catch (e) {
       await m.react('✖️')

@@ -11,7 +11,7 @@ const require = createRequire(__dirname)
 export default {
   command: ['eval', 'e'],
   isOwner: true,
-  run: async (client, m, args, command, text) => {
+  async run(sock, m, args, command, text) => {
 
     let code = text
     let _return
@@ -23,7 +23,7 @@ export default {
     try {
       let f = { exports: {} }
       let exec = new (async () => { }).constructor(
-        'client',
+        'sock',
         'm',
         'require',
         'args',
@@ -33,8 +33,8 @@ export default {
       )
 
       _return = await exec.call(
-        client,
-        client,
+        sock,
+        sock,
         m,
         require,
         args,
@@ -55,7 +55,7 @@ export default {
 
       _return = e
     }
-    return client.reply(
+    return sock.reply(
       m.chat,
       _syntax + format(_return),
       m

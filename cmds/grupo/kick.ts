@@ -3,12 +3,12 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  run: async (client, m, args, command, text, usedPrefix) => {
-    const groupInfo = await client.groupMetadata(m.chat);
+  async run(sock, m, args, command, text, usedPrefix) => {
+    const groupInfo = await sock.groupMetadata(m.chat);
     const ownerGroup = groupInfo.owner || m.chat.split('-')[0] + '@s.whatsapp.net';
     const ownerBot = global.owner + '@s.whatsapp.net';
     const participants = groupInfo.participants;
-    const botId = client.decodeJid(client.user.id);    
+    const botId = sock.decodeJid(sock.user.id);    
     if (args[0] === 'num' || args[0] === 'listnum') {
       if (!args[1]) return m.reply(`ꕤ Ingrese algún prefijo de un país\n> ✎ Ejemplo: *${usedPrefix + command} num +54*`);
       const prefix = args[1].replace(/[+]/g, '');
@@ -16,7 +16,7 @@ export default {
       if (allUsersWithPrefix.length === 0) return m.reply(`ꕤ Aquí no hay ningún número con el prefijo +${prefix}`);
       if (args[0] === 'listnum') {
         const numeros = allUsersWithPrefix.map(v => '⭔ @' + v.replace(/@.+/, ''));
-        return client.reply(m.chat, `✎ *Lista de usuarios con prefijo +${prefix}* (${allUsersWithPrefix.length})\n\n${numeros.join('\n')}`, m, { mentions: allUsersWithPrefix });
+        return sock.reply(m.chat, `✎ *Lista de usuarios con prefijo +${prefix}* (${allUsersWithPrefix.length})\n\n${numeros.join('\n')}`, m, { mentions: allUsersWithPrefix });
       }
       const usersToKick = allUsersWithPrefix.filter(user => {
         const participant = participants.find(p => p.phoneNumber === user || p.jid === user || p.id === user || p.lid === user);
@@ -36,7 +36,7 @@ export default {
         const participant = participants.find(p => p.phoneNumber === user || p.jid === user || p.id === user || p.lid === user);
         if (!participant) continue;
         try {
-          await client.groupParticipantsUpdate(m.chat, [user], 'remove');
+          await sock.groupParticipantsUpdate(m.chat, [user], 'remove');
           eliminados++;
           await new Promise(resolve => setTimeout(resolve, 3000));
         } catch (e) {
@@ -70,7 +70,7 @@ export default {
         const participant = participants.find(p => p.phoneNumber === user || p.jid === user || p.id === user || p.lid === user);
         if (!participant) continue;
         try {
-          await client.groupParticipantsUpdate(m.chat, [user], 'remove');
+          await sock.groupParticipantsUpdate(m.chat, [user], 'remove');
           eliminados++;
           await new Promise(resolve => setTimeout(resolve, 3000));
         } catch (e) {
@@ -111,7 +111,7 @@ export default {
       }
       if (sider.length === 0) return m.reply('ꕤ Este grupo es activo, no tiene inactivos.');
       if (args[0] === 'listinactive') {
-        return client.reply(m.chat, `✎ *Lista de inactivos* (${sider.length})\n\n${sider.map(v => '⭔ @' + v.replace(/@.+/, '')).join('\n')}`, m, { mentions: sider });
+        return sock.reply(m.chat, `✎ *Lista de inactivos* (${sider.length})\n\n${sider.map(v => '⭔ @' + v.replace(/@.+/, '')).join('\n')}`, m, { mentions: sider });
       }
       await m.reply(`ꕤ *Eliminando inactivos* (${sider.length})\n> El proceso tomará unos segundos...`);
       let eliminados = 0;
@@ -120,7 +120,7 @@ export default {
         const participant = participants.find(p => p.phoneNumber === user || p.jid === user || p.id === user || p.lid === user);
         if (!participant) continue;
         try {
-          await client.groupParticipantsUpdate(m.chat, [user], 'remove');
+          await sock.groupParticipantsUpdate(m.chat, [user], 'remove');
           eliminados++;
           await new Promise(resolve => setTimeout(resolve, 3000));
         } catch (e) {
@@ -139,9 +139,9 @@ export default {
     let user = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted.sender;
     const participant = groupInfo.participants.find((p) => p.phoneNumber === user || p.jid === user || p.id === user || p.lid === user);
     if (!participant) {
-      return client.reply(m.chat, `✎ @${user.split('@')[0]} ya no está en el grupo.`, m, { mentions: [user] });
+      return sock.reply(m.chat, `✎ @${user.split('@')[0]} ya no está en el grupo.`, m, { mentions: [user] });
     }
-    if (user === client.decodeJid(client.user.id)) {
+    if (user === sock.decodeJid(sock.user.id)) {
       return m.reply('ꕤ No puedo eliminar al *bot* del grupo');
     }
     if (user === ownerGroup) {
@@ -151,8 +151,8 @@ export default {
       return m.reply('ꕤ No puedo eliminar al *propietario* del bot');
     }
     try {
-      await client.groupParticipantsUpdate(m.chat, [user], 'remove');
-      client.reply(m.chat, `✎ @${user.split('@')[0]} *eliminado* correctamente`, m, { mentions: [user] });
+      await sock.groupParticipantsUpdate(m.chat, [user], 'remove');
+      sock.reply(m.chat, `✎ @${user.split('@')[0]} *eliminado* correctamente`, m, { mentions: [user] });
     } catch (e) {
       return m.reply(msgglobal);
     }

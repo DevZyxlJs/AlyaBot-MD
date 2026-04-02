@@ -1,9 +1,9 @@
 export default {
   command: ['newpack', 'newstickerpack'],
   category: 'stickers',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
-      const settings = await getSettings(client.user.id.split(':')[0] + '@s.whatsapp.net') || {}
+      const settings = await getSettings(sock.user.id.split(':')[0] + '@s.whatsapp.net') || {}
       const userId = await getUser(m.sender)
       const dev = userId.name || m.pushName || 'Desconocido'
       const name = args.join(' ').trim()

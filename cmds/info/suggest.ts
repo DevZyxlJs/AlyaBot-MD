@@ -1,7 +1,7 @@
 export default {
   command: ['report', 'reporte', 'sug', 'suggest'],
   category: 'info',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const texto = args.join(' ').trim()
     const now = Date.now()
 
@@ -30,7 +30,7 @@ export default {
       const tipo2 = (command === 'report' || command === 'reporte') ? 'ꕥ Reporte' : 'ꕥ Sugerencia'
       const displayName = m.pushName || 'Usuario desconocido'
       const numero = m.sender.split('@')[0]
-      const pp = await client.profilePictureUrl(m.sender, 'image').catch(() => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
+      const pp = await sock.profilePictureUrl(m.sender, 'image').catch(() => 'https://cdn.sockywa.xyz/files/1755559736781.jpeg')
 
       let reportMsg =
         `🫗۫᷒ᰰ⃘ׅ᷒  ۟　\`${tipo}\`　ׅ　ᩡ\n\n` +
@@ -41,7 +41,7 @@ export default {
         dev
 
       try {
-        await global.client.sendContextInfoIndex('120363416930479619@g.us', reportMsg, {}, null, false, null, {
+        await global.sock.sendContextInfoIndex('120363416930479619@g.us', reportMsg, {}, null, false, null, {
           banner: pp,
           title: tipo2,
           body: dev,
@@ -50,7 +50,7 @@ export default {
       } catch {
         try {
           for (const nums of global.owner) {
-            await client.sendContextInfoIndex(`${nums}@s.whatsapp.net`, reportMsg, {}, null, false, null, {
+            await sock.sendContextInfoIndex(`${nums}@s.whatsapp.net`, reportMsg, {}, null, false, null, {
               banner: pp,
               title: tipo2,
               body: dev,

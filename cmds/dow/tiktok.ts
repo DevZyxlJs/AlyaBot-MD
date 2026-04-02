@@ -3,9 +3,9 @@ import fetch from 'node-fetch';
 export default {
   command: ['tiktok', 'tt'],
   category: 'downloader',
-  run: async (client, m, args, command) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
-    const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net'
+  async run(sock, m, args, command) => {
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
+    const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
 
     if (!args.length) {
       return m.reply(`✿ Ingresa un *término* o *enlace* de TikTok.`)
@@ -55,7 +55,7 @@ export default {
           }
         }
         if (medias.length) {
-          await client.sendAlbumMessage(m.chat, medias, { quoted: m })
+          await sock.sendAlbumMessage(m.chat, medias, { quoted: m })
         } else {
           await m.reply(`✿ No se pudieron procesar los enlaces.`)
         }
@@ -89,7 +89,7 @@ export default {
             `𖣣ֶㅤ֯⌗ ☄︎ ⬭ *Compartidos:* ${(stats.shares || 0).toLocaleString()}\n` +
             `𖣣ֶㅤ֯⌗ ⚡︎ ⬭ *Audio:* ${music.title ? music.title + ' -' : 'Desconocido'} ${music.author || ''}`
 
-          await client.sendMessage(m.chat, { video: { url: dl }, caption }, { quoted: m })
+          await sock.sendMessage(m.chat, { video: { url: dl }, caption }, { quoted: m })
         } catch (e) {
           await m.reply(msgglobal)
         }
@@ -137,7 +137,7 @@ export default {
         }
 
         if (medias.length) {
-          await client.sendAlbumMessage(m.chat, medias, { quoted: m })
+          await sock.sendAlbumMessage(m.chat, medias, { quoted: m })
         } else {
           await m.reply(`✿ No se pudieron procesar los resultados.`)
         }

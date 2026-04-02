@@ -1,12 +1,12 @@
-export default async (client, m) => {
+export default async (sock, m) => {
   if (!m.isGroup) return
 
-  const groupMetadata = await client.groupMetadata(m.chat).catch(() => null)
+  const groupMetadata = await sock.groupMetadata(m.chat).catch(() => null)
   if (!groupMetadata) return
 
   const participants = groupMetadata.participants || []
   const groupAdmins = participants.filter(p => p.admin).map(p => p.id || p.jid)
-  const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+  const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
   const isBotAdmin = groupAdmins.includes(botId)
   const isAdmin = groupAdmins.includes(m.sender)
 
@@ -74,7 +74,7 @@ export default async (client, m) => {
 
     if (deleteObj) {
 
-      await client.sendMessage(m.chat, {
+      await sock.sendMessage(m.chat, {
         delete: deleteObj
       }).catch(err => {
         console.error('Error al borrar status (detalle):', err)
@@ -91,7 +91,7 @@ export default async (client, m) => {
       }
       
       if (currentDeleteObj.id !== deleteObj.id) {
-        await client.sendMessage(m.chat, {
+        await sock.sendMessage(m.chat, {
           delete: currentDeleteObj
         }).catch(err => {
           console.error('Error al borrar comando actual:', err)
@@ -105,8 +105,8 @@ export default async (client, m) => {
     const userName = ysr?.name || m.pushName || 'Usuario'
 
     setTimeout(async () => {
-    await client.reply(m.chat, `❖ *${userName}* eliminado por \`Anti-Status\``, null)
-    await client.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+    await sock.reply(m.chat, `❖ *${userName}* eliminado por \`Anti-Status\``, null)
+    await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
     }, 500)
 
   } catch (error) {
@@ -115,6 +115,6 @@ export default async (client, m) => {
     const ysr = await getUser(m.sender)
     const userName = ysr?.name || m.pushName || 'Usuario'
     
-    await client.reply(m.chat, `❖ *${userName}* el \`Anti-Status\` está activado, a la proxima serás expulsado del grupo.`, m)
+    await sock.reply(m.chat, `❖ *${userName}* el \`Anti-Status\` está activado, a la proxima serás expulsado del grupo.`, m)
   }
 }

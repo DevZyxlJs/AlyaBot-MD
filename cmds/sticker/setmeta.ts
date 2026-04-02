@@ -1,7 +1,7 @@
 export default {
   command: ['setstickermeta', 'setmeta'],
   category: 'stickers',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     if (!args || args.length === 0) {
       return m.reply('《✧》 Por favor, ingresa los metadatos que deseas asignar a tus stickers.');
     }
@@ -21,7 +21,7 @@ export default {
       }
       await updateUser(m.sender, 'metadatos', metadatos01);
       await updateUser(m.sender, 'metadatos2', metadatos02);
-      await client.sendMessage(m.chat, { text: `✎ Los metadatos de tus stickers se han actualizado correctamente.` }, { quoted: m });
+      await sock.sendMessage(m.chat, { text: `✎ Los metadatos de tus stickers se han actualizado correctamente.` }, { quoted: m });
     } catch (e) {
       await m.reply(msgglobal);
     }

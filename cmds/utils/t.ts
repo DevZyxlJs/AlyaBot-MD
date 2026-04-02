@@ -1,7 +1,7 @@
 export default {
   command: ['test'],
   category: 'utils',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     try {
       if (m.mentionedJid?.length) {
         return m.reply(`📌 Usuarios mencionados: ${m.mentionedJid.join(', ')}`);

@@ -4,10 +4,10 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['profile', 'perfil'],
   category: 'profile',
-  run: async (client, m) => {
+  async run(sock, m) => {
     const texto = m.mentionedJid
     const who2 = texto.length > 0 ? texto[0] : m.quoted ? m.quoted.sender : m.sender
-    const userId = await resolveLidToRealJid(who2, client, m.chat);
+    const userId = await resolveLidToRealJid(who2, sock, m.chat);
 
     const chat = await getChat(m.chat)
     const chatUsers = await getChatUser(m.chat, userId)
@@ -18,7 +18,7 @@ export default {
       return m.reply('✐ El usuario *mencionado* no está *registrado* en el bot')
     }
 
-    const idBot = client.user.id.split(':')[0] + '@s.whatsapp.net' || ''
+    const idBot = sock.user.id.split(':')[0] + '@s.whatsapp.net' || ''
     const settings = await getSettings(idBot)
     const currency = settings.currency || ''
 
@@ -44,7 +44,7 @@ export default {
     const totalCoins = chocolates + banco
     const harem = user?.characters?.length || 0
 
-    const perfil = await client
+    const perfil = await sock
       .profilePictureUrl(userId, 'image')
       .catch((_) => 'https://cdn.sockywa.xyz/files/1751246122292.jpg')
 
@@ -68,7 +68,7 @@ try {
 𖣣ֶㅤ֯⌗ ⛁  ׄ ⬭ Dinero Total › *¥${totalCoins.toLocaleString()} ${currency}*
 𖣣ֶㅤ֯⌗ ☄︎  ׄ ⬭ Comandos ejecutados › *${comandos.toLocaleString()}*`
 
-   await client.sendMessage(
+   await sock.sendMessage(
       m.chat,
       {
         image: { url: perfil },

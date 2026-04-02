@@ -11,9 +11,9 @@ function msToTime(duration) {
 
 const linkRegex = /chat\.whatsapp\.com\/([0-9A-Za-z]{20,24})(?:\s+[0-9]{1,3})?/i
 
-async function getGroupName(client, chatId) {
+async function getGroupName(sock, chatId) {
   try {
-    const metadata = await client.groupMetadata(chatId)
+    const metadata = await sock.groupMetadata(chatId)
     return metadata.subject || 'Grupo desconocido'
   } catch {
     return 'Chat privado'
@@ -23,10 +23,10 @@ async function getGroupName(client, chatId) {
 export default {
   command: ['invite', 'invitar'],
   category: 'info',
-  run: async (client, m, args) => {
-    const grupo = m.isGroup ? await getGroupName(client, m.chat) : 'Chat privado'
+  async run(sock, m, args) => {
+    const grupo = m.isGroup ? await getGroupName(sock, m.chat) : 'Chat privado'
 
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const botname = botSettings.namebot2
 
@@ -40,7 +40,7 @@ export default {
       return m.reply('《✤》 Ingresa el enlace para invitar al bot a tu grupo.')
     }
 
-    const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
 
     const botType = isOficialBot
       ? 'Owner'
@@ -62,13 +62,13 @@ export default {
     for (const num of global.owner) {
       const jid = `${num}@s.whatsapp.net`
       try {
-        await client.sendMessage(jid, { text: sugg })
+        await sock.sendMessage(jid, { text: sugg })
       } catch (e) {
         m.reply(`No se pudo enviar a ${jid}.`)
       }
     }
 
-    await client.reply(
+    await sock.reply(
       m.chat,
       '《✤》 Enlace de invitación enviado con éxito a los Desarrolladores.',
       m,

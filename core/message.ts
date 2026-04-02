@@ -253,21 +253,21 @@ export function getGroupAdmins(participants) {
   return admins || []
 }
 
-export async function fixLid(client, m) {
-  const decodedJid = client.decodeJid((m.fromMe && client.user.id) || m.key.participant || m.chat || '')
-  const realJid = await resolveLidToRealJid(decodedJid, client, m.chat)
+export async function fixLid(sock, m) {
+  const decodedJid = sock.decodeJid((m.fromMe && sock.user.id) || m.key.participant || m.chat || '')
+  const realJid = await resolveLidToRealJid(decodedJid, sock, m.chat)
   return realJid
 }
 
-export async function fixLid2(client, m) {
-  const decodedJid = client.decodeJid(m.msg.contextInfo.participant)
-  const realJid = await resolveLidToRealJid(decodedJid, client, m.chat)
+export async function fixLid2(sock, m) {
+  const decodedJid = sock.decodeJid(m.msg.contextInfo.participant)
+  const realJid = await resolveLidToRealJid(decodedJid, sock, m.chat)
   return realJid
 }
 
 
-export async function smsg(client, m, store) {
-  client.downloadMediaMessage = async (message) => {
+export async function smsg(sock, m, store) {
+  sock.downloadMediaMessage = async (message) => {
     const msg = message.msg || message
     const mime = msg.mimetype || ''
     const messageType = (message.type || mime.split('/')[0]).replace(/Message/gi, '')
@@ -279,8 +279,8 @@ export async function smsg(client, m, store) {
     return buffer
   }
 
-  const botLid = client.decodeJid(client.user.lid)
-  const botNumber = client.decodeJid(client.user.id)
+  const botLid = sock.decodeJid(sock.user.lid)
+  const botNumber = sock.decodeJid(sock.user.id)
   let fix = ''
   if (!m) return m
   if (m.key) {
@@ -294,17 +294,17 @@ export async function smsg(client, m, store) {
       /(.)\1{5,}|[^a-zA-Z0-9]|[^0-9A-F]/.test(m.id) ||
       false
     m.isGroup = m.chat.endsWith('@g.us')
-   // if (!m.isGroup && m.chat.endsWith('@lid')) m.chat = client.findJidByLid(m.chat) || m.chat
+   // if (!m.isGroup && m.chat.endsWith('@lid')) m.chat = sock.findJidByLid(m.chat) || m.chat
    if (!m.isGroup && m.chat.endsWith('@lid')) {
-   if (typeof client.findJidByLid === 'function') {
-    m.chat = client.findJidByLid(m.chat) || m.chat
+   if (typeof sock.findJidByLid === 'function') {
+    m.chat = sock.findJidByLid(m.chat) || m.chat
    } else {
     m.chat = m.chat 
    }}
  
-   //  m.sender = client.decodeJid((m.fromMe && client.user.id) || m.key.participant)
+   //  m.sender = sock.decodeJid((m.fromMe && sock.user.id) || m.key.participant)
 
-     m.sender = await fixLid(client, m)
+     m.sender = await fixLid(sock, m)
    }
   if (m.message) {
     m.type = getContentType(m.message) || Object.keys(m.message)[0]
@@ -335,7 +335,7 @@ export async function smsg(client, m, store) {
       m.msg?.selectedDisplayText ||
       m.msg?.title ||
       ''
-      const idBot = client.user.id.split(':')[0] + '@s.whatsapp.net'
+      const idBot = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const config = await getSettings(idBot) || {}
     const splitter = new GraphemeSplitter()
     let activePrefixes = []
@@ -363,7 +363,7 @@ export async function smsg(client, m, store) {
     m.expiration =
       m.msg?.contextInfo?.expiration ||
       m?.metadata?.ephemeralDuration ||
-      client?.messages?.[m.chat]?.array?.slice(-1)[0]?.metadata?.ephemeralDuration ||
+      sock?.messages?.[m.chat]?.array?.slice(-1)[0]?.metadata?.ephemeralDuration ||
       0
     m.timestamp =
       (typeof m.messageTimestamp === 'number'
@@ -397,8 +397,8 @@ export async function smsg(client, m, store) {
         m.msg.contextInfo.participant =
           m?.metadata?.participants?.find((a) => a.lid === m.msg.contextInfo.participant)?.id ||
           m.msg.contextInfo.participant
-      m.quoted.sender = await fixLid2(client, m)
-      m.quoted.fromMe = m.quoted.sender === client.decodeJid(client.user.id)
+      m.quoted.sender = await fixLid2(sock, m)
+      m.quoted.fromMe = m.quoted.sender === sock.decodeJid(sock.user.id)
       m.quoted.text =
         m.quoted.caption ||
         m.quoted.conversation ||
@@ -424,14 +424,14 @@ export async function smsg(client, m, store) {
       m.getQuotedObj = async () => {
         if (!m.quoted.id) return false
         let q = await store.loadMessage(m.chat, m.quoted.id)
-        return await exports.smsg(client, q)
+        return await exports.smsg(sock, q)
       }
       m.quoted.key = {
         remoteJid: m.msg?.contextInfo?.remoteJid || m.chat,
         participant: m.quoted.sender,
         fromMe: areJidsSameUser(
-          client.decodeJid(m.msg?.contextInfo?.participant),
-          client.decodeJid(client?.user?.id),
+          sock.decodeJid(m.msg?.contextInfo?.participant),
+          sock.decodeJid(sock?.user?.id),
         ),
         id: m.msg?.contextInfo?.stanzaId,
       }
@@ -481,9 +481,9 @@ export async function smsg(client, m, store) {
         message: m.quoted,
         ...(m.isGroup ? { participant: m.quoted.sender } : {}),
       })
-      m.quoted.download = () => client.downloadMediaMessage(m.quoted)
+      m.quoted.download = () => sock.downloadMediaMessage(m.quoted)
       m.quoted.delete = () => {
-        client.sendMessage(m.quoted.chat, {
+        sock.sendMessage(m.quoted.chat, {
           delete: {
             remoteJid: m.quoted.chat,
             fromMe: m.isBotAdmin ? false : true,
@@ -495,12 +495,12 @@ export async function smsg(client, m, store) {
     }
   }
 
-  m.download = () => client.downloadMediaMessage(m)
+  m.download = () => sock.downloadMediaMessage(m)
 
   m.copy = () =>
-    exports.smsg(client, proto.WebMessageInfo.fromObject(proto.WebMessageInfo.toObject(m)))
+    exports.smsg(sock, proto.WebMessageInfo.fromObject(proto.WebMessageInfo.toObject(m)))
 
-  m.react = (u) => client.sendMessage(m.chat, { react: { text: u, key: m.key } })
+  m.react = (u) => sock.sendMessage(m.chat, { react: { text: u, key: m.key } })
 
   m.reply = async (content, options = {}) => {
     const quoted = m
@@ -509,7 +509,7 @@ export async function smsg(client, m, store) {
     const ephemeralExpiration = m.expiration
     const mentions = ''
     if (typeof content === 'object') {
-      return client.sendMessage(chat, content, {
+      return sock.sendMessage(chat, content, {
         ...options,
         quoted,
         ephemeralExpiration,
@@ -520,23 +520,23 @@ export async function smsg(client, m, store) {
           const data = await axios.get(content, { responseType: 'arraybuffer' })
           const mime = data.headers['content-type'] || (await FileType.fromBuffer(data.data)).mime
           if (/gif|image|video|audio|pdf|stream/i.test(mime)) {
-            return client.sendMedia(chat, data.data, '', caption, quoted, content)
+            return sock.sendMedia(chat, data.data, '', caption, quoted, content)
           } else {
-            return client.sendMessage(
+            return sock.sendMessage(
               chat,
               { text: content, mentions, ...options },
               { quoted, ephemeralExpiration },
             )
           }
         } else {
-          return client.sendMessage(
+          return sock.sendMessage(
             chat,
             { text: content, mentions, ...options },
             { quoted, ephemeralExpiration },
           )
         }
       } catch (e) {
-        return client.sendMessage(
+        return sock.sendMessage(
           chat,
           { text: content, mentions, ...options },
           { quoted, ephemeralExpiration },
@@ -545,20 +545,20 @@ export async function smsg(client, m, store) {
     }
   }
 
-  m.copy = () => exports.smsg(client, M.fromObject(M.toObject(m)))
+  m.copy = () => exports.smsg(sock, M.fromObject(M.toObject(m)))
 
   m.copyNForward = (jid = m.chat, forceForward = false, options = {}) =>
-    client.copyNForward(jid, m, forceForward, options)
+    sock.copyNForward(jid, m, forceForward, options)
 
-  client.getName = (jid, withoutContact = false) => {
+  sock.getName = (jid, withoutContact = false) => {
     // jid = m.chat?
-    id = client.decodeJid(jid)
-    withoutContact = client.withoutContact || withoutContact
+    id = sock.decodeJid(jid)
+    withoutContact = sock.withoutContact || withoutContact
     let v
     if (id.endsWith('@g.us'))
       return new Promise(async (resolve) => {
         v = store.contacts[id] || {}
-        if (!(v.name || v.subject)) v = client.groupMetadata(id) || {}
+        if (!(v.name || v.subject)) v = sock.groupMetadata(id) || {}
         resolve(
           v.name ||
             v.subject ||
@@ -569,8 +569,8 @@ export async function smsg(client, m, store) {
       v =
         id === '0@s.whatsapp.net'
           ? { id, name: 'WhatsApp' }
-          : id === client.decodeJid(client.user.jid)
-            ? client.user
+          : id === sock.decodeJid(sock.user.jid)
+            ? sock.user
             : store.contacts[id] || {}
     return (
       (withoutContact ? '' : v.name) ||
@@ -580,7 +580,7 @@ export async function smsg(client, m, store) {
     )
   }
 
-  client.getFile = async (PATH, saveToFile = false) => {
+  sock.getFile = async (PATH, saveToFile = false) => {
     let res, filename
     const data = Buffer.isBuffer(PATH)
       ? PATH
@@ -614,18 +614,18 @@ export async function smsg(client, m, store) {
     }
   }
 
-  m.react = (text, key, options) => client.sendMessage(m.chat, { react: { text, key: m.key } })
+  m.react = (text, key, options) => sock.sendMessage(m.chat, { react: { text, key: m.key } })
 
-  client.parseMention = async (text) => {
+  sock.parseMention = async (text) => {
     return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net')
   }
 
-  client.appenTextMessage = async (text, chatUpdate) => {
+  sock.appenTextMessage = async (text, chatUpdate) => {
     let messages = await generateWAMessage(
       m.chat,
       { text: text, mentions: m.mentionedJid },
       {
-        userJid: client.user.id,
+        userJid: sock.user.id,
         quoted: m.quoted && m.quoted.fakeObj,
       },
     )
@@ -641,7 +641,7 @@ export async function smsg(client, m, store) {
     conn.ev.emit('messages.upsert', msg)
   }
 
-  client.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
+  sock.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
     let buff = Buffer.isBuffer(path)
       ? path
       : /^data:.*?\/.*?;base64,/i.test(path)
@@ -657,10 +657,10 @@ export async function smsg(client, m, store) {
     } else {
       buffer = await imageToWebp(buff)
     }
-    await client.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+    await sock.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
     return buffer
   }
-  client.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
+  sock.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
     let buff = Buffer.isBuffer(path)
       ? path
       : /^data:.*?\/.*?;base64,/i.test(path)
@@ -676,11 +676,11 @@ export async function smsg(client, m, store) {
     } else {
       buffer = await videoToWebp(buff)
     }
-    await client.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+    await sock.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
     return buffer
   }  
   
-  client.sendFile = async (jid, path, filename = "file", caption = "", quoted = null, ptt = false, options = {}) => {
+  sock.sendFile = async (jid, path, filename = "file", caption = "", quoted = null, ptt = false, options = {}) => {
   let buffer
   if (Buffer.isBuffer(path)) {
     buffer = path
@@ -714,10 +714,10 @@ export async function smsg(client, m, store) {
   delete options.asDocument
   delete options.asImage
   const message = { ...options, caption, ptt, [mtype]: file, mimetype, fileName: filename || pathFile.split("/").pop(), }
-  return client.sendMessage(jid, message, { quoted, ...options })
+  return sock.sendMessage(jid, message, { quoted, ...options })
   }
   
-  client.sendAlbumMessage = async (jid, medias, options = {}) => {
+  sock.sendAlbumMessage = async (jid, medias, options = {}) => {
   if (typeof jid !== "string") throw new TypeError(`jid must be string, received: ${jid}`)
   if (!Array.isArray(medias) || medias.length < 2) throw new RangeError("Minimum 2 media required")
   for (const media of medias) {
@@ -743,20 +743,20 @@ export async function smsg(client, m, store) {
       }} : {}),
     },
   }, {})
-  await client.relayMessage(album.key.remoteJid, album.message, { messageId: album.key.id })
+  await sock.relayMessage(album.key.remoteJid, album.message, { messageId: album.key.id })
   for (let i = 0; i < medias.length; i++) {
     const { type, data, caption } = medias[i]
-    const mediaMsg = await generateWAMessage(album.key.remoteJid, { [type]: data, ...(caption ? { caption } : {}) }, { upload: client.waUploadToServer })
+    const mediaMsg = await generateWAMessage(album.key.remoteJid, { [type]: data, ...(caption ? { caption } : {}) }, { upload: sock.waUploadToServer })
     mediaMsg.message.messageContextInfo = {
       messageAssociation: { associationType: 1, parentMessageKey: album.key },
     }
-    await client.relayMessage(mediaMsg.key.remoteJid, mediaMsg.message, { messageId: mediaMsg.key.id })
+    await sock.relayMessage(mediaMsg.key.remoteJid, mediaMsg.message, { messageId: mediaMsg.key.id })
     await delay(delayMs)
   }
   return album
   }
   
-  client.sendButton = async (
+  sock.sendButton = async (
     jid,
     text = '',
     footer = '',
@@ -776,12 +776,12 @@ export async function smsg(client, m, store) {
         if (/^image\//i.test(contentType)) {
           img = await prepareWAMessageMedia(
             { image: { url: buffer } },
-            { upload: client.waUploadToServer },
+            { upload: sock.waUploadToServer },
           )
         } else if (/^video\//i.test(contentType)) {
           video = await prepareWAMessageMedia(
             { video: { url: buffer } },
-            { upload: client.waUploadToServer },
+            { upload: sock.waUploadToServer },
           )
         } else {
           console.error('Tipo MIME no compatible:', contentType)
@@ -791,16 +791,16 @@ export async function smsg(client, m, store) {
       }
     } else {
       try {
-        const type = await client.getFile(buffer)
+        const type = await sock.getFile(buffer)
         if (/^image\//i.test(type.mime)) {
           img = await prepareWAMessageMedia(
             { image: { url: buffer } },
-            { upload: client.waUploadToServer },
+            { upload: sock.waUploadToServer },
           )
         } else if (/^video\//i.test(type.mime)) {
           video = await prepareWAMessageMedia(
             { video: { url: buffer } },
-            { upload: client.waUploadToServer },
+            { upload: sock.waUploadToServer },
           )
         }
       } catch (error) {
@@ -808,7 +808,7 @@ export async function smsg(client, m, store) {
       }
     }
 
-    const botId = client?.user?.id.split(':')[0] + '@s.whatsapp.net' || ''
+    const botId = sock?.user?.id.split(':')[0] + '@s.whatsapp.net' || ''
     const botSettings = await getSettings(botId) || {}
     const botname = botSettings.botname || ''
     const botname2 = botSettings.namebot || ''
@@ -869,15 +869,15 @@ export async function smsg(client, m, store) {
     let msgL = generateWAMessageFromContent(
       jid,
       { viewOnceMessage: { message: { interactiveMessage } } },
-      { userJid: client.user.jid, quoted },
+      { userJid: sock.user.jid, quoted },
     )
-    client.relayMessage(jid, msgL.message, {
+    sock.relayMessage(jid, msgL.message, {
       messageId: msgL.key.id,
       ...options,
     })
   }
 
-  client.sendList = async (jid, title, text, buttonText, listSections, quoted, options = {}) => {
+  sock.sendList = async (jid, title, text, buttonText, listSections, quoted, options = {}) => {
     const sections = [...listSections]
     const message = {
       interactiveMessage: {
@@ -897,10 +897,10 @@ export async function smsg(client, m, store) {
         },
       },
     }
-    await client.relayMessage(jid, { viewOnceMessage: { message } }, {})
+    await sock.relayMessage(jid, { viewOnceMessage: { message } }, {})
   }
 
-  client.newsletterMsg = async (key, content = {}, timeout = 5000) => {
+  sock.newsletterMsg = async (key, content = {}, timeout = 5000) => {
     const {
       type: rawType = 'INFO',
       name,
@@ -935,7 +935,7 @@ export async function smsg(client, m, store) {
             },
           },
         ]
-      const hasil = await client.query({
+      const hasil = await sock.query({
         tag: 'message',
         attrs: {
           to: key,
@@ -955,9 +955,9 @@ export async function smsg(client, m, store) {
       return hasil
     } else if (media && typeof media === 'object' && Object.keys(media).length > 0) {
       const msg = await generateWAMessageContent(media, {
-        upload: client.waUploadToServer,
+        upload: sock.waUploadToServer,
       })
-      const anu = await client.query({
+      const anu = await sock.query({
         tag: 'message',
         attrs: { to: newsletter_id, type: 'text' in media ? 'text' : 'media' },
         content: [
@@ -991,7 +991,7 @@ export async function smsg(client, m, store) {
             },
           },
         ]
-      const _query = await client.query(
+      const _query = await sock.query(
         {
           tag: 'iq',
           attrs: {
@@ -1052,14 +1052,14 @@ export async function smsg(client, m, store) {
     }
   }
 
-  const botIds = client?.user?.id.split(':')[0] + '@s.whatsapp.net' || ''
+  const botIds = sock?.user?.id.split(':')[0] + '@s.whatsapp.net' || ''
   const botSetting = await getSettings(botIds)
   const namebugsito = botSetting.namebot || ''
   const namebugg2 = botSetting.namebot2 || ''
   const pfp = botSetting.icon || ''
   const link = botSetting.link || ''
 
-  client.sendContextInfo = async (jid, text = '', options, quoted) => {
+  sock.sendContextInfo = async (jid, text = '', options, quoted) => {
     let prep = generateWAMessageFromContent(
       jid,
       {
@@ -1083,10 +1083,10 @@ export async function smsg(client, m, store) {
       },
       { quoted: m },
     )
-    return client.relayMessage(jid, prep.message, { messageId: prep.key.id })
+    return sock.relayMessage(jid, prep.message, { messageId: prep.key.id })
   }
 
-  client.sendContextInfoIndex = async (
+  sock.sendContextInfoIndex = async (
     jid,
     text = '',
     options = {},
@@ -1095,7 +1095,7 @@ export async function smsg(client, m, store) {
     mentionedJid = null,
     config = {},
   ) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const settings = await getSettings(botId)
     const banner = config.banner || settings.icon || ''
     const botnam = config.title || settings.namebot || ''
@@ -1126,16 +1126,16 @@ export async function smsg(client, m, store) {
     }
     const prep = generateWAMessageFromContent(jid, content, useQuoted ? { quoted } : {})
 
-    return client.relayMessage(jid, prep.message, {
+    return sock.relayMessage(jid, prep.message, {
       quoted: useQuoted ? prep.key.quoted : undefined,
       messageId: prep.key.id,
     })
   }
 
-  client.reply = async (jid, text = '', quoted, options) => {
+  sock.reply = async (jid, text = '', quoted, options) => {
     return Buffer.isBuffer(text)
-      ? client.sendFile(jid, text, 'file', '', quoted, false, options)
-      : client.sendMessage(jid, { ...options, text }, { quoted, ...options })
+      ? sock.sendFile(jid, text, 'file', '', quoted, false, options)
+      : sock.sendMessage(jid, { ...options, text }, { quoted, ...options })
   }
 
   return m

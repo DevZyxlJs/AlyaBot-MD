@@ -1,7 +1,7 @@
 export default {
   command: ['setstickerpackname', 'setpackname', 'packname'],
   category: 'stickers',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     try {
       if (!args.length) {
         return m.reply(`《✧》Especifica el nombre del paquete y el nuevo nombre.\n> Ejemplo: *${prefix + command} NombreActual | NuevoNombre*`)

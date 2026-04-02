@@ -34,7 +34,7 @@ export default {
   command: ['winfo', 'charinfo', 'cinfo'],
   category: 'gacha',
   use: '<nombre del personaje>',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat;
     const chatData = await getChat(chatId);
     

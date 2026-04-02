@@ -1,10 +1,10 @@
 export default {
   command: ['daily'],
   category: 'rpg',
-  run: async (client, m) => {
+  async run(sock, m) => {
     const chat = await getChat(m.chat)
     const user = await getChatUser(m.chat, m.sender)
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const monedas = botSettings.currency
 
@@ -39,7 +39,7 @@ export default {
 
    await updateChatUser(m.chat, m.sender, 'coins', user.coins)
 
-    return client.reply(m.chat, `「✿」 Has reclamado tu recompensa diaria de *${recompensa.toLocaleString()} ${monedas}*! (Día *1*)\n` +
+    return sock.reply(m.chat, `「✿」 Has reclamado tu recompensa diaria de *${recompensa.toLocaleString()} ${monedas}*! (Día *1*)\n` +
     `> Día *2* » *¥${siguiente.toLocaleString()}*` +
     (perdioRacha ? `\n> ☆ ¡Has perdido tu racha de días!` : ''), m)
 }
@@ -60,7 +60,7 @@ export default {
       ? `\n> ☆ ¡Racha de *${user.dailyStreak}* días, ¡Sigue así!`
       : ''
 
-    await client.reply(m.chat, `「✿」 Has reclamado tu recompensa diaria de *¥${recompensa.toLocaleString()} ${monedas}* (Día *${user.dailyStreak}*)\n` +
+    await sock.reply(m.chat, `「✿」 Has reclamado tu recompensa diaria de *¥${recompensa.toLocaleString()} ${monedas}* (Día *${user.dailyStreak}*)\n` +
       `> Día *${user.dailyStreak + 1}* » *¥${siguiente.toLocaleString()}*${rachaExtra}`, m, true)
 
   }

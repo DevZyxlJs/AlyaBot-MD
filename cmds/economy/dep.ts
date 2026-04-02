@@ -1,10 +1,10 @@
 export default {
   command: ['dep', 'deposit', 'd'],
   category: 'rpg',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatData = await getChat(m.chat)
     const user = await getChatUser(m.chat, m.sender)
-    const idBot = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const idBot = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const settings = await getSettings(idBot)
     const monedas = settings.currency
 

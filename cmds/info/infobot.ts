@@ -16,8 +16,8 @@ function rTime(seconds) {
 export default {
   command: ['infobot', 'infosocket', 'info'],
   category: 'info',
-  run: async (client, m) => {
-    const botId = client.user.id.split(':')[0] + "@s.whatsapp.net"
+  async run(sock, m) => {
+    const botId = sock.user.id.split(':')[0] + "@s.whatsapp.net"
     const botSettings = await getSettings(botId)
 
     const botname = botSettings.namebot || 'Ai Surus'
@@ -54,7 +54,7 @@ export default {
       minute: '2-digit'
     }).replace(/^./, m => m.toUpperCase())
 
-      const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net'
+      const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
       const botType = isOficialBot
         ? 'Owner'
             : 'Sub Bot'
@@ -80,7 +80,7 @@ export default {
 
 > \`Enlace:\` ${link}`.trim()
 
-    await client.sendMessage(m.chat, {
+    await sock.sendMessage(m.chat, {
       text: message,
       contextInfo: {
         mentionedJid: [...message.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net'),

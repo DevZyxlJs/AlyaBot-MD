@@ -12,17 +12,17 @@ import { getGroupAdmins } from './core/message.ts';
 
 seeCommands()
 
-export default async (client, m) => {
+export default async (sock, m) => {
 
 const sender = m.sender 
 
 let body = m.message.conversation || m.message.extendedTextMessage?.text || m.message.imageMessage?.caption || m.message.videoMessage?.caption || m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply?.selectedRowId || m.message.templateButtonReplyMessage?.selectedId || ''
 
-antilink(client, m)
-antistatus(client, m)
+antilink(sock, m)
+antistatus(sock, m)
 
 const from = m.key.remoteJid
-const botJid = client.user.id.split(':')[0] + '@s.whatsapp.net' || client.user.lid
+const botJid = sock.user.id.split(':')[0] + '@s.whatsapp.net' || sock.user.lid
 const chat = await getChat(m.chat)
 const settings = await getSettings(botJid)  
 const rawBotname = settings.namebot2 || 'Alya'
@@ -43,7 +43,7 @@ prefix = new RegExp('^', 'i')
 prefix = new RegExp('^(' + prefixes.join('|') + ')?', 'i')
 }
 const strRegex = (str) => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-let pluginPrefix = client.prefix ? client.prefix : prefix
+let pluginPrefix = sock.prefix ? sock.prefix : prefix
 let matchs = pluginPrefix instanceof RegExp ? [[pluginPrefix.exec(m.text), pluginPrefix]] : Array.isArray(pluginPrefix) ? pluginPrefix.map(p => {
 let regex = p instanceof RegExp ? p : new RegExp(strRegex(p))
 return [regex.exec(m.text), regex]}) : typeof pluginPrefix === 'string' ? [[new RegExp(strRegex(pluginPrefix)).exec(m.text), new RegExp(strRegex(pluginPrefix))]] : [[null, null]]
@@ -72,7 +72,7 @@ let groupAdmins = []
 let groupName = ''
 
 if (m.isGroup) {
-  groupMetadata = await client.groupMetadata(m.chat).catch(() => null)
+  groupMetadata = await sock.groupMetadata(m.chat).catch(() => null)
   groupName = groupMetadata?.subject || ''
   groupAdmins = groupMetadata?.participants.filter(p =>
     (p.admin === 'admin' || p.admin === 'superadmin')
@@ -89,7 +89,7 @@ const consolePrimary = fromprimary.primaryBot;
 if (m.message || !consolePrimary || consolePrimary === global.botJid) {
 console.log(`
 ${chalk.hex('#FE0041').bold('┈──────────────── ꒰ 🌺 ꒱')}
-≡ 🌿  Username Bot :: ${chalk.cyan(client.user.name)}   
+≡ 🌿  Username Bot :: ${chalk.cyan(sock.user.name)}   
 ≡ 🎍  Horario :: ${chalk.redBright(moment().format('DD/MM/YY HH:mm:ss'))}  
 ≡ 🌲  User :: ${chalk.blueBright(pushname)}  
 ≡ 🌷  From :: ${chalk.green(m.isGroup ? 'Grupo' : 'Chat Private')}  
@@ -116,7 +116,7 @@ function getAllSessionBots() {
   try {
     const ownerCreds = path.resolve('./Sessions/Owner/creds.json')
     if (fs.existsSync(ownerCreds)) {
-      const ownerId = global.client.user.id.split(':')[0] + '@s.whatsapp.net'
+      const ownerId = global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
       bots.push(ownerId)
     }
   } catch {}
@@ -125,12 +125,12 @@ function getAllSessionBots() {
 
 const chatData = await getChat(m.chat)
 const botprimaryId = chatData?.primaryBot
-const selfId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+const selfId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
 
 if (botprimaryId && botprimaryId !== selfId) {
   if (hasPrefix) {
     const participants = m.isGroup
-      ? (await client.groupMetadata(m.chat).catch(() => ({ participants: [] }))).participants
+      ? (await sock.groupMetadata(m.chat).catch(() => ({ participants: [] }))).participants
       : []
     const primaryInGroup = participants.some(p =>
       (p.phoneNumber || p.id) === botprimaryId
@@ -147,7 +147,7 @@ if (botprimaryId && botprimaryId !== selfId) {
 }
 
 const isVotOwn = [
-  client.user.id.split(':')[0] + '@s.whatsapp.net',
+  sock.user.id.split(':')[0] + '@s.whatsapp.net',
   ...global.owner.map(num => num + '@s.whatsapp.net')
 ].includes(sender)
 
@@ -192,7 +192,7 @@ const cmdData = global.comandos.get(command)
 
 if (!cmdData) {
   if (settings.prefijo === 1) return
-  await client.readMessages([m.key])
+  await sock.readMessages([m.key])
   return m.reply(`ꕤ El comando *${command}* no existe.\n✎ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
 }
 
@@ -202,11 +202,11 @@ if (cmdData.isOwner && !global.owner.map(num => num + '@s.whatsapp.net').include
   return m.reply(`ꕤ El comando *${command}* no existe.\n✎ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
 }
 
-if (cmdData.isAdmin && !isAdmins) return client.reply(m.chat, mess.admin, m)
-if (cmdData.botAdmin && !isBotAdmins) return client.reply(m.chat, mess.botAdmin, m)
+if (cmdData.isAdmin && !isAdmins) return sock.reply(m.chat, mess.admin, m)
+if (cmdData.botAdmin && !isBotAdmins) return sock.reply(m.chat, mess.botAdmin, m)
 
 try {
-  await client.readMessages([m.key])
+  await sock.readMessages([m.key])
   const user2 = await getUser(m.sender)
 
   user2.usedcommands = (user2.usedcommands || 0) + 1
@@ -224,7 +224,7 @@ try {
   user.stats[today].cmds++
   await updateChatUser(m.chat, m.sender, 'stats', user.stats)
 
-  await cmdData.run(client, m, args, command, text, usedPrefix)
+  await cmdData.run(sock, m, args, command, text, usedPrefix)
 } catch (error) {
   return m.reply(`${error}`)
 }

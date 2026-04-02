@@ -4,7 +4,7 @@ import FormData from 'form-data';
 export default {
   command: ['hd', 'upscale'],
   category: 'utils',
-    run: async (client, m, args, command, text, prefix) => {
+    async run(sock, m, args, command, text, prefix) => {
     try {
       const q = m.quoted || m
       const mime = q.mimetype || q.msg?.mimetype || ''
@@ -27,7 +27,7 @@ export default {
         return m.reply('✎ No se pudo *obtener* la imagen mejorada')
       }
 
-      await client.sendMessage(m.chat, { image: enhancedBuffer, caption: null }, { quoted: m })
+      await sock.sendMessage(m.chat, { image: enhancedBuffer, caption: null }, { quoted: m })
     } catch (err) {
       console.error(err)
       await m.reply(msgglobal)

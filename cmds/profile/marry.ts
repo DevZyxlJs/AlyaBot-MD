@@ -5,14 +5,14 @@ let proposals = {}
 export default {
   command: ['marry'],
   category: 'profile',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const proposer = m.sender
     const mentioned = m.mentionedJid
     const who2 = mentioned.length > 0 ? mentioned[0] : (m.quoted ? m.quoted.sender : false)
     if (!who2) return m.reply('《✤》 Menciona al usuario al que deseas proponer matrimonio.')
 
-    const proposee = await resolveLidToRealJid(who2, client, m.chat)
+    const proposee = await resolveLidToRealJid(who2, sock, m.chat)
 
     if (proposer === proposee)
       return m.reply('「✿」 No puedes proponerte matrimonio a ti mismo.')
@@ -41,7 +41,7 @@ export default {
      return m.reply(`✐ Felicidades, *${proposerData.name || proposer.split('@')[0]}* y *${proposeeData.name || proposee.split('@')[0]}* ahora están casados.`)
     } else {
       proposals[proposer] = proposee
-      return client.reply(
+      return sock.reply(
         chatId,
         `✎ @${proposee.split('@')[0]}, el usuario @${proposer.split('@')[0]} te ha enviado una propuesta de matrimonio.\n\n⚘ *Responde con:*\n> ❀ *_marry @${proposer.split('@')[0]}_* para confirmar.\n> ❀ La propuesta expirará en 2 minutos.`,
         m,

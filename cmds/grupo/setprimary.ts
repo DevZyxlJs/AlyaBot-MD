@@ -25,33 +25,33 @@ export default {
   category: 'grupo',
   isAdmin: true,
 
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
       const chat = await getChat(m.chat)
       const mentioned = m.mentionedJid
       const who2 = mentioned.length > 0 ? mentioned[0] : m.quoted?.sender || false
-      const who = await resolveLidToRealJid(who2, client, m.chat);
+      const who = await resolveLidToRealJid(who2, sock, m.chat);
 
       if (!who2) {
-        return client.reply(m.chat, `《✤》 Por favor menciona un bot para convertirlo en primario.`, m)
+        return sock.reply(m.chat, `《✤》 Por favor menciona un bot para convertirlo en primario.`, m)
       }
 
-      const groupMetadata = m.isGroup ? await client.groupMetadata(m.chat).catch(() => {}) : ''
+      const groupMetadata = m.isGroup ? await sock.groupMetadata(m.chat).catch(() => {}) : ''
       const groupParticipants = groupMetadata?.participants?.map((p) => p.phoneNumber || p.jid || p.id || p.lid) || []
 
-      const mainBotJid = global.client.user.id.split(':')[0] + '@s.whatsapp.net'
+      const mainBotJid = global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
       const allowedBots = getAllowedBots(mainBotJid)
 
       if (!allowedBots.includes(who)) {
-        return client.reply(m.chat, `✿ El usuario mencionado no es una instancia de Sub-Bot.`, m)
+        return sock.reply(m.chat, `✿ El usuario mencionado no es una instancia de Sub-Bot.`, m)
       }
 
       if (!groupParticipants.includes(who)) {
-        return client.reply(m.chat, `《✧》 El bot mencionado no está presente en este grupo.`, m)
+        return sock.reply(m.chat, `《✧》 El bot mencionado no está presente en este grupo.`, m)
       }
 
       if (chat.primaryBot === who) {
-        return client.reply(m.chat, `✎ @${who.split('@')[0]} ya es el Bot principal del Grupo.`, m, {
+        return sock.reply(m.chat, `✎ @${who.split('@')[0]} ya es el Bot principal del Grupo.`, m, {
           mentions: [who],
         })
       }
@@ -59,7 +59,7 @@ export default {
       chat.primaryBot = who
       await updateChat(m.chat, 'primaryBot', chat.primaryBot)
 
-      await client.reply(
+      await sock.reply(
         m.chat,
         `✐ Se ha establecido a @${who.split('@')[0]} como bot primario de este grupo.\n> Ahora todos los comandos de este grupo serán ejecutados por @${who.split('@')[0]}.`,
         m,

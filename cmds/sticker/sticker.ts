@@ -8,11 +8,11 @@ const { writeExif } = exif;
 export default {
   command: ['sticker', 's'],
   category: 'stickers',
-  run: async (client, m, args, command, text, usedPrefix) => {
+  async run(sock, m, args, command, text, usedPrefix) => {
     try {
       if (args[0] === '-list') {
         let helpText = `ꕥ Lista de Formas y Efectos Disponibles para *imagen*:\n\n✦ *Formas:*\n- -c : Crea un sticker circular\n- -t : Crea un sticker triangular\n- -s : Crea un sticker con forma de estrella\n- -r : Crea un sticker con esquinas redondeadas\n- -h : Crea un sticker hexagonal\n- -d : Crea un sticker con forma de diamante\n- -f : Crea un sticker con un marco\n- -b : Crea un sticker con un borde\n- -w : Crea un sticker con forma de onda\n- -m : Crea un sticker espejado\n- -o : Crea un sticker octogonal\n- -y : Crea un sticker pentagonal\n- -e : Crea un sticker elíptico\n- -z : Crea un sticker en forma de cruz\n- -v : Crea un sticker con forma de corazón\n- -x : Crea un sticker expandido (cover)\n- -i : Crea un sticker expandido (contain)\n\n✧ *Efectos:*\n- -blur : Aplica un efecto de desenfoque\n- -sepia : Aplica un efecto sepia\n- -sharpen : Aplica un efecto de nitidez\n- -brighten : Aumenta el brillo\n- -darken : Disminuye el brillo\n- -invert : Invierte los colores\n- -grayscale : Aplica escala de grises\n- -rotate90 : Rota la imagen 90 grados\n- -rotate180 : Rota la imagen 180 grados\n- -flip : Invierte la imagen horizontalmente\n- -flop : Invierte la imagen verticalmente\n- -normalice : Normaliza la imagen\n- -negate : Negatiza la imagen\n- -tint : Aplica un tinte de color a la imagen (rojo por defecto)\n\n> Ejemplo: *${usedPrefix + command} -c -blur Pack | Autor*`;
-        return client.reply(m.chat, helpText, m);
+        return sock.reply(m.chat, helpText, m);
       }      
       const quoted = m.quoted ? m.quoted : m;
       const mime = (quoted.msg || quoted).mimetype || '';
@@ -46,7 +46,7 @@ export default {
         const media = { mimetype: 'webp', data: webpBuffer };
         const metadata = { packname: pack, author: author, categories: [''] };
         const stickerPath = await writeExif(media, metadata);
-        await client.sendMessage(m.chat, { sticker: { url: stickerPath } }, { quoted: m });
+        await sock.sendMessage(m.chat, { sticker: { url: stickerPath } }, { quoted: m });
         fs.unlinkSync(stickerPath);
       };
       const convertToGif = async (inputPath) => {
@@ -130,10 +130,10 @@ export default {
       } else if (urlArg) {
         const url = urlArg;        
         if (!url.match(/\.(jpe?g|png|gif|webp|mp4|mov|avi|mkv|webm)(\?.*)?$/i)) {
-          return client.reply(m.chat, '《✧》 La URL debe ser de una imagen (jpg, png, gif, webp) o video (mp4, mov, avi, mkv, webm)', m);
+          return sock.reply(m.chat, '《✧》 La URL debe ser de una imagen (jpg, png, gif, webp) o video (mp4, mov, avi, mkv, webm)', m);
         }        
         const response = await fetch(url);
-        if (!response.ok) return client.reply(m.chat, '《✧》 No pude descargar ese archivo desde la URL.', m);
+        if (!response.ok) return sock.reply(m.chat, '《✧》 No pude descargar ese archivo desde la URL.', m);
         const buffer = Buffer.from(await response.arrayBuffer());
         if (url.match(/\.webp(\?.*)?$/i)) {
           await handleWebpBuffer(buffer);
@@ -150,7 +150,7 @@ export default {
           fs.unlinkSync(inputPath);
         }
       } else {
-        return client.reply(m.chat, `《✧》 Por favor, envía una imagen, video, sticker o URL para hacer un sticker.\n> Usa *${usedPrefix + command} -list* para ver formas y efectos`, m);
+        return sock.reply(m.chat, `《✧》 Por favor, envía una imagen, video, sticker o URL para hacer un sticker.\n> Usa *${usedPrefix + command} -list* para ver formas y efectos`, m);
       }
     } catch (e) {
       return m.reply(msgglobal + e);

@@ -3,7 +3,7 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['giveallharem'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const senderId = m.sender
     
@@ -14,7 +14,7 @@ export default {
 
     const texto = m.mentionedJid
     const who2 = texto.length > 0 ? texto[0] : m.quoted ? m.quoted.sender : false
-    const mentionedJid = await resolveLidToRealJid(who2, client, m.chat)
+    const mentionedJid = await resolveLidToRealJid(who2, sock, m.chat)
 
     if (!who2 || mentionedJid === senderId)
       return m.reply('《✤》 Menciona al usuario al que deseas regalar todos tus personajes.')

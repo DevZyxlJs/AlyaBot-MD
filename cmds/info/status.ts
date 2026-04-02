@@ -11,13 +11,13 @@ function getDefaultHostId() {
 export default {
   command: ['status'],
   category: 'info',
-  run: async (client, m) => {
+  async run(sock, m) => {
 
     const users = await getUser()
     const hostId = getDefaultHostId()
     const chats = await getChat()
     const registeredGroups = chats ? Object.keys(chats).length : 0
-    const botId = client.user.id.split(':')[0] + "@s.whatsapp.net" || false
+    const botId = sock.user.id.split(':')[0] + "@s.whatsapp.net" || false
     const botSettings = await getSettings(botId)
 
     const botname = botSettings.namebot || 'Ai Surus'
@@ -50,6 +50,6 @@ export default {
 
     const message = `${estadoBot}\n\n${estadoServidor}`
 
-        await client.sendContextInfoIndex(m.chat, message, {}, m, true, {})
+        await sock.sendContextInfoIndex(m.chat, message, {}, m, true, {})
   }
 };

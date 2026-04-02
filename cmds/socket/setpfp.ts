@@ -14,8 +14,8 @@ async function resizeImage(media) {
 export default {
   command: ['setimage', 'setpfp'],
   category: 'socket',
-  run: async (client, m, args) => {
-    const idBot = client.user.id.split(':')[0] + '@s.whatsapp.net'
+  async run(sock, m, args) => {
+    const idBot = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const config = await getSettings(idBot)
     const owner = config.owner ? config.owner : '' || ''
     const isOwner2 = [idBot, ...global.owner.map((number) => number + '@s.whatsapp.net')].includes(m.sender)
@@ -27,11 +27,11 @@ export default {
     const media = await q.download()
     if (!media) return m.reply('❀ No se pudo descargar la imagen.')
 
-    const jid = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const jid = sock.user.id.split(':')[0] + '@s.whatsapp.net'
 
     if (args[1] === 'full') {
       const { img } = await resizeImage(media)
-      await client.query({
+      await sock.query({
         tag: 'iq',
         attrs: {
           to: jid,
@@ -47,7 +47,7 @@ export default {
         ],
       })
     } else {
-      await client.updateProfilePicture(jid, media)
+      await sock.updateProfilePicture(jid, media)
     }
 
     return m.reply(`✿ Se ha actualizado la foto de perfil de *${config.namebot}*!`)

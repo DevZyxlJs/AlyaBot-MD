@@ -1,10 +1,10 @@
 export default {
   command: ['cazar', 'hunt'],
   category: 'rpg',
-    run: async (client, m, args, command, text, prefix) => {
+    async run(sock, m, args, command, text, prefix) => {
     const chat = await getChat(m.chat)
     const user = await getChatUser(m.chat, m.sender)
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const currency = botSettings.currency
     if (chat.adminonly || !chat.rpg)
@@ -83,7 +83,7 @@ export default {
     user.lasthunt = Date.now() + 15 * 60 * 1000
 
    await updateChatUser(m.chat, m.sender, 'lasthunt', user.lasthunt)
-    await client.sendMessage(m.chat, { text: `「✿」 ${message}` }, { quoted: m })
+    await sock.sendMessage(m.chat, { text: `「✿」 ${message}` }, { quoted: m })
   },
 }
 

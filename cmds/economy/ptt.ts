@@ -1,9 +1,9 @@
 export default {
   command: ['ppt'],
   category: 'rpg',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const chatId = m.chat
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const monedas = botSettings.currency
     const chatData = await getChat(m.chat)
@@ -41,7 +41,7 @@ export default {
    await updateChatUser(m.chat, m.sender, 'coins', user.coins)
   await updateUser(m.sender, 'exp', user2.exp)
 
-      await client.reply(
+      await sock.reply(
         chatId,
         `✿ Ganaste.\n\n> *Tu elección ›* ${userChoice}\n> *Bot eligió ›* ${botChoice}\n> *${monedas} ›* ¥${reward.toLocaleString()}\n> *Exp ›* ${exp}\n\n${dev}`,
         m
@@ -63,7 +63,7 @@ export default {
    await updateChatUser(m.chat, m.sender, 'bank', user.bank)
       }
 
-      await client.reply(
+      await sock.reply(
         chatId,
         `✿ Perdiste.\n\n> *Tu elección ›* ${userChoice}\n> *Bot eligió ›* ${botChoice}\n> *${monedas} ›* -¥${actualLoss.toLocaleString()}\n\n${dev}`,
         m
@@ -74,7 +74,7 @@ export default {
 
    await updateChatUser(m.chat, m.sender, 'coins', user.coins)
    await updateUser(m.sender, 'exp', user2.exp)
-      await client.reply(
+      await sock.reply(
         chatId,
         `✿ Empate.\n\n> *Tu elección ›* ${userChoice}\n> *Bot eligió ›* ${botChoice}\n> *${monedas} ›* +¥${tieReward.toLocaleString()}\n> *Exp ›* +${tieExp}\n\n${dev}`,
         m

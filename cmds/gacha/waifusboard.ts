@@ -2,7 +2,7 @@ export default {
   command: ['waifusboard', 'waifustop', 'topwaifus'],
   category: 'gacha',
   use: '[página]',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const chatData = await getChat(chatId)
 

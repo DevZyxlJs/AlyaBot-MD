@@ -3,14 +3,14 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  run: async (client, m) => {
+  async run(sock, m) => {
     const mentioned = await m.mentionedJid
     const who = mentioned.length > 0 ? mentioned[0] : m.quoted ? await m.quoted.sender : false
 
     if (!who) return m.reply('《✤》 Menciona al usuario que deseas promover a administrador.')
 
     try {
-      const groupMetadata = await client.groupMetadata(m.chat)
+      const groupMetadata = await sock.groupMetadata(m.chat)
       const participant = groupMetadata.participants.find(
         (p) =>
           p.phoneNumber === who ||
@@ -20,15 +20,15 @@ export default {
       )
 
       if (participant?.admin)
-        return client.reply(
+        return sock.reply(
           m.chat,
           `✎ *@${who.split('@')[0]}* ya es administrador del grupo!`,
           m,
           { mentions: [who] }
         )
 
-      await client.groupParticipantsUpdate(m.chat, [who], 'promote')
-      await client.reply(
+      await sock.groupParticipantsUpdate(m.chat, [who], 'promote')
+      await sock.reply(
         m.chat,
         `✐ *@${who.split('@')[0]}* ha sido promovido a administrador del grupo!`,
         m,

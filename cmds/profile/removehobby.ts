@@ -1,7 +1,7 @@
 export default {
   command: ['delpasatiempo', 'removehobby'],
   category: 'profile',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const user = await getUser(m.sender)
 
     if (!user.pasatiempo || user.pasatiempo === 'No definido') {

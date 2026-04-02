@@ -1,8 +1,8 @@
 export default {
   command: ['ritual'],
   category: 'rpg',
-   run: async (client, m, args, command, text, prefix) => {
-    const botId = client?.user?.id.split(':')[0] + '@s.whatsapp.net'
+   async run(sock, m, args, command, text, prefix) => {
+    const botId = sock?.user?.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const monedas = botSettings?.currency || 'Coins'
 
@@ -55,7 +55,7 @@ export default {
     let msg = `${narration}\nGanaste *${reward.toLocaleString()} ${monedas}*`
     if (bonusMsg) msg += `\n${bonusMsg}`
 
-    await client.reply(m.chat, msg, m)
+    await sock.reply(m.chat, msg, m)
 
   },
 };

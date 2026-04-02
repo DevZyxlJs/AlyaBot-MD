@@ -3,9 +3,9 @@ import fetch from 'node-fetch'
 export default {
   command: ['fb', 'facebook'],
   category: 'downloader',
-  run: async (client, m, args, command) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
-    const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net'
+  async run(sock, m, args, command) => {
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
+    const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
 
     if (!args.length) {
       return m.reply('✎ Ingrese uno o varios enlaces de *Facebook*')
@@ -35,7 +35,7 @@ export default {
           }
         }
         if (medias.length) {
-          await client.sendAlbumMessage(m.chat, medias, { quoted: m })
+          await sock.sendAlbumMessage(m.chat, medias, { quoted: m })
         } else {
           await m.reply(`✿ No se pudieron procesar los enlaces.`)
         }
@@ -46,7 +46,7 @@ export default {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const buffer = await res.buffer()
 
-        await client.sendMessage(
+        await sock.sendMessage(
           m.chat,
           { video: buffer, mimetype: 'video/mp4', fileName: 'fb.mp4' },
           { quoted: m }

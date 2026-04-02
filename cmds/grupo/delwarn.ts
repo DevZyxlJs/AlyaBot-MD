@@ -4,21 +4,21 @@ export default {
   command: ['delwarn'],
   category: 'group',
   isAdmin: true,
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chat = await getChat(m.chat)
     const mentioned = m.mentionedJid || []
     const who2 = mentioned.length > 0 ? mentioned[0] : (m.quoted ? m.quoted.sender : false)
 
     if (!who2) return m.reply('《✤》 Debes mencionar o responder al usuario cuya advertencia deseas eliminar.')
 
-    const targetId = await resolveLidToRealJid(who2, client, m.chat)
+    const targetId = await resolveLidToRealJid(who2, sock, m.chat)
     const user = await getChatUser(m.chat, targetId)
     const nam = await getUser(targetId)
     if (!user) return m.reply('✎ No se encontró al usuario en la base de datos.')
 
     const total = user?.warnings?.length || 0
     if (total === 0) {
-      return client.reply(
+      return sock.reply(
         m.chat,
         `✐ El usuario @${targetId.split('@')[0]} no tiene advertencias registradas.`,
         m,
@@ -32,7 +32,7 @@ export default {
 
     if (rawIndex?.toLowerCase() === 'all') {
       user.warnings = []
-      return client.reply(
+      return sock.reply(
         m.chat,
         `✎ Se han eliminado todas las advertencias del usuario @${targetId.split('@')[0]} (${name}).`,
         m,
@@ -52,7 +52,7 @@ export default {
     const realIndex = total - index
     user.warnings.splice(realIndex, 1)
 
-    await client.reply(
+    await sock.reply(
       m.chat,
       `✎ Se ha eliminado la advertencia #${index} del usuario @${targetId.split('@')[0]} (${name}).`,
       m,

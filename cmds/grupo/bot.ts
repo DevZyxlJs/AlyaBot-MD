@@ -2,10 +2,10 @@ export default {
   command: ['bot'],
   category: 'grupo',
   isAdmin: true,
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chat = await getChat(m.chat)
     const estado = chat.bannedGrupo ?? 0
-    const botId = client.user.id.split(':')[0] + "@s.whatsapp.net"
+    const botId = sock.user.id.split(':')[0] + "@s.whatsapp.net"
     const bot = await getSettings(botId)
 
     if (args[0] === 'off') {

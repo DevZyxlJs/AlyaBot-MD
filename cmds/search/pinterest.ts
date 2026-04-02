@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 export default {
   command: ['pinterest', 'pin'],
   category: 'search',
-  run: async (client, m, args, from) => {
+  async run(sock, m, args, from) => {
     const text = args.join(' ')
     const isPinterestUrl = /^https?:\/\//.test(text)
 
@@ -22,7 +22,7 @@ export default {
         const { data: result } = await ress.json()
         const mediaType = ['image', 'video'].includes(result.type) ? result.type : 'document'
 
-        await client.sendMessage(
+        await sock.sendMessage(
           m.chat,
           { [mediaType]: { url: result.dl }, caption: null },
           { quoted: m },
@@ -57,13 +57,13 @@ export default {
         }
 
         if (medias.length) {
-          await client.sendAlbumMessage(m.chat, medias, { quoted: m })
+          await sock.sendAlbumMessage(m.chat, medias, { quoted: m })
         } else {
           await m.reply(`✿ No se pudieron procesar los resultados.`)
         }
       }
     } catch (e) {
-      await client.reply(
+      await sock.reply(
         m.chat,
         msgglobal,
         m

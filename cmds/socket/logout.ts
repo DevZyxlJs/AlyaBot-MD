@@ -5,8 +5,8 @@ import {jidDecode} from '@whiskeysockets/baileys';
 export default {
   command: ['logout'],
   category: 'socket',
-    run: async (client, m, args, command, text, prefix) => {
-    const rawId = client.user?.id || ''
+    async run(sock, m, args, command, text, prefix) => {
+    const rawId = sock.user?.id || ''
     const decoded = jidDecode(rawId)
     const cleanId = decoded?.user || rawId.split('@')[0]
 
@@ -22,7 +22,7 @@ export default {
 
     try {
       await m.reply('✐ Cerrando sesión del Socket...')
-      await client.logout()
+      await sock.logout()
 
       setTimeout(() => {
         if (fs.existsSync(sessionPath)) {

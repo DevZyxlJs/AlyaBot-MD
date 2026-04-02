@@ -3,7 +3,7 @@ import axios from 'axios';
 export default {
   command: ['aptoide', 'apk', 'apkdl'],
   category: 'search',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     if (!args || !args.length) {
       return m.reply(
         '✿ Ingresa el *nombre* de la *aplicación*.',
@@ -28,9 +28,9 @@ export default {
 𖣣ֶㅤ֯⌗ ❖ ׄ ⬭ *Última actualización ›* ${data.lastUpdated}
 𖣣ֶㅤ֯⌗ ❖ ׄ ⬭ *Tamaño ›* ${data.size}`
 
-    await client.sendContextInfoIndex(m.chat, response, {}, m, true, {})
+    await sock.sendContextInfoIndex(m.chat, response, {}, m, true, {})
 
-        await client.sendMessage(
+        await sock.sendMessage(
           m.chat,
           {
             document: { url: data.dl },
@@ -41,7 +41,7 @@ export default {
           { quoted: m },
         )
       } else {
-        await client.reply(m.chat, `✿ No se encontró la aplicación solicitada.`, m)
+        await sock.reply(m.chat, `✿ No se encontró la aplicación solicitada.`, m)
       }
     } catch (error) {
       await m.reply(msgglobal)

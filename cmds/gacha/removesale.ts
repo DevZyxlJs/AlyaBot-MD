@@ -1,7 +1,7 @@
 export default {
   command: ['removesale', 'removerventa'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
     const chatId = m.chat
     const userId = m.sender
@@ -36,7 +36,7 @@ export default {
     
     await updateChatUser(chatId, userId, 'characters', userData.characters)
 
-    await client.reply(chatId, `✐ Tu personaje *${personajeCancelado.name}* ha sido retirado de la venta.`, m)
+    await sock.reply(chatId, `✐ Tu personaje *${personajeCancelado.name}* ha sido retirado de la venta.`, m)
     } catch (e) {
       m.reply(msgglobal + e)
     }

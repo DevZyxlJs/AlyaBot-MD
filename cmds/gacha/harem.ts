@@ -18,11 +18,11 @@ function findCharacterMatch(char, charactersData) {
 export default {
   command: ['harem', 'miswaifus', 'claims'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const mentioned = m.mentionedJid
     const who2 = mentioned.length > 0 ? mentioned[0] : (m.quoted ? m.quoted.sender : m.sender)
-    const userId = await resolveLidToRealJid(who2, client, m.chat)
+    const userId = await resolveLidToRealJid(who2, sock, m.chat)
 
     const globalUser = await getUser(userId)
     const name = globalUser?.name || userId.split('@')[0]

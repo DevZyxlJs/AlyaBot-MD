@@ -3,13 +3,13 @@ import fetch from 'node-fetch';
 export default {
   command: ['tiktoksearch', 'ttsearch', 'tts'],
   category: 'search',
-  run: async (client, m, args) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+  async run(sock, m, args) => {
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const banner = botSettings.icon
 
     if (!args || !args.length) {
-      return client.reply(
+      return sock.reply(
         m.chat,
         `✿ Ingresa un término de búsqueda.`,
         m,
@@ -26,7 +26,7 @@ export default {
       const json = await res.json()
 
       if (!json || !json.data || !json.data.length) {
-        return client.reply(m.chat, `✿ No se encontraron resultados para "${query}".`, m)
+        return sock.reply(m.chat, `✿ No se encontraron resultados para "${query}".`, m)
       }
 
       let message = ``
@@ -45,7 +45,7 @@ export default {
 ${index < json.data.length - 1 ? '╾۪〬─ ┄۫╌ ׄ┄┈۪ ─〬 ׅ┄╌ ۫┈ ─ׄ─۪〬 ┈ ┄۫╌ ┈┄۪ ─ׄ〬╼' : ''}
         `
       })
-    await client.sendContextInfoIndex(m.chat, message, {}, m, true, {})
+    await sock.sendContextInfoIndex(m.chat, message, {}, m, true, {})
     } catch (e) {
       await m.reply(msgglobal)
     }

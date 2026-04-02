@@ -5,16 +5,16 @@ const joinCommands = [
   '!invite', '.invite', '+invite'
 ]
 
-export default async (client, m) => {
+export default async (sock, m) => {
   if (!m.isGroup || !m.text) return
 
-  const groupMetadata = await client.groupMetadata(m.chat).catch(() => null)
+  const groupMetadata = await sock.groupMetadata(m.chat).catch(() => null)
   if (!groupMetadata) return
 
   const participants = groupMetadata.participants || []
   const groupAdmins = participants.filter(p => p.admin).map(p => p.phoneNumber || p.jid)
   const isAdmin = groupAdmins.includes(m.sender)
-  const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+  const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
   const isBotAdmin = groupAdmins.includes(botId)
 
   const botSettings = await getSettings(botId)
@@ -31,7 +31,7 @@ export default async (client, m) => {
 
   if (!isGroupLink || !chat?.antilinks || isAdmin || !isBotAdmin || !isPrimary) return
 
-  await client.sendMessage(m.chat, {
+  await sock.sendMessage(m.chat, {
     delete: {
       remoteJid: m.chat,
       fromMe: false,
@@ -41,7 +41,7 @@ export default async (client, m) => {
   }).catch(() => {})
 
 if (!joinCommands.includes(command)) {
-  await client.sendMessage(m.chat, {
+  await sock.sendMessage(m.chat, {
     delete: {
       remoteJid: m.chat,
       fromMe: false,
@@ -51,7 +51,7 @@ if (!joinCommands.includes(command)) {
   }).catch(() => {})
 
   if (m.quoted?.key?.id) {
-    await client.sendMessage(m.chat, {
+    await sock.sendMessage(m.chat, {
       delete: {
         remoteJid: m.chat,
         fromMe: false,
@@ -65,8 +65,8 @@ if (!joinCommands.includes(command)) {
     const userName = ysr?.name || m.pushName || 'Usuario'
 
   setTimeout(async () => {
-    await client.reply(m.chat, `❖ *${userName}* eliminado por \`Anti-Link\``, null)
-    await client.groupParticipantsUpdate(m.chat, [m.sender], 'remove').catch(err => {
+    await sock.reply(m.chat, `❖ *${userName}* eliminado por \`Anti-Link\``, null)
+    await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove').catch(err => {
       m.reply('Error al expulsar' + err)
     })
   }, 500)

@@ -8,14 +8,14 @@ const dirname = path.dirname(filename);
 export default {
   command: ['bots', 'sockets'],
   category: 'socket',
-  run: async (client, m) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+  async run(sock, m) => {
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const bot = await getSettings(botId)
     const from = m.key.remoteJid
-    const groupMetadata = m.isGroup ? await client.groupMetadata(from).catch(() => {}) : ''
+    const groupMetadata = m.isGroup ? await sock.groupMetadata(from).catch(() => {}) : ''
     const groupParticipants = groupMetadata?.participants?.map((p) => p.phoneNumber || p.jid || p.lid || p.id) || []
 
-    const mainBotJid = global.client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const mainBotJid = global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const isMainBotInGroup = groupParticipants.includes(mainBotJid)
 
     const basePath = path.join(dirname, '../../Sessions')
@@ -85,6 +85,6 @@ export default {
       }
     }
 
-    await client.sendContextInfoIndex(m.chat, message, {}, m, true, mentionedJid)
+    await sock.sendContextInfoIndex(m.chat, message, {}, m, true, mentionedJid)
   },
 };

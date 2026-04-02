@@ -37,7 +37,7 @@ async function reloadCommands(dir = path.join(__dirname, '..')) {
 export default {
   command: ['fix', 'update'],
   isOwner: true,
-  run: async (client, m) => {
+  async run(sock, m) => {
     exec('git pull', async (error, stdout, stderr) => {
       await reloadCommands(path.join(__dirname, '..'))
 
@@ -48,7 +48,7 @@ export default {
         msg = `*Actualización completada*\n\n${stdout}`
       }
 
-      await client.sendMessage(m.key.remoteJid, { text: msg }, { quoted: m })
+      await sock.sendMessage(m.key.remoteJid, { text: msg }, { quoted: m })
     })
   }
 }

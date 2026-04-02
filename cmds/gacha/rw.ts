@@ -47,7 +47,7 @@ const msToTime = (duration) => {
 export default {
   command: ['rollwaifu', 'roll', 'rw', 'rf'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const userId = m.sender
     const chat = await getChat(chatId)
@@ -112,7 +112,7 @@ const payload = {
   mimetype: 'image/jpeg'
 };
 
-const sent = await client.sendMessage(chatId, payload, { quoted: m });
+const sent = await sock.sendMessage(chatId, payload, { quoted: m });
 
       if (!poseedor) {
         const idUnico = uuidv4().slice(0, 8)

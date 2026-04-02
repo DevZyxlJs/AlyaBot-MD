@@ -1,7 +1,7 @@
 export default {
   command: ['buycharacter', 'buychar', 'buyc'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
    try {
     const chatId = m.chat
     const userId = m.sender
@@ -11,7 +11,7 @@ export default {
     if (chatConfig.adminonly || !chatConfig.gacha)
       return m.reply(mess.comandooff)
 
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const monedas = botSettings?.currency || 'monedas'
 

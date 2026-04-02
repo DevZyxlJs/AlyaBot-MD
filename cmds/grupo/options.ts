@@ -10,7 +10,7 @@ export default {
   ],
   category: 'grupo',
   isAdmin: true,
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     const chatData = await getChat(m.chat)
     const stateArg = args[0]?.toLowerCase()
     const validStates = ['on', 'off', 'enable', 'disable']
@@ -68,7 +68,7 @@ export default {
     const titulo = featureTitles[normalizedKey] || normalizedKey
 
     if (!stateArg) {
-      return client.reply(
+      return sock.reply(
         m.chat,
         `*✩ ${titulo} (✿❛◡❛)*\n` +
         `❒ *Estado ›* ${estado}\n\n` +

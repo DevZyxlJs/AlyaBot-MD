@@ -3,11 +3,11 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['givecoins', 'pay', 'coinsgive'],
   category: 'rpg',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
 
     try {
     const chatId = m.chat
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const monedas = botSettings.currency || 'coins'
     const chatData = await getChat(m.chat)
@@ -18,7 +18,7 @@ export default {
     const [cantidadInputRaw, ...rest] = args
     const mentioned = m.mentionedJid || []
     const who2 = mentioned[0] || args.find(arg => arg.includes('@s.whatsapp.net'))
-    const who = await resolveLidToRealJid(who2, client, m.chat);
+    const who = await resolveLidToRealJid(who2, sock, m.chat);
     if (!who2) return m.reply(`《✤》 Debes mencionar a quien quieras transferir *${monedas}*.`)
 
     const senderData = await getChatUser(m.chat, m.sender)
@@ -46,7 +46,7 @@ export default {
       const cantidadFormatted = cantidad.toLocaleString()
       const textoTransferencia = `*¥${cantidadFormatted} ${monedas}*`
 
-await client.reply(
+await sock.reply(
   chatId,
   `「✿」 Transferiste ${textoTransferencia} a *@${who.split('@')[0]}*.`,
   m,

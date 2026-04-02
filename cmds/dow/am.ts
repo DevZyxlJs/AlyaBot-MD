@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 export default {
   command: ['am', 'applemusic'],
   category: 'downloader',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     try {
       if (!args[0]) {
         return m.reply('✎ Por favor, menciona el nombre de la canción que deseas descargar de Apple Music')
@@ -27,7 +27,7 @@ export default {
 
 𐙚 ❀ ｡ ↻ El archivo se está enviando, espera un momento... ˙𐙚`
 
-      await client.sendMessage(m.chat, { image: { url: songInfo.thumbnail }, caption }, { quoted: m })
+      await sock.sendMessage(m.chat, { image: { url: songInfo.thumbnail }, caption }, { quoted: m })
 
       const audioRes = await fetch(songInfo.download)
       if (!audioRes.ok) {
@@ -41,7 +41,7 @@ export default {
         fileName: `${songInfo.title}.m4a`
       }
 
-      await client.sendMessage(m.chat, mensaje, { quoted: m })
+      await sock.sendMessage(m.chat, mensaje, { quoted: m })
 
     } catch (e) {
       await m.reply('❖ Ocurrió un error inesperado, intenta nuevamente.')

@@ -37,11 +37,11 @@ function msToTime(duration) {
 export default {
   command: ['vote', 'votar'],
   category: 'gacha',
-  run: async (client, m, args, command) => {
+  async run(sock, m, args, command) => {
     const chatId = m.chat
     const userId = m.sender
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
-    const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
+    const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const settings = await getSettings(botId)
 
     const chatConfig = await getChat(chatId)

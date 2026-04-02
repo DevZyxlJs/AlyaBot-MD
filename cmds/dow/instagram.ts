@@ -3,9 +3,9 @@ import fetch from 'node-fetch'
 export default {
   command: ['instagram', 'ig', 'reel'],
   category: 'downloader',
-  run: async (client, m, args, command) => {
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
-    const isOficialBot = botId === global.client.user.id.split(':')[0] + '@s.whatsapp.net'
+  async run(sock, m, args, command) => {
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
+    const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
 
     if (!args.length) {
       return m.reply('✎ Ingrese uno o varios enlaces de *Instagram*.')
@@ -38,7 +38,7 @@ export default {
           }
         }
         if (medias.length) {
-          await client.sendAlbumMessage(m.chat, medias, { quoted: m })
+          await sock.sendAlbumMessage(m.chat, medias, { quoted: m })
         } else {
           await m.reply(`✿ No se pudieron procesar los enlaces.`)
         }
@@ -47,12 +47,12 @@ export default {
         const res = await fetch(`${api.url}/dl/instagram?url=${encodeURIComponent(url)}&key=${api.key}`)
         const json = await res.json()
         if (!json.status || !json.data) {
-          return client.reply(m.chat, '✿ No se pudo *obtener* el contenido', m)
+          return sock.reply(m.chat, '✿ No se pudo *obtener* el contenido', m)
         }
 
         if (json.data.length === 1) {
           const media = json.data[0]
-          await client.sendMessage(
+          await sock.sendMessage(
             m.chat,
             { video: { url: media.url }, mimetype: 'video/mp4', fileName: 'instagram.mp4' },
             { quoted: m }
@@ -62,11 +62,11 @@ export default {
           for (const media of json.data.slice(0, 10)) {
             medias.push({ type: 'image', data: { url: media.url || media.thumbnail } })
           }
-          await client.sendAlbumMessage(m.chat, medias, { quoted: m })
+          await sock.sendAlbumMessage(m.chat, medias, { quoted: m })
         }
       }
     } catch (e) {
-      await client.reply(m.chat, msgglobal, m)
+      await sock.reply(m.chat, msgglobal, m)
     }
   }
 }

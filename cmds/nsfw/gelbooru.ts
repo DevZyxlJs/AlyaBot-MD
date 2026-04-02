@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 export default {
   command: ['gelbooru', 'gbooru'],
   category: 'nsfw',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
      const chat = await getChat(m.chat)
 
@@ -28,7 +28,7 @@ export default {
 
       const randomImage = data.results[Math.floor(Math.random() * data.results.length)]
 
-      await client.sendMessage(
+      await sock.sendMessage(
         chatId,
         {
           image: { url: randomImage }

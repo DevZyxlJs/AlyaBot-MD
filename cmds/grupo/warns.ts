@@ -4,7 +4,7 @@ export default {
   command: ['warns'],
   category: 'group',
   isAdmin: true,
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chat = await getChat(m.chat)
     const mentioned = m.mentionedJid
     const who2 =
@@ -13,7 +13,7 @@ export default {
         : m.quoted
         ? m.quoted.sender
         : false
-   const userId = await resolveLidToRealJid(who2, client, m.chat);
+   const userId = await resolveLidToRealJid(who2, sock, m.chat);
 
     const user = await getChatUser(m.chat, userId)
     const nam = await getUser(userId)
@@ -25,7 +25,7 @@ export default {
     const total = user.warnings?.length || 0
 
     if (total === 0) {
-      return client.reply(m.chat, `✐ @${userId.split('@')[0]} no tiene advertencias registradas.`, m, {
+      return sock.reply(m.chat, `✐ @${userId.split('@')[0]} no tiene advertencias registradas.`, m, {
         mentions: [userId],
       })
     }
@@ -39,7 +39,7 @@ export default {
       })
       .join('\n')
 
-    await client.reply(m.chat,
+    await sock.reply(m.chat,
       `✐ Advertencias de @${userId.split('@')[0]} (${name}):\n> ✧ Total de advertencias: \`${total}\`\n\n${warningList}`,
       m,
       { mentions: [userId, ...user.warnings.map(w => w.by).filter(Boolean)] }

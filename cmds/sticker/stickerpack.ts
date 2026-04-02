@@ -47,9 +47,9 @@ const filterRelevantPacks = (packs, query) => {
 export default {
   command: ['stickerpack', 'spack'],
   category: 'stickers',
-  run: async (client, m, args, command, text, prefix) => {
+  async run(sock, m, args, command, text, prefix) => {
     try {
-      if (!text) return client.reply(m.chat, `《✧》 Ingresa un texto para buscar packs de stickers o una URL de sticker.ly.`, m);
+      if (!text) return sock.reply(m.chat, `《✧》 Ingresa un texto para buscar packs de stickers o una URL de sticker.ly.`, m);
       const name = await getUser(m.sender).name || m.sender.split('@')[0];
       let packData;
       const stickerMatch = text.match(/(?:sticker\.ly\/s\/)([a-zA-Z0-9]+)(?:\s|$)/);
@@ -58,13 +58,13 @@ export default {
       if (url) {
         let detail = await downloadPack(url);
         if (!detail || !detail.status || detail.error === 500) {
-          return client.reply(m.chat, `《✧》 El pack de la URL no está disponible o es privado.`, m);
+          return sock.reply(m.chat, `《✧》 El pack de la URL no está disponible o es privado.`, m);
         }
-        if (!detail.detalles) return client.reply(m.chat, `《✧》 No se pudo obtener el pack desde la URL.`, m);
+        if (!detail.detalles) return sock.reply(m.chat, `《✧》 No se pudo obtener el pack desde la URL.`, m);
         packData = detail.detalles;
       } else {
         const search = await searchPacks(text);
-        if (!search.status || !search.resultados?.length) return client.reply(m.chat, `《✧》 No se encontraron packs para *${text}*.`, m);
+        if (!search.status || !search.resultados?.length) return sock.reply(m.chat, `《✧》 No se encontraron packs para *${text}*.`, m);
         const relevantPacks = filterRelevantPacks(search.resultados, text);
         let packsToTry = relevantPacks.length > 0 ? relevantPacks : search.resultados;
         let detail = null;
@@ -85,20 +85,20 @@ export default {
           intentos++;
         }
         if (!detail) {
-          return client.reply(m.chat, `《✧》 No se pudo descargar ningún pack válido.`, m);
+          return sock.reply(m.chat, `《✧》 No se pudo descargar ningún pack válido.`, m);
         }
         packData = detail;
       }
 
       const { name: packName, author, stickers } = packData;
       if (!stickers?.length) {
-        return client.reply(m.chat, `《✧》 El pack no contiene stickers válidos.`, m);
+        return sock.reply(m.chat, `《✧》 El pack no contiene stickers válidos.`, m);
       }
 
       const MAX_STICKERS = 30;
       const selectedStickers = stickers.slice(0, MAX_STICKERS);
 
-      await client.sendMessage(m.chat, {
+      await sock.sendMessage(m.chat, {
         stickerPack: {
           name: packName,
           publisher: author?.name || author?.username || `@${name}`,

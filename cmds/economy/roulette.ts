@@ -19,10 +19,10 @@ const weightedRandom = (colors, weights) => {
 export default {
   command: ['rt', 'roulette', 'ruleta'],
   category: 'rpg',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const senderId = m.sender
-    const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const chatData = await getChat(m.chat)
 
@@ -71,7 +71,7 @@ export default {
       const reward = amount * multiplier
       user.coins += reward
       await updateChatUser(m.chat, m.sender, 'coins', user.coins)
-      await client.reply(
+      await sock.reply(
         chatId,
         `ꕥ La ruleta salió en *${resultColor}* y has ganado *¥${reward.toLocaleString()} ${currency}*.`,
         m,
@@ -80,7 +80,7 @@ export default {
     } else {
       user.coins -= amount
       await updateChatUser(m.chat, m.sender, 'coins', user.coins)
-      await client.reply(
+      await sock.reply(
         chatId,
         `✎ La ruleta salió en *${resultColor}* y has perdido *¥${amount.toLocaleString()} ${currency}*.`,
         m,

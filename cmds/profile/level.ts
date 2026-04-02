@@ -3,11 +3,11 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['levelup', 'level', 'lvl'],
   category: 'profile',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const mentioned = m.mentionedJid
     const who2 = mentioned.length > 0 ? mentioned[0] : (m.quoted ? m.quoted.sender : m.sender)
-    const who = await resolveLidToRealJid(who2, client, m.chat)
+    const who = await resolveLidToRealJid(who2, sock, m.chat)
 
     const user = await getUser(who)           // usuario específico
     const allUsers = await getUser() || []    // todos los usuarios

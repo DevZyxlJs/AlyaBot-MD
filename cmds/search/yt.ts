@@ -4,7 +4,7 @@ import {getBuffer} from '../../core/message.ts';
 export default {
   command: ['ytsearch', 'search'],
   category: 'internet',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     if (!args || !args[0]) {
       return m.reply(
         '✿ Ingrese el *título* de un *vídeo*.',
@@ -38,7 +38,7 @@ export default {
       })
       .filter((v) => v)
       .join('\n\n╾۪〬─ ┄۫╌ ׄ┄┈۪ ─〬 ׅ┄╌ ۫┈ ─ׄ─۪〬 ┈ ┄۫╌ ┈┄۪ ─ׄ〬╼\n\n')
-    client.sendMessage(m.chat, { image: Ibuff, caption: teks2 }, { quoted: m }).catch((err) => {
+    sock.sendMessage(m.chat, { image: Ibuff, caption: teks2 }, { quoted: m }).catch((err) => {
       m.reply('Error')
     })
   },

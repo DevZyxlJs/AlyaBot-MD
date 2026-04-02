@@ -12,7 +12,7 @@ async function loadCharacters() {
 export default {
   command: ['serieinfo', 'animeinfo', 'ainfo'],
   category: 'gacha',
-  run: async (client, m, args) => {
+  async run(sock, m, args) => {
     const chatId = m.chat
     const chatData = await getChat(chatId)
 
@@ -60,7 +60,7 @@ export default {
         `❀ *Reclamados ›* ${claimedCount}/${totalCharacters}\n\n` +
         `✎ *Lista de personajes* \n${characterStatus.join('\n')}`
 
-      await client.reply(chatId, message, m)
+      await sock.reply(chatId, message, m)
     } catch (error) {
       await m.reply(msgglobal)
     }
