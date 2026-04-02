@@ -1,4 +1,4 @@
-import { startSubBot } from '../../commands/socket/subbot.ts';
+import { startSubBot } from '../../cmds/socket/subbot.ts';
 import fs from 'fs';
 import path from 'path';
 import {jidDecode} from '@whiskeysockets/baileys';
