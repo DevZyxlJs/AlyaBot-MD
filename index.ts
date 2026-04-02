@@ -1,6 +1,6 @@
 import "./settings.ts"
 import handler from './handler.ts'
-import events from './commands/events.ts'
+import events from './cmds/events.ts'
 import {
   Browsers,
   makeWASocket,
@@ -19,7 +19,7 @@ import readlineSync from "readline-sync";
 import readline from "readline";
 import { smsg } from "./lib/message.ts";
 import database from "./lib/system/database.ts";
-import { startSubBot } from './commands/socket/subbot.ts';
+import { startSubBot } from './cmds/socket/subbot.ts';
 import { exec, execSync } from "child_process";
 
 const log = {
