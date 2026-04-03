@@ -212,6 +212,7 @@ export const commands = [
     {"name": "bots", "desc": "Muestra el número de sockets conectados.", "alias": ["/bots", "/sockets"], "category": "sockets"},
     {"name": "code", "desc": "Vincular un nuevo socket a tu número.", "alias": ["/code", "/qr"], "category": "sockets"},
     {"name": "self", "desc": "Haz privado o público tu socket.", "alias": ["/self"], "category": "sockets", "uso": "_<on|off>_"},
+    { "name": "join", "desc": "Unir el bot a un grupo.", "alias": ["/join", "/unir"], "category": "sockets", "uso": "_<enlace>_" },
     { "name": "setbanner", "desc": "Cambiar el banner del menu.", "alias": ["/setbanner", "/setmenubanner"], "category": "sockets" },
     { "name": "seticon", "desc": "Cambiar el icon del socket.", "alias": ["/seticon"], "category": "sockets" },
     { "name": "setbotname", "desc": "Cambiar el nombre del bot.", "alias": ["/setbotname", "/setname"], "category": "sockets", "uso": "_<corto / largo>_" },
