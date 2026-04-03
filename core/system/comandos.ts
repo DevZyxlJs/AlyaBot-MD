@@ -76,6 +76,7 @@ export const commands = [
     {"name": "spotify", "desc": "Descarga audios de spotify.", "alias": ["/spotify", "/sp"], "category": "download", "uso": "_<url|query>_"},
     {"name": "applemusic", "desc": "Descarga audios de Apple Music.", "alias": ["/applemusic", "/am"], "category": "download", "uso": "_<query>_"},
     {"name": "ytmp4", "desc": "Descarga videos de youtube.", "alias": ["/play2", "/mp4", "/playvideo", "/ytvideo", "/ytmp4"], "category": "download", "uso": "_<url|query>_"},
+    { "name": "mf", "desc": "Descarga archivos desde Mediafire.", "alias": ["/mf", "/mediafire"], "category": "download", "uso": "_<url>_" },
 
     // ECONOMÍA
     {"name": "balance", "desc": "Muestra tu balance o la de un usuario.", "alias": ["/balance", "/bal"], "category": "economia", "uso": "_<mention>_" },
