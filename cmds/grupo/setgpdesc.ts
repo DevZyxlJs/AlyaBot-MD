@@ -3,7 +3,7 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const newDesc = args.join(' ').trim()
     if (!newDesc)
       return m.reply('《✧》 Por favor, ingrese la nueva descripción que desea ponerle al grupo.')

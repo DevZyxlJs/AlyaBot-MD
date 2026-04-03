@@ -24,7 +24,7 @@ function formatDate(timestamp) {
 export default {
   command: ['givechar', 'givewaifu', 'regalar'],
   category: 'gacha',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const chatId = m.chat
     const senderId = m.sender
     

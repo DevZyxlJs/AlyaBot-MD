@@ -3,7 +3,7 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['balance', 'bal'],
   category: 'rpg',
-    async run(sock, m, args, command, text, prefix) {
+    run: async (sock, m, args, command, text, prefix) => {
     const chatId = m.chat
     const chatData = await getChat(m.chat)
     const botId = sock.user.id.split(':')[0] + "@s.whatsapp.net"

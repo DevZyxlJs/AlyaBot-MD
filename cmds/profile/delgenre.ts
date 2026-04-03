@@ -1,7 +1,7 @@
 export default {
   command: ['delgenre'],
   category: 'profile',
-  async run(sock, m) {
+  run: async (sock, m) => {
     const user = await getUser(m.sender)
     if (!user.genre) return m.reply(`ꕥ No tienes un género asignado.`)
 

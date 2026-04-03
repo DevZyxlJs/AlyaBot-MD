@@ -1,7 +1,7 @@
 export default {
   command: ['divorce'],
   category: 'rpg',
-  async run(sock, m) {
+  run: async (sock, m) => {
     const user = await getUser(m.sender)
     const partnerId = user.marry
     const user2 = await getUser(partnerId)

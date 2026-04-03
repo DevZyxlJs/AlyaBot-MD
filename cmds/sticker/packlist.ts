@@ -1,7 +1,7 @@
 export default {
   command: ['packlist', 'stickerpacks'],
   category: 'stickers',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     try {
       const stickerPackData = await getStickersPack(m.sender)
       const packs = stickerPackData.packs || []

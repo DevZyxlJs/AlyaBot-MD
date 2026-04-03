@@ -47,7 +47,7 @@ const filterRelevantPacks = (packs, query) => {
 export default {
   command: ['stickerpack', 'spack'],
   category: 'stickers',
-  async run(sock, m, args, command, text, prefix) {
+  run: async (sock, m, args, command, text, prefix) => {
     try {
       if (!text) return sock.reply(m.chat, `《✧》 Ingresa un texto para buscar packs de stickers o una URL de sticker.ly.`, m);
       const name = await getUser(m.sender).name || m.sender.split('@')[0];

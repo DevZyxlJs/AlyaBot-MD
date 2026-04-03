@@ -3,7 +3,7 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['givecoins', 'pay', 'coinsgive'],
   category: 'rpg',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
 
     try {
     const chatId = m.chat

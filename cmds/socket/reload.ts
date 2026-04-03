@@ -6,7 +6,7 @@ import {jidDecode} from '@whiskeysockets/baileys';
 export default {
   command: ['reload'],
   category: 'socket',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const rawId = sock.user?.id || ''
     const decoded = jidDecode(rawId)
     const cleanId = decoded?.user || rawId.split('@')[0]

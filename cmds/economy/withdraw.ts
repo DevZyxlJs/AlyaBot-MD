@@ -1,7 +1,7 @@
 export default {
   command: ['withdraw', 'with'],
   category: 'rpg',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const chatId = m.chat
     const senderId = m.sender
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'

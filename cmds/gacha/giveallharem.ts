@@ -3,7 +3,7 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['giveallharem'],
   category: 'gacha',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const chatId = m.chat
     const senderId = m.sender
     

@@ -2,7 +2,7 @@ export default {
   command: ['setwarnlimit'],
   category: 'group',
   isAdmin: true,
-    async run(sock, m, args, command, text, prefix) {
+    run: async (sock, m, args, command, text, prefix) => {
     try {
     const chat = await getChat(m.chat)
     const raw = args[0]

@@ -1,7 +1,7 @@
 export default {
   command: ['accepttrade', 'aceptarintercambio'],
   category: 'gacha',
-  async run(sock, m) {
+  run: async (sock, m) => {
     const chatId = m.chat
     const userId = m.sender
     

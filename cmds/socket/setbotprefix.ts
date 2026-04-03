@@ -3,7 +3,7 @@ import GraphemeSplitter from 'grapheme-splitter'
 export default {
   command: ['setbotprefix'],
   category: 'socket',
-  async run(sock, m, args, command, text, prefix) {
+  run: async (sock, m, args, command, text, prefix) => {
     const idBot = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const config = await getSettings(idBot)
     const owner = config.owner ? config.owner : '' || ''

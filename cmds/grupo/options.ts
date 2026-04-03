@@ -10,7 +10,7 @@ export default {
   ],
   category: 'grupo',
   isAdmin: true,
-  async run(sock, m, args, command, text, prefix) {
+  run: async (sock, m, args, command, text, prefix) => {
     const chatData = await getChat(m.chat)
     const stateArg = args[0]?.toLowerCase()
     const validStates = ['on', 'off', 'enable', 'disable']

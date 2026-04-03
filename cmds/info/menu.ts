@@ -8,7 +8,7 @@ import { commands } from '../../core/system/comandos.ts';
 export default {
   command: ['allmenu', 'help', 'menu'],
   category: 'info',
-  async run(sock, m, args, command, text, prefix) {
+  run: async (sock, m, args, command, text, prefix) => {
     try {
 
       const now = new Date();

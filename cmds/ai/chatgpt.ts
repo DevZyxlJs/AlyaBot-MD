@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 export default {
   command: ['ia', 'chatgpt'],
   category: 'ai',
-  async run(sock, m, args, command) {
+  run: async (sock, m, args, command) => {
 
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'

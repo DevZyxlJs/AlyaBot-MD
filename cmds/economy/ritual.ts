@@ -1,7 +1,7 @@
 export default {
   command: ['ritual'],
   category: 'rpg',
-   async run(sock, m, args, command, text, prefix) {
+   run: async (sock, m, args, command, text, prefix) => {
     const botId = sock?.user?.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const monedas = botSettings?.currency || 'Coins'

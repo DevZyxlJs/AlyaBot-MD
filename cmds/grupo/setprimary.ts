@@ -25,7 +25,7 @@ export default {
   category: 'grupo',
   isAdmin: true,
 
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     try {
       const chat = await getChat(m.chat)
       const mentioned = m.mentionedJid

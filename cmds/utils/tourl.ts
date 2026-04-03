@@ -78,7 +78,7 @@ async function uploadAuto(buffer: Buffer, mime: string): Promise<{ link: string,
 export default {
   command: ["tourl"],
   category: "utils",
-  async run(sock: any, m: any, args: string[], command: string, text: string, prefix: string) {
+  run: async (sock: any, m: any, args: string[], command: string, text: string, prefix: string) => {
     const q = m.quoted || m
     const mime = (q.msg || q).mimetype || ""
     if (!mime) {

@@ -3,7 +3,7 @@ import axios from 'axios'
 export default {
   command: ['wiki', 'wikipedia'],
   category: 'search',
-  async run(sock, m, args, command, text, prefix) {
+  run: async (sock, m, args, command, text, prefix) => {
     if (!text) return sock.reply(m.chat, `✿ Por favor, ingresa lo que quieres buscar en Wikipedia.`, m)
     try {
     //  await m.react('🕒')

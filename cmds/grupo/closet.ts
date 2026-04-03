@@ -42,7 +42,7 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const groupMetadata = await sock.groupMetadata(m.chat)
     const groupAnnouncement = groupMetadata.announce
     if (!args.length) {

@@ -5,7 +5,7 @@ const exec = promisify(cp.exec)
 export default {
   command: ['r'],
   isOwner: true,
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const cmd = args.join(' ').trim()
     if (!cmd) {
       return // sock.reply(m.chat, '❌ Escribe un comando para ejecutar.\nEjemplo: .r ls', m)

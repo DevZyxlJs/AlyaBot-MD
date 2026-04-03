@@ -1,7 +1,7 @@
 export default {
   command: ['buycharacter', 'buychar', 'buyc'],
   category: 'gacha',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
    try {
     const chatId = m.chat
     const userId = m.sender

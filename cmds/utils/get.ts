@@ -4,7 +4,7 @@ import {format} from 'util';
 export default {
   command: ['get'],
   category: 'utils',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const text = args[0]
     if (!text) return m.reply('✎ Ingresa un enlace para realizar la solicitud.')
 

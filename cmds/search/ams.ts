@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 export default {
   command: ['ams', 'applemusicsearch'],
   category: 'search',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     try {
       if (!args[0]) {
         return m.reply('✎ Por favor, menciona el nombre de la canción que deseas buscar en Apple Music')

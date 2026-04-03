@@ -236,7 +236,7 @@ async function joinChannels(client) {
 export default {
   command: ['code', 'qr'],
   category: 'socket',
-  async run(client, m, args, command) {
+  run: async (client, m, args, command) => {
     let user = await getUser(m.sender);
     let time = user.Subs + 120000 || '';
 

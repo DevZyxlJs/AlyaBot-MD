@@ -1,7 +1,7 @@
 export default {
   command: ['setdescription', 'setdesc'],
   category: 'profile',
-    async run(sock, m, args, command, text, prefix) {
+    run: async (sock, m, args, command, text, prefix) => {
     const user = await getUser(m.sender)
     const input = args.join(' ')
 

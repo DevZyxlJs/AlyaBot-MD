@@ -3,7 +3,7 @@ import axios from 'axios';
 export default {
   command: ['aptoide', 'apk', 'apkdl'],
   category: 'search',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     if (!args || !args.length) {
       return m.reply(
         '✿ Ingresa el *nombre* de la *aplicación*.',

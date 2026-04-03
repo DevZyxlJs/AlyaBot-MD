@@ -3,7 +3,7 @@ import { resolveLidToRealJid } from "../../core/utils.ts"
 export default {
   command: ['levelup', 'level', 'lvl'],
   category: 'profile',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const chatId = m.chat
     const mentioned = m.mentionedJid
     const who2 = mentioned.length > 0 ? mentioned[0] : (m.quoted ? m.quoted.sender : m.sender)

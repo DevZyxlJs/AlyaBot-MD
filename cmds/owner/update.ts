@@ -37,7 +37,7 @@ async function reloadCommands(dir = path.join(__dirname, '..')) {
 export default {
   command: ['fix', 'update'],
   isOwner: true,
-  async run(sock, m) {
+  run: async (sock, m) => {
     exec('git pull', async (error, stdout, stderr) => {
       await reloadCommands(path.join(__dirname, '..'))
 

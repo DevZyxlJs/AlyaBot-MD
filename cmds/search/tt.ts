@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 export default {
   command: ['tiktoksearch', 'ttsearch', 'tts'],
   category: 'search',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await getSettings(botId)
     const banner = botSettings.icon

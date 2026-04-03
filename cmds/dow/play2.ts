@@ -5,7 +5,7 @@ import { getBuffer } from '../../core/message.ts'
 export default {
   command: ['play2', 'mp4', 'ytmp4', 'ytvideo', 'playvideo'],
   category: 'downloader',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     try {
       if (!args[0]) {
         return m.reply('《✧》Por favor, menciona el nombre o URL del video que deseas descargar')

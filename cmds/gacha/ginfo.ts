@@ -1,7 +1,7 @@
 export default {
   command: ['gachainfo', 'ginfo', 'infogacha'],
   category: 'gacha',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const chatId = m.chat
     const userId = m.sender
     

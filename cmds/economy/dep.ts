@@ -1,7 +1,7 @@
 export default {
   command: ['dep', 'deposit', 'd'],
   category: 'rpg',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const chatData = await getChat(m.chat)
     const user = await getChatUser(m.chat, m.sender)
     const idBot = sock.user.id.split(':')[0] + '@s.whatsapp.net'

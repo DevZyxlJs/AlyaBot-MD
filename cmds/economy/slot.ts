@@ -3,7 +3,7 @@ import { delay } from "@whiskeysockets/baileys"
 export default {
   command: ['slot'],
   category: 'rpg',
-      async run(sock, m, args, command, text, prefix) {
+      run: async (sock, m, args, command, text, prefix) => {
     const chat = await getChat(m.chat)
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const bot = await getSettings(botId)

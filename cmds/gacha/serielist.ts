@@ -12,7 +12,7 @@ async function loadCharacters() {
 export default {
   command: ['slist', 'serielist', 'animelist'],
   category: 'gacha',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const chatId = m.chat
     const chatData = await getChat(chatId)
 

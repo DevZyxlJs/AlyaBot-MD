@@ -11,7 +11,7 @@ const require = createRequire(__dirname)
 export default {
   command: ['eval', 'e'],
   isOwner: true,
-  async run(sock, m, args, command, text) {
+  run: async (sock, m, args, command, text) => {
 
     let code = text
     let _return

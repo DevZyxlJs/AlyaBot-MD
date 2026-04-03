@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 export default {
   command: ['imagen', 'img', 'image'],
   category: 'search',
-  async run(sock, m, args, from) {
+  run: async (sock, m, args, from) => {
     const text = args.join(' ')
     if (!text) {
       return sock.reply(

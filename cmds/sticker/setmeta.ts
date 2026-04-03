@@ -1,7 +1,7 @@
 export default {
   command: ['setstickermeta', 'setmeta'],
   category: 'stickers',
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     if (!args || args.length === 0) {
       return m.reply('《✧》 Por favor, ingresa los metadatos que deseas asignar a tus stickers.');
     }

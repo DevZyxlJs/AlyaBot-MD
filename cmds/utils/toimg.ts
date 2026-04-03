@@ -1,7 +1,7 @@
 export default {
   command: ['toimg', 'toimage'],
   category: 'utils',
-  async run(sock, m) {
+  run: async (sock, m) => {
     if (!m.quoted) return sock.reply(m.chat, `✿ Debes citar un sticker para convertir a imagen.`, m)
    // await m.react('🕒')
     let xx = m.quoted

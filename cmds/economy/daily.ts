@@ -1,7 +1,7 @@
 export default {
   command: ['daily'],
   category: 'rpg',
-  async run(sock, m) {
+  run: async (sock, m) => {
     const chat = await getChat(m.chat)
     const user = await getChatUser(m.chat, m.sender)
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'

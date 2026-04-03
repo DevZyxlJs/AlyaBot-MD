@@ -3,7 +3,7 @@ export default {
   category: 'grupo',
   isAdmin: true,
   botAdmin: true,
-  async run(sock, m, args) {
+  run: async (sock, m, args) => {
     const newName = args.join(' ').trim()
 
     if (!newName)
