@@ -46,8 +46,8 @@ export async function startSubBot(
   const { version } = await fetchLatestBaileysVersion();
 
   console.info = () => {};
-  
-  const sock = makeWASocket({
+
+  const clientes = makeWASocket({
     logger: pino({ level: 'silent' }),
     printQRInTerminal: false,
     browser: Browsers.macOS('Chrome'),
@@ -64,17 +64,17 @@ export async function startSubBot(
     maxIdleTimeMs: 120_000,
   });
 
-  sock.isInit = false;
-  sock.commandTriggered = isCommand;
-  sock.triggerSender = senderId;
-  sock.triggerChatId = chatId;
-  sock.triggerClient = client;
-  sock.triggerIsCode = isCode;
-  sock.sessionFolder = sessionFolder;
-  
-  sock.ev.on('creds.update', saveCreds);
+  clientes.isInit = false;
+  clientes.commandTriggered = isCommand;
+  clientes.triggerSender = senderId;
+  clientes.triggerChatId = chatId;
+  clientes.triggerClient = client;
+  clientes.triggerIsCode = isCode;
+  clientes.sessionFolder = sessionFolder;
 
-  sock.decodeJid = (jid) => {
+  clientes.ev.on('creds.update', saveCreds);
+
+  clientes.decodeJid = (jid) => {
     if (!jid) return jid;
     if (/:\d+@/gi.test(jid)) {
       let decode = jidDecode(jid) || {};
@@ -82,46 +82,46 @@ export async function startSubBot(
     } else return jid;
   };
 
-  sock.ev.on('connection.update', async ({ connection, lastDisconnect, isNewLogin, qr }) => {
-    if (isNewLogin) sock.isInit = false;
+  clientes.ev.on('connection.update', async ({ connection, lastDisconnect, isNewLogin, qr }) => {
+    if (isNewLogin) clientes.isInit = false;
 
     if (connection === 'open') {
-      sock.uptime = Date.now();
-      sock.isInit = true;
-      sock.userId = cleanJid(sock.user?.id?.split('@')[0]);
-      const botDir = sock.userId + '@s.whatsapp.net';
-      
+      clientes.uptime = Date.now();
+      clientes.isInit = true;
+      clientes.userId = cleanJid(clientes.user?.id?.split('@')[0]);
+      const botDir = clientes.userId + '@s.whatsapp.net';
+
       let settings = await getSettings(botDir);
       if (!settings) {
         settings = {};
       }
 
-      if (!global.conns.find((c) => c.userId === sock.userId)) {
-        global.conns.push(sock);
+      if (!global.conns.find((c) => c.userId === clientes.userId)) {
+        global.conns.push(clientes);
       }
 
-      delete reintentos[sock.userId || id];
-      await joinChannels(sock);
-      console.log(chalk.gray(`[ ✿  ]  SUB-BOT conectado: ${sock.userId}`));
+      delete reintentos[clientes.userId || id];
+      await joinChannels(clientes);
+      console.log(chalk.gray(`[ ✿  ]  SUB-BOT conectado: ${clientes.userId}`));
 
-      const sentFlagFile = path.join(sock.sessionFolder, 'msg_sent.flag');
+      const sentFlagFile = path.join(clientes.sessionFolder, 'msg_sent.flag');
       const hasSentMessage = fs.existsSync(sentFlagFile);
 
-      if (sock.commandTriggered && !hasSentMessage && sock.triggerClient && sock.triggerChatId) {
+      if (clientes.commandTriggered && !hasSentMessage && clientes.triggerClient && clientes.triggerChatId) {
 
-       await client.sendMessage(m.chat, { text: `✎ Has conectado un nuevo Socket de tipo *Gratuito*.` }, { quoted: m })
+       await client.sendMessage(m.chat, { text: `✎ Has conectado un nuevo socket de tipo *Gratuito*.` }, { quoted: m })
 
         fs.writeFileSync(sentFlagFile, '1'); 
-        sock.commandTriggered = false;
-        
-        if (commandFlags[sock.triggerSender]) {
-          delete commandFlags[sock.triggerSender];
+        clientes.commandTriggered = false;
+
+        if (commandFlags[clientes.triggerSender]) {
+          delete commandFlags[clientes.triggerSender];
         }
       }
     }
 
     if (connection === 'close') {
-      const botId = sock.userId || id;
+      const botId = clientes.userId || id;
       const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.reason || 0;
       const intentos = reintentos[botId] || 0;
       reintentos[botId] = intentos + 1;
@@ -171,7 +171,7 @@ export async function startSubBot(
 
     if (qr && isCode && phone && client && chatId && commandFlags[senderId]) {
       try {
-        let codeGen = await sock.requestPairingCode(phone);
+        let codeGen = await clientes.requestPairingCode(phone);
         codeGen = codeGen.match(/.{1,4}/g)?.join("-") || codeGen;
         const msg = await m.reply(caption);
         const msgCode = await m.reply(codeGen);
@@ -186,7 +186,7 @@ export async function startSubBot(
         console.error("[Código Error]", err);
       }
     }
-    
+
     if (qr && !isCode && client && chatId && commandFlags[senderId]) {
       try {
         const msgQR = await client.sendMessage(m.chat, { image: await qrcode.toBuffer(qr, { scale: 8 }), caption }, { quoted: m });
@@ -202,13 +202,13 @@ export async function startSubBot(
     }
   });
 
-  sock.ev.on('messages.upsert', async ({ messages, type }) => {
+  clientes.ev.on('messages.upsert', async ({ messages, type }) => {
     if (type !== 'notify') return;
     for (let raw of messages) {
       if (!raw.message) continue;
-      let msg = await smsg(sock, raw);
+      let msg = await smsg(clientes, raw);
       try {
-        handler(sock, msg, messages);
+        handler(clientes, msg, messages);
       } catch (err) {
         console.log(chalk.gray(`[ ✿  ]  Sub » ${err}`));
       }
@@ -216,13 +216,13 @@ export async function startSubBot(
   });
 
   try {
-    await events(sock, m);
+    await events(clientes, m);
   } catch (err) {
     console.log(chalk.gray(`[ BOT  ]  → ${err}`));
   }
 
   process.on('uncaughtException', console.error);
-  return sock;
+  return clientes;
 }
 
 async function joinChannels(client) {
@@ -236,10 +236,10 @@ async function joinChannels(client) {
 export default {
   command: ['code', 'qr'],
   category: 'socket',
-  run: async (client, m, args, command) => {
+  async run(client, m, args, command) => {
     let user = await getUser(m.sender);
     let time = user.Subs + 120000 || '';
-    
+
     if (new Date() - user.Subs < 120000) {
       return client.reply(
         m.chat,
