@@ -2,7 +2,7 @@ import fs from 'fs';
 import { watchFile, unwatchFile } from 'fs'
 import { fileURLToPath } from 'url'
 
-global.owner = ['5492916450307', '573196588149']
+global.owner = ['5492916450307', '573196588149', '5218711426787']
 global.sessionName = 'Sessions/Owner'
 
 global.api = {
@@ -10,7 +10,7 @@ global.api = {
   key: '' 
 }
 
-global.msgglobal = '✿⸝꙳.˖ Ocurrió un problema, contacte al creador'
+global.msgglobal = '⋆˚𝜗 There was a problem processing the request, contact the creator or a moderator to fix this issue. (✿◡‿◡)'
 global.dev = `ʙᴜɪʟᴛ ᴀɴᴅ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɪ'ᴍ ᴅɪᴇɢᴏ ッ`
 
 global.mess = {
