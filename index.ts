@@ -125,7 +125,7 @@ async function initDB() {
     database.clearCache('packsticker');
     console.log(chalk.gray('[ ✿  ]  Base de datos cargada correctamente.'));
     } catch (e) {
-    console.log(chalk.gray(`[ ✿  ]  La base de datos no se cargó correctsmente.\n\n${e}`));
+    console.log(chalk.gray(`[ ✿  ]  La base de datos no se cargó correctamente.`));
     }
 }
 
