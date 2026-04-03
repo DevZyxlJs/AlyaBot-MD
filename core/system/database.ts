@@ -96,8 +96,8 @@ export const defSets = {
   banner: 'https://cdn.nexylight.xyz/files/aouhio5v.jpeg',
   icon: 'https://cdn.nexylight.xyz/files/9yhtos.jpeg',
   currency: '¥enes',
-  namebot: 'あ ┊⏤͟͟͞͞☆ Kana Arima ϟ',
-  namebot2: 'Kana',
+  namebot: 'あ ┊⏤͟͟͞͞☆ Alya San ϟ',
+  namebot2: 'Alya',
   owner: 'Oculto por privacidad'
 };
 
