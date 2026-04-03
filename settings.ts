@@ -11,7 +11,7 @@ global.api = {
 }
 
 global.msgglobal = '⋆˚𝜗 There was a problem processing the request, contact the creator or a moderator to fix this issue. (✿◡‿◡)'
-global.dev = `ʙᴜɪʟᴛ ᴀɴᴅ ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɪ'ᴍ ᴅɪᴇɢᴏ ッ`
+global.dev = `ᴍᴀᴅᴇ ᴡɪᴛʜ ʙʏ ɪ'ᴍ ᴅɪᴇɢᴏ ッ`
 
 global.mess = {
   socket: '(∩´͈ ᴖ `͈∩ ྀི) Este comando solo puede ser ejecutado por un Socket.',
