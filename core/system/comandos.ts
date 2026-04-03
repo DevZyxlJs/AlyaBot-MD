@@ -159,6 +159,7 @@ export const commands = [
 
     // NSFW
     { "name": "xnxx", "desc": "Busca y descarga videos desde XNXX.", "alias": ["/xnxx"], "category": "nsfw", "uso": "_<query|url>_" },
+    { "name": "removerprendas", "desc": "Quita las prendas de la imagen utilizando la IA.", "alias": ["/removerprendas", "/desnudar"], "category": "nsfw" },
     { "name": "xvideos", "desc": "Busca y descarga videos desde XVideos.", "alias": ["/xvideos"], "category": "nsfw", "uso": "_<query|url>_" },
     {"name": "danbooru", "desc": "Buscar imágenes en danbooru.", "alias": ["/danbooru", "/dbooru"], "category": "nsfw", "uso": "_<tag>_"},
     { "name": "rule34", "desc": "Buscar imágenes o videos en Rule34.", "alias": ["/r34", "/r34vid", "/rule34", "/rule34vid", "/rule", "/rulevid"], "category": "nsfw", "uso": "_<tag>_" },
