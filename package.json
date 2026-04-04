@@ -34,7 +34,7 @@
   "gradient-string": "^2.0.2",
   "grapheme-splitter": "^1.0.4",
   "human-readable": "^0.2.1",
-  "jimp": "^0.22.6",
+  "jimp": "^1.6.0",
   "moment": "^2.29.4",
   "moment-timezone": "^0.5.37",
   "node-cache": "^5.1.2",
