@@ -146,7 +146,7 @@ export const commands = [
 
     // IA
     {"name": "ia", "desc": "Realiza una petición a chatgpt.", "alias": ["/ia", "/chatgpt"], "category": "ia", "uso": "_<query>_"},
-    { "name": "nano", "desc": "Genera una imagen editada con la API NanoBanana a partir de una imagen y un prompt.", "alias": ["/nano", "/nanobanana"], "category": "ai", "uso": "_<prompt>_" },
+    { "name": "nano", "desc": "Genera una imagen editada con la API NanoBanana a partir de una imagen y un prompt.", "alias": ["/nano", "/nanobanana"], "category": "ia", "uso": "_<prompt>_" },
 
     // Info
     { "name": "allmenu", "desc": "Muestra la lista de comandos.", "alias": ["/allmenu", "/menu", "/help"], "category": "info", "uso": "_<category>_" },
