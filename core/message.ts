@@ -581,9 +581,6 @@ export async function smsg(sock, m, store) {
     )
   }
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 function detectBySignature(buf: Buffer): { ext: string; mime: string } | null {
   if (buf.length >= 8 && buf.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]))) {
     return { ext: 'png', mime: 'image/png' };
