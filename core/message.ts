@@ -21,8 +21,6 @@ import { sizeFormatter } from 'human-readable';
 import util from 'util';
 import Jimp from 'jimp';
 import fetch from 'node-fetch';
-// import { fileTypeFromBuffer } from 'file-type';
-import mimeTypes from 'mime-types';
 import path from 'path';
 import exif from './exif.ts';
 import { fileURLToPath } from 'url'
@@ -580,108 +578,6 @@ export async function smsg(sock, m, store) {
       PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
     )
   }
-
-function detectBySignature(buf: Buffer): { ext: string; mime: string } | null {
-  if (buf.length >= 8 && buf.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]))) {
-    return { ext: 'png', mime: 'image/png' };
-  }
-  if (buf.length >= 3 && buf.slice(0, 3).equals(Buffer.from([0xFF, 0xD8, 0xFF]))) {
-    return { ext: 'jpg', mime: 'image/jpeg' };
-  }
-  if (buf.length >= 6 && (buf.slice(0, 6).toString('ascii') === 'GIF89a' || buf.slice(0, 6).toString('ascii') === 'GIF87a')) {
-    return { ext: 'gif', mime: 'image/gif' };
-  }
-  if (buf.length >= 12 && buf.slice(0, 4).toString('ascii') === 'RIFF' && buf.slice(8, 12).toString('ascii') === 'WEBP') {
-    return { ext: 'webp', mime: 'image/webp' };
-  }
-  if (buf.length >= 4 && buf.slice(0, 4).equals(Buffer.from([0x25, 0x50, 0x44, 0x46]))) {
-    return { ext: 'pdf', mime: 'application/pdf' };
-  }
-  if (buf.length >= 4 && buf.slice(0, 4).equals(Buffer.from([0x50, 0x4B, 0x03, 0x04]))) {
-    return { ext: 'zip', mime: 'application/zip' };
-  }
-  if (buf.length >= 3 && buf.slice(0, 3).toString('ascii') === 'ID3') {
-    return { ext: 'mp3', mime: 'audio/mpeg' };
-  }
-  if (buf.length >= 4 && (buf[0] === 0x00 && buf[1] === 0x00 && buf[2] === 0x00 && (buf[3] === 0x18 || buf[3] === 0x20))) {
-    return { ext: 'mp4', mime: 'video/mp4' };
-  }
-  return null;
-}
-
-function normExt(ext: string | undefined) {
-  if (!ext) return 'bin';
-  return String(ext).replace(/^\./, '') || 'bin';
-}
-
-sock.getFile = async (PATH, saveToFile = false) => {
-  let res: any = undefined;
-  let filename: string | undefined = undefined;
-
-  const data = Buffer.isBuffer(PATH)
-    ? PATH
-    : PATH instanceof ArrayBuffer
-      ? Buffer.from(PATH)
-      : /^data:.*;base64,/i.test(String(PATH))
-        ? Buffer.from(String(PATH).split(',')[1] || '', 'base64')
-        : /^https?:\/\//i.test(String(PATH))
-          ? (res = await (await fetch(String(PATH))).buffer())
-          : fs.existsSync(String(PATH))
-            ? ((filename = String(PATH)), fs.readFileSync(String(PATH)))
-            : typeof PATH === 'string'
-              ? Buffer.from(PATH)
-              : Buffer.alloc(0);
-
-  if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer');
-
-  let detected = detectBySignature(data);
-
-  if (!detected && filename) {
-    const extFromName = path.extname(filename).replace(/^\./, '');
-    const mime = mimeTypes.lookup(extFromName) || 'application/octet-stream';
-    detected = { ext: normExt(extFromName), mime };
-  }
-
-  if (!detected) {
-    try {
-      const img = await Jimp.read(data);
-      const mime = img.getMIME();
-      const ext = mimeTypes.extension(mime) || 'png';
-      detected = { ext: normExt(ext), mime };
-    } catch (e) {
-      detected = detected;
-    }
-  }
-
-  if (!detected && typeof PATH === 'string') {
-    const extFromPath = path.extname(String(PATH)).replace(/^\./, '');
-    if (extFromPath) {
-      const mime = mimeTypes.lookup(extFromPath) || 'application/octet-stream';
-      detected = { ext: normExt(extFromPath), mime };
-    }
-  }
-
-  const type = detected || { mime: 'application/octet-stream', ext: 'bin' };
-  const ext = normExt(type.ext);
-
-  if (data && saveToFile && !filename) {
-    const tmpDir = path.join(process.cwd(), 'tmp');
-    if (!fs.existsSync(tmpDir)) await fs.promises.mkdir(tmpDir, { recursive: true });
-    filename = path.join(tmpDir, `${Date.now()}.${ext}`);
-    await fs.promises.writeFile(filename, data);
-  }
-
-  return {
-    res,
-    filename,
-    mime: type.mime,
-    ext,
-    data,
-    deleteFile() {
-      return filename ? fs.promises.unlink(filename) : Promise.resolve();
-    },
-  };
-}
 
   m.react = (text, key, options) => sock.sendMessage(m.chat, { react: { text, key: m.key } })
 
