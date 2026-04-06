@@ -581,7 +581,6 @@ export async function smsg(sock, m, store) {
     )
   }
 
-/** Comprueba firmas (magic numbers) y devuelve {ext, mime} o null */
 function detectBySignature(buf: Buffer): { ext: string; mime: string } | null {
   if (buf.length >= 8 && buf.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]))) {
     return { ext: 'png', mime: 'image/png' };
@@ -612,16 +611,11 @@ function detectBySignature(buf: Buffer): { ext: string; mime: string } | null {
   return null;
 }
 
-/** Normaliza ext sin punto */
 function normExt(ext: string | undefined) {
   if (!ext) return 'bin';
   return String(ext).replace(/^\./, '') || 'bin';
 }
 
-/**
- * getFile: acepta Buffer | ArrayBuffer | dataURL | URL | ruta local | string
- * Devuelve { res, filename, mime, ext, data, deleteFile() }
- */
 export async function getFile(PATH: Buffer | ArrayBuffer | string, saveToFile = false) {
   let res: any = undefined;
   let filename: string | undefined = undefined;
