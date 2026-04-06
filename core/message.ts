@@ -580,35 +580,46 @@ export async function smsg(sock, m, store) {
     )
   }
 
-export async function detectFileType(buffer) {
+/**
+ * Detecta el tipo usando file-type, compatible con varias versiones/exports.
+ * @param {Buffer} buffer
+ * @returns {Promise<{ext:string,mime:string}|null>}
+ */
+async function detectFileType(buffer) {
   const mod = await import('file-type');
-  // mod puede exponer: named export, default con .fromBuffer, o module.exports
-  const FileType = mod.fileTypeFromBuffer ? mod : (mod.default || mod);
-  // 3 posibilidades:
-  // 1) named: mod.fileTypeFromBuffer(buffer)
-  // 2) default.fromBuffer: FileType.fromBuffer(buffer)
-  // 3) legacy: FileType.fromBuffer(buffer) (module.exports)
-  if (FileType.fileTypeFromBuffer) {
-    return await FileType.fileTypeFromBuffer(buffer);
+  if (typeof mod.fileTypeFromBuffer === 'function') {
+    return await mod.fileTypeFromBuffer(buffer);
   }
-  if (FileType.fromBuffer) {
-    return await FileType.fromBuffer(buffer);
+  const candidate = mod.default || mod;
+  if (candidate && typeof candidate.fromBuffer === 'function') {
+    return await candidate.fromBuffer(buffer);
+  }
+  if (typeof candidate.fileTypeFromBuffer === 'function') {
+    return await candidate.fileTypeFromBuffer(buffer);
   }
   return null;
 }
 
+/**
+ * Obtiene un archivo desde PATH (Buffer | ArrayBuffer | dataURL | URL | ruta local | string)
+ * y detecta su tipo. Todo en un mismo archivo.
+ * @param {Buffer|ArrayBuffer|string} PATH
+ * @param {boolean} saveToFile
+ */
 export async function getFile(PATH, saveToFile = false) {
-  let res, filename;
+  let res = undefined;
+  let filename = undefined;
+
   const data = Buffer.isBuffer(PATH)
     ? PATH
     : PATH instanceof ArrayBuffer
       ? Buffer.from(PATH)
       : /^data:.*;base64,/i.test(PATH)
-        ? Buffer.from(PATH.split(',')[1], 'base64')
-        : /^https?:\/\//.test(PATH)
-          ? (res = await (await fetch(PATH)).buffer())
-          : fs.existsSync(PATH)
-            ? ((filename = PATH), fs.readFileSync(PATH))
+        ? Buffer.from(String(PATH).split(',')[1] || '', 'base64')
+        : /^https?:\/\//i.test(String(PATH))
+          ? (res = await (await fetch(String(PATH))).buffer())
+          : fs.existsSync(String(PATH))
+            ? ((filename = String(PATH)), fs.readFileSync(String(PATH)))
             : typeof PATH === 'string'
               ? Buffer.from(PATH)
               : Buffer.alloc(0);
@@ -620,7 +631,9 @@ export async function getFile(PATH, saveToFile = false) {
   const ext = String(type.ext || 'bin').replace(/^\./, '');
 
   if (data && saveToFile && !filename) {
-    filename = path.join(__dirname, '../tmp', `${Date.now()}.${ext}`);
+    const tmpDir = path.join(process.cwd(), 'tmp');
+    if (!fs.existsSync(tmpDir)) await fs.promises.mkdir(tmpDir, { recursive: true });
+    filename = path.join(tmpDir, `${Date.now()}.${ext}`);
     await fs.promises.writeFile(filename, data);
   }
 
@@ -630,7 +643,7 @@ export async function getFile(PATH, saveToFile = false) {
     mime: type.mime,
     ext,
     data,
-    deleteFile() {
+    async deleteFile() {
       return filename ? fs.promises.unlink(filename) : Promise.resolve();
     },
   };
