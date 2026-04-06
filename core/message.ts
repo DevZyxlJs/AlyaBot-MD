@@ -21,7 +21,7 @@ import { sizeFormatter } from 'human-readable';
 import util from 'util';
 import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
-import { fileTypeFromBuffer } from 'file-type';
+// import { fileTypeFromBuffer } from 'file-type';
 import path from 'path';
 import exif from './exif.ts';
 import { fileURLToPath } from 'url'
@@ -580,39 +580,61 @@ export async function smsg(sock, m, store) {
     )
   }
 
-  sock.getFile = async (PATH, saveToFile = false) => {
-    let res, filename
-    const data = Buffer.isBuffer(PATH)
-      ? PATH
-      : PATH instanceof ArrayBuffer
-        ? PATH.toBuffer()
-        : /^data:.*?\/.*?;base64,/i.test(PATH)
-          ? Buffer.from(PATH.split`,`[1], 'base64')
-          : /^https?:\/\//.test(PATH)
-            ? await (res = await fetch(PATH)).buffer()
-            : fs.existsSync(PATH)
-              ? ((filename = PATH), fs.readFileSync(PATH))
-              : typeof PATH === 'string'
-                ? PATH
-                : Buffer.alloc(0)
-    if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer')
-    const type = (await fileTypeFromBuffer(data)) || {
-      mime: 'application/octet-stream',
-      ext: '.bin',
-    }
-    if (data && saveToFile && !filename)
-      ((filename = path.join(__dirname, '../tmp/' + new Date() * 1 + '.' + type.ext)),
-        await fs.promises.writeFile(filename, data))
-    return {
-      res,
-      filename,
-      ...type,
-      data,
-      deleteFile() {
-        return filename && fs.promises.unlink(filename)
-      },
-    }
+export async function detectFileType(buffer) {
+  const mod = await import('file-type');
+  // mod puede exponer: named export, default con .fromBuffer, o module.exports
+  const FileType = mod.fileTypeFromBuffer ? mod : (mod.default || mod);
+  // 3 posibilidades:
+  // 1) named: mod.fileTypeFromBuffer(buffer)
+  // 2) default.fromBuffer: FileType.fromBuffer(buffer)
+  // 3) legacy: FileType.fromBuffer(buffer) (module.exports)
+  if (FileType.fileTypeFromBuffer) {
+    return await FileType.fileTypeFromBuffer(buffer);
   }
+  if (FileType.fromBuffer) {
+    return await FileType.fromBuffer(buffer);
+  }
+  return null;
+}
+
+export async function getFile(PATH, saveToFile = false) {
+  let res, filename;
+  const data = Buffer.isBuffer(PATH)
+    ? PATH
+    : PATH instanceof ArrayBuffer
+      ? Buffer.from(PATH)
+      : /^data:.*;base64,/i.test(PATH)
+        ? Buffer.from(PATH.split(',')[1], 'base64')
+        : /^https?:\/\//.test(PATH)
+          ? (res = await (await fetch(PATH)).buffer())
+          : fs.existsSync(PATH)
+            ? ((filename = PATH), fs.readFileSync(PATH))
+            : typeof PATH === 'string'
+              ? Buffer.from(PATH)
+              : Buffer.alloc(0);
+
+  if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer');
+
+  const detected = await detectFileType(data);
+  const type = detected || { mime: 'application/octet-stream', ext: 'bin' };
+  const ext = String(type.ext || 'bin').replace(/^\./, '');
+
+  if (data && saveToFile && !filename) {
+    filename = path.join(__dirname, '../tmp', `${Date.now()}.${ext}`);
+    await fs.promises.writeFile(filename, data);
+  }
+
+  return {
+    res,
+    filename,
+    mime: type.mime,
+    ext,
+    data,
+    deleteFile() {
+      return filename ? fs.promises.unlink(filename) : Promise.resolve();
+    },
+  };
+}
 
   m.react = (text, key, options) => sock.sendMessage(m.chat, { react: { text, key: m.key } })
 
