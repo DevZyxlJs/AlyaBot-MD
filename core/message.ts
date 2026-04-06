@@ -501,32 +501,36 @@ export async function smsg(sock, m, store) {
 
   m.react = (u) => sock.sendMessage(m.chat, { react: { text: u, key: m.key } })
 
-  m.reply = async (content, options = {}) => {
-    const quoted = m
-    const chat = m.chat
-    const caption = ''
-    const ephemeralExpiration = m.expiration
-    const mentions = ''
-    if (typeof content === 'object') {
-      return sock.sendMessage(chat, content, {
-        ...options,
-        quoted,
-        ephemeralExpiration,
-      })
-    } else if (typeof content === 'string') {
-      try {
-        if (/^https?:\/\//.test(content)) {
-          const data = await axios.get(content, { responseType: 'arraybuffer' })
-          const mime = data.headers['content-type'] || (await fileTypeFromBuffer(data.data)).mime
-          if (/gif|image|video|audio|pdf|stream/i.test(mime)) {
-            return sock.sendMedia(chat, data.data, '', caption, quoted, content)
-          } else {
-            return sock.sendMessage(
-              chat,
-              { text: content, mentions, ...options },
-              { quoted, ephemeralExpiration },
-            )
-          }
+m.reply = async (content, options = {}) => {
+  const quoted = m
+  const chat = m.chat
+  const caption = ''
+  const ephemeralExpiration = m.expiration
+  const mentions = ''
+  if (typeof content === 'object') {
+    return sock.sendMessage(chat, content, {
+      ...options,
+      quoted,
+      ephemeralExpiration,
+    })
+  } else if (typeof content === 'string') {
+    try {
+      if (/^https?:\/\//.test(content)) {
+        const data = await axios.get(content, { responseType: 'arraybuffer' })
+        const buffer = Buffer.from(data.data)
+        let mime = data.headers['content-type'] || ''
+        if (!mime) {
+          const detected = detectBySignature(buffer)
+          if (detected && detected.mime) mime = detected.mime
+        }
+        if (!mime) {
+          const mimeMod = await import('mime-types')
+          const mimeTypes = mimeMod.default || mimeMod
+          const ext = (new URL(content).pathname.split('.').pop() || '').split('?')[0]
+          mime = mimeTypes.lookup(ext) || ''
+        }
+        if (/gif|image|video|audio|pdf|stream/i.test(mime)) {
+          return sock.sendMedia(chat, buffer, '', caption, quoted, content)
         } else {
           return sock.sendMessage(
             chat,
@@ -534,15 +538,35 @@ export async function smsg(sock, m, store) {
             { quoted, ephemeralExpiration },
           )
         }
-      } catch (e) {
+      } else {
         return sock.sendMessage(
           chat,
           { text: content, mentions, ...options },
           { quoted, ephemeralExpiration },
         )
       }
+    } catch (e) {
+      return sock.sendMessage(
+        chat,
+        { text: content, mentions, ...options },
+        { quoted, ephemeralExpiration },
+      )
     }
   }
+}
+
+function detectBySignature(buf) {
+  if (!buf || buf.length < 4) return null
+  if (buf.length >= 8 && buf.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]))) return { ext: 'png', mime: 'image/png' }
+  if (buf.length >= 3 && buf.slice(0, 3).equals(Buffer.from([0xFF, 0xD8, 0xFF]))) return { ext: 'jpg', mime: 'image/jpeg' }
+  if (buf.length >= 6 && (buf.slice(0, 6).toString('ascii') === 'GIF89a' || buf.slice(0, 6).toString('ascii') === 'GIF87a')) return { ext: 'gif', mime: 'image/gif' }
+  if (buf.length >= 12 && buf.slice(0, 4).toString('ascii') === 'RIFF' && buf.slice(8, 12).toString('ascii') === 'WEBP') return { ext: 'webp', mime: 'image/webp' }
+  if (buf.length >= 4 && buf.slice(0, 4).equals(Buffer.from([0x25, 0x50, 0x44, 0x46]))) return { ext: 'pdf', mime: 'application/pdf' }
+  if (buf.length >= 4 && buf.slice(0, 4).equals(Buffer.from([0x50, 0x4B, 0x03, 0x04]))) return { ext: 'zip', mime: 'application/zip' }
+  if (buf.length >= 3 && buf.slice(0, 3).toString('ascii') === 'ID3') return { ext: 'mp3', mime: 'audio/mpeg' }
+  if (buf.length >= 4 && buf[0] === 0x00 && buf[1] === 0x00 && buf[2] === 0x00 && (buf[3] === 0x18 || buf[3] === 0x20)) return { ext: 'mp4', mime: 'video/mp4' }
+  return null
+}
 
   m.copy = () => exports.smsg(sock, M.fromObject(M.toObject(m)))
 
