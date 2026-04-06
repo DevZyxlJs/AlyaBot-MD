@@ -22,6 +22,7 @@ import util from 'util';
 import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
 // import { fileTypeFromBuffer } from 'file-type';
+import mimeTypes from 'mime-types';
 import path from 'path';
 import exif from './exif.ts';
 import { fileURLToPath } from 'url'
@@ -580,41 +581,56 @@ export async function smsg(sock, m, store) {
     )
   }
 
-/**
- * Detecta el tipo usando file-type, compatible con varias versiones/exports.
- * @param {Buffer} buffer
- * @returns {Promise<{ext:string,mime:string}|null>}
- */
-async function detectFileType(buffer) {
-  const mod = await import('file-type');
-  if (typeof mod.fileTypeFromBuffer === 'function') {
-    return await mod.fileTypeFromBuffer(buffer);
+/** Comprueba firmas (magic numbers) y devuelve {ext, mime} o null */
+function detectBySignature(buf: Buffer): { ext: string; mime: string } | null {
+  if (buf.length >= 8 && buf.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]))) {
+    return { ext: 'png', mime: 'image/png' };
   }
-  const candidate = mod.default || mod;
-  if (candidate && typeof candidate.fromBuffer === 'function') {
-    return await candidate.fromBuffer(buffer);
+  if (buf.length >= 3 && buf.slice(0, 3).equals(Buffer.from([0xFF, 0xD8, 0xFF]))) {
+    return { ext: 'jpg', mime: 'image/jpeg' };
   }
-  if (typeof candidate.fileTypeFromBuffer === 'function') {
-    return await candidate.fileTypeFromBuffer(buffer);
+  if (buf.length >= 6 && buf.slice(0, 6).toString('ascii') === 'GIF89a' || buf.slice(0,6).toString('ascii') === 'GIF87a') {
+    return { ext: 'gif', mime: 'image/gif' };
+  }
+  if (buf.length >= 12 && buf.slice(0, 4).toString('ascii') === 'RIFF' && buf.slice(8, 12).toString('ascii') === 'WEBP') {
+    return { ext: 'webp', mime: 'image/webp' };
+  }
+  if (buf.length >= 4 && buf.slice(0, 4).equals(Buffer.from([0x25,0x50,0x44,0x46]))) {
+    return { ext: 'pdf', mime: 'application/pdf' };
+  }
+  if (buf.length >= 4 && buf.slice(0, 4).equals(Buffer.from([0x50,0x4B,0x03,0x04]))) {
+    return { ext: 'zip', mime: 'application/zip' };
+  }
+  // MP3 (ID3) or frame sync
+  if (buf.length >= 3 && buf.slice(0, 3).toString('ascii') === 'ID3') {
+    return { ext: 'mp3', mime: 'audio/mpeg' };
+  }
+  if (buf.length >= 4 && (buf[0] === 0x00 && buf[1] === 0x00 && buf[2] === 0x00 && (buf[3] === 0x18 || buf[3] === 0x20))) {
+    // posible MP4/ISO base media (heurística)
+    return { ext: 'mp4', mime: 'video/mp4' };
   }
   return null;
 }
 
+/** Normaliza ext sin punto */
+function normExt(ext: string | undefined) {
+  if (!ext) return 'bin';
+  return String(ext).replace(/^\./, '') || 'bin';
+}
+
 /**
- * Obtiene un archivo desde PATH (Buffer | ArrayBuffer | dataURL | URL | ruta local | string)
- * y detecta su tipo. Todo en un mismo archivo.
- * @param {Buffer|ArrayBuffer|string} PATH
- * @param {boolean} saveToFile
+ * getFile: acepta Buffer | ArrayBuffer | dataURL | URL | ruta local | string
+ * Devuelve { res, filename, mime, ext, data, deleteFile() }
  */
-export async function getFile(PATH, saveToFile = false) {
-  let res = undefined;
-  let filename = undefined;
+export async function getFile(PATH: Buffer | ArrayBuffer | string, saveToFile = false) {
+  let res: any = undefined;
+  let filename: string | undefined = undefined;
 
   const data = Buffer.isBuffer(PATH)
     ? PATH
     : PATH instanceof ArrayBuffer
       ? Buffer.from(PATH)
-      : /^data:.*;base64,/i.test(PATH)
+      : /^data:.*;base64,/i.test(String(PATH))
         ? Buffer.from(String(PATH).split(',')[1] || '', 'base64')
         : /^https?:\/\//i.test(String(PATH))
           ? (res = await (await fetch(String(PATH))).buffer())
@@ -626,12 +642,37 @@ export async function getFile(PATH, saveToFile = false) {
 
   if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer');
 
-  const detected = await detectFileType(data);
+  let detected = detectBySignature(data);
+
+  if (!detected && filename) {
+    const extFromName = path.extname(filename).replace(/^\./, '');
+    const mime = mimeTypes.lookup(extFromName) || 'application/octet-stream';
+    detected = { ext: normExt(extFromName), mime };
+  }
+
+  if (!detected) {
+    try {
+      const img = await Jimp.read(data);
+      const mime = img.getMIME();
+      const ext = mimeTypes.extension(mime) || 'png';
+      detected = { ext: normExt(ext), mime };
+    } catch (e) {
+    }
+  }
+
+  if (!detected && typeof PATH === 'string') {
+    const extFromPath = path.extname(String(PATH)).replace(/^\./, '');
+    if (extFromPath) {
+      const mime = mimeTypes.lookup(extFromPath) || 'application/octet-stream';
+      detected = { ext: normExt(extFromPath), mime };
+    }
+  }
+
   const type = detected || { mime: 'application/octet-stream', ext: 'bin' };
-  const ext = String(type.ext || 'bin').replace(/^\./, '');
+  const ext = normExt(type.ext);
 
   if (data && saveToFile && !filename) {
-    const tmpDir = path.join(process.cwd(), 'tmp');
+    const tmpDir = path.join(process.cwd(), 'core', 'system', 'tmp');
     if (!fs.existsSync(tmpDir)) await fs.promises.mkdir(tmpDir, { recursive: true });
     filename = path.join(tmpDir, `${Date.now()}.${ext}`);
     await fs.promises.writeFile(filename, data);
@@ -643,7 +684,7 @@ export async function getFile(PATH, saveToFile = false) {
     mime: type.mime,
     ext,
     data,
-    async deleteFile() {
+    deleteFile() {
       return filename ? fs.promises.unlink(filename) : Promise.resolve();
     },
   };
