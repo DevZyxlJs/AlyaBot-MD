@@ -37,6 +37,7 @@
   "jimp": "^0.22.12",
   "moment": "^2.29.4",
   "moment-timezone": "^0.5.37",
+  "mime-types": "latest",
   "node-cache": "^5.1.2",
   "node-fetch": "^2.6.1",
   "node-webpmux": "^3.2.0",
