@@ -52,7 +52,7 @@ function formatViews(views) {
 }
 
 export default {
-  command: ['play', 'play2', 'mp3', 'yta', 'mp4', 'ytv', 'play3', 'ytadoc', 'playdoc', 'ytmp3doc', 'play4', 'ytvdoc', 'play2doc', 'ytmp4doc'],
+  command: ['t', 't2'],
   category: 'downloader',
   run: async (client, m, args, command, text) => {
     try {
@@ -83,7 +83,7 @@ export default {
           }
         }
       });
-      if (['play', 'yta', 'mp3', 'ytmp3', 'playaudio'].includes(command)) {
+      if (['t'].includes(command)) {
         let sistema = "Stellar";
         try {
           const api = await ddownr.download(url, 'mp3');
@@ -95,7 +95,7 @@ export default {
           if (!result) throw new Error();
           await client.sendMessage(m.chat, { audio: { url: result }, fileName: `${api.data.title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
         }
-      } else if (command === 'play3' || command === 'ytadoc' || command === 'playdoc' || command === 'ytmp3doc') {
+      } else if (command === 't2') {
         const api = await ddownr.download(url, 'mp3');
         const result = api.downloadUrl;
         await client.sendMessage(m.chat, { document: { url: result }, mimetype: "audio/mpeg", fileName: `${title}.mp3`, caption: `${dev} Aqui tienes tu audio` }, { quoted: m });        
