@@ -21,7 +21,7 @@ import { sizeFormatter } from 'human-readable';
 import util from 'util';
 import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
-import * as FileType from 'file-type';
+import { fileTypeFromBuffer } from 'file-type';
 import path from 'path';
 import exif from './exif.ts';
 import { fileURLToPath } from 'url'
@@ -518,7 +518,7 @@ export async function smsg(sock, m, store) {
       try {
         if (/^https?:\/\//.test(content)) {
           const data = await axios.get(content, { responseType: 'arraybuffer' })
-          const mime = data.headers['content-type'] || (await FileType.fromBuffer(data.data)).mime
+          const mime = data.headers['content-type'] || (await fileTypeFromBuffer(data.data)).mime
           if (/gif|image|video|audio|pdf|stream/i.test(mime)) {
             return sock.sendMedia(chat, data.data, '', caption, quoted, content)
           } else {
@@ -596,7 +596,7 @@ export async function smsg(sock, m, store) {
                 ? PATH
                 : Buffer.alloc(0)
     if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer')
-    const type = (await FileType.fromBuffer(data)) || {
+    const type = (await fileTypeFromBuffer(data)) || {
       mime: 'application/octet-stream',
       ext: '.bin',
     }
@@ -691,7 +691,7 @@ export async function smsg(sock, m, store) {
   } else {
     throw new Error("Ruta o buffer inválido")
   }
-  const type = (await FileType.fromBuffer(buffer)) || { mime: "application/octet-stream", ext: "bin", }
+  const type = (await fileTypeFromBuffer(buffer)) || { mime: "application/octet-stream", ext: "bin", }
   let mtype = ""
   let mimetype = options.mimetype || type.mime
   let file = buffer
