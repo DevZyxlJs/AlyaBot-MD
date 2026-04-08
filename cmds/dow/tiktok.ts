@@ -6,9 +6,16 @@ export default {
   run: async (sock, m, args, command) => {
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
+    const botSettings = await getSettings(botId)
+    const isPremiumBot = botSettings.botprem === 1
+    const isModBot = botSettings.botmod === 1
+
+    if (!isOficialBot && !isPremiumBot && !isModBot) {
+      return sock.reply(m.chat, mess.solosub, m)
+    }
 
     if (!args.length) {
-      return m.reply(`✿ Ingresa un *término* o *enlace* de TikTok.`)
+      return m.reply(`✿ Ingresa un término o enlace de TikTok.`)
     }
 
     const urls = args.filter(arg => arg.includes("tiktok.com"))
@@ -32,21 +39,22 @@ export default {
               author = {},
               stats = {},
               music = {},
+              type
             } = data
 
             const caption =
               `ㅤ۟∩　ׅ　★ ໌　ׅ　🅣𝗂𝗄𝖳𝗈𝗄 🅓ownload　ׄᰙ\n\n` +
-              `𖣣ֶㅤ֯⌗ ✿ ⬭ *Título:* ${title}\n` +
-              `𖣣ֶㅤ֯⌗ ★ ⬭ *Autor:* ${author.nickname || author.unique_id || 'Desconocido'}\n` +
-              `𖣣ֶㅤ֯⌗ ❃ ⬭ *Duración:* ${duration || 'N/A'}\n` +
-              `𖣣ֶㅤ֯⌗ ♡ ⬭ *Likes:* ${(stats.likes || 0).toLocaleString()}\n` +
-              `𖣣ֶㅤ֯⌗ ❖ ⬭ *Comentarios:* ${(stats.comments || 0).toLocaleString()}\n` +
-              `𖣣ֶㅤ֯⌗ ☄︎ ⬭ *Vistas:* ${(stats.views || stats.plays || 0).toLocaleString()}\n` +
-              `𖣣ֶㅤ֯⌗ ⚡︎ ⬭ *Compartidos:* ${(stats.shares || 0).toLocaleString()}\n` +
-              `𖣣ֶㅤ֯⌗ ꕥ ⬭ *Audio:* ${music.title ? music.title + ' -' : 'Desconocido'} ${music.author || ''}`
+              `𖣣ֶㅤ֯⌗ ✿ ⬭ Título: ${title}\n` +
+              `𖣣ֶㅤ֯⌗ ★ ⬭ Autor: ${author.nickname || author.unique_id || 'Desconocido'}\n` +
+              `𖣣ֶㅤ֯⌗ ❃ ⬭ Duración: ${duration || 'N/A'}\n` +
+              `𖣣ֶㅤ֯⌗ ♡ ⬭ Likes: ${(stats.likes || 0).toLocaleString()}\n` +
+              `𖣣ֶㅤ֯⌗ ❖ ⬭ Comentarios: ${(stats.comments || 0).toLocaleString()}\n` +
+              `𖣣ֶㅤ֯⌗ ☄︎ ⬭ Vistas: ${(stats.views || stats.plays || 0).toLocaleString()}\n` +
+              `𖣣ֶㅤ֯⌗ ⚡︎ ⬭ Compartidos: ${(stats.shares || 0).toLocaleString()}\n` +
+              `𖣣ֶㅤ֯⌗ ꕥ ⬭ Audio: ${music.title ? music.title + ' -' : 'Desconocido'} ${music.author || ''}`
 
             medias.push({
-              type: 'video',
+              type: type,
               data: { url: dl },
               caption
             })
@@ -54,11 +62,16 @@ export default {
             continue
           }
         }
-        if (medias.length) {
-          await sock.sendAlbumMessage(m.chat, medias, { quoted: m })
-        } else {
-          await m.reply(`✿ No se pudieron procesar los enlaces.`)
-        }
+if (medias.length === 1) {
+  await sock.sendMessage(
+    m.chat,
+    { [type]: dl, caption },
+    { quoted: m }
+  )
+} else if (medias.length >= 2) {
+  await sock.sendAlbumMessage(m.chat, medias, { quoted: m })
+} else {
+  await m.reply('✿ No se pudieron procesar los resultados.')
       } else {
         const url = urls[0]
         try {
@@ -76,20 +89,25 @@ export default {
             author = {},
             stats = {},
             music = {},
+            type
           } = data
 
           const caption =
             `ㅤ۟∩　ׅ　★ ໌　ׅ　🅣𝗂𝗄𝖳𝗈𝗄 🅓ownload　ׄᰙ\n\n` +
-            `𖣣ֶㅤ֯⌗ ✿ ⬭ *Título:* ${title}\n` +
-            `𖣣ֶㅤ֯⌗ ★ ⬭ *Autor:* ${author.nickname || author.unique_id || 'Desconocido'}\n` +
-            `𖣣ֶㅤ֯⌗ ❖ ⬭ *Duración:* ${duration || 'N/A'}\n` +
-            `𖣣ֶㅤ֯⌗ ♡ ⬭ *Likes:* ${(stats.likes || 0).toLocaleString()}\n` +
-            `𖣣ֶㅤ֯⌗ ꕥ ⬭ *Comentarios:* ${(stats.comments || 0).toLocaleString()}\n` +
-            `𖣣ֶㅤ֯⌗ ❒ ⬭ *Vistas:* ${(stats.views || stats.plays || 0).toLocaleString()}\n` +
-            `𖣣ֶㅤ֯⌗ ☄︎ ⬭ *Compartidos:* ${(stats.shares || 0).toLocaleString()}\n` +
-            `𖣣ֶㅤ֯⌗ ⚡︎ ⬭ *Audio:* ${music.title ? music.title + ' -' : 'Desconocido'} ${music.author || ''}`
+            `𖣣ֶㅤ֯⌗ ✿ ⬭ Título: ${title}\n` +
+            `𖣣ֶㅤ֯⌗ ★ ⬭ Autor: ${author.nickname || author.unique_id || 'Desconocido'}\n` +
+            `𖣣ֶㅤ֯⌗ ❖ ⬭ Duración: ${duration || 'N/A'}\n` +
+            `𖣣ֶㅤ֯⌗ ♡ ⬭ Likes: ${(stats.likes || 0).toLocaleString()}\n` +
+            `𖣣ֶㅤ֯⌗ ꕥ ⬭ Comentarios: ${(stats.comments || 0).toLocaleString()}\n` +
+            `𖣣ֶㅤ֯⌗ ❒ ⬭ Vistas: ${(stats.views || stats.plays || 0).toLocaleString()}\n` +
+            `𖣣ֶㅤ֯⌗ ☄︎ ⬭ Compartidos: ${(stats.shares || 0).toLocaleString()}\n` +
+            `𖣣ֶㅤ֯⌗ ⚡︎ ⬭ Audio: ${music.title ? music.title + ' -' : 'Desconocido'} ${music.author || ''}`
 
-          await sock.sendMessage(m.chat, { video: { url: dl }, caption }, { quoted: m })
+await sock.sendMessage(
+  m.chat,
+  { [type]: { url: dl }, caption },
+  { quoted: m }
+)
         } catch (e) {
           await m.reply(msgglobal)
         }
@@ -120,14 +138,14 @@ export default {
 
           const caption =
             `ㅤ۟∩　ׅ　★ ໌　ׅ　🅣𝗂𝗄𝖳𝗈𝗄 🅓ownload　ׄᰙ\n\n` +
-            `𖣣ֶㅤ֯⌗ ✿ ⬭ *Título:* ${title}\n` +
-            `𖣣ֶㅤ֯⌗ ❑ ⬭ *Autor:* ${author.nickname || author.unique_id || 'Desconocido'}\n` +
-            `𖣣ֶㅤ֯⌗ ❀ ⬭ *Duración:* ${duration || 'N/A'}\n` +
-            `𖣣ֶㅤ֯⌗ ♡ ⬭ *Likes:* ${(stats.likes || 0).toLocaleString()}\n` +
-            `𖣣ֶㅤ֯⌗ ★ ⬭ *Comentarios:* ${(stats.comments || 0).toLocaleString()}\n` +
-            `𖣣ֶㅤ֯⌗ ❖ ⬭ *Vistas:* ${(stats.views || stats.plays || 0).toLocaleString()}\n` +
-            `𖣣ֶㅤ֯⌗ ꕥ ⬭ *Compartidos:* ${(stats.shares || 0).toLocaleString()}\n` +
-            `𖣣ֶㅤ֯⌗ ☄︎ ⬭ *Audio:* ${music.title ? music.title + ' -' : 'Desconocido'} ${music.author || ''}`
+            `𖣣ֶㅤ֯⌗ ✿ ⬭ Título: ${title}\n` +
+            `𖣣ֶㅤ֯⌗ ❑ ⬭ Autor: ${author.nickname || author.unique_id || 'Desconocido'}\n` +
+            `𖣣ֶㅤ֯⌗ ❀ ⬭ Duración: ${duration || 'N/A'}\n` +
+            `𖣣ֶㅤ֯⌗ ♡ ⬭ Likes: ${(stats.likes || 0).toLocaleString()}\n` +
+            `𖣣ֶㅤ֯⌗ ★ ⬭ Comentarios: ${(stats.comments || 0).toLocaleString()}\n` +
+            `𖣣ֶㅤ֯⌗ ❖ ⬭ Vistas: ${(stats.views || stats.plays || 0).toLocaleString()}\n` +
+            `𖣣ֶㅤ֯⌗ ꕥ ⬭ Compartidos: ${(stats.shares || 0).toLocaleString()}\n` +
+            `𖣣ֶㅤ֯⌗ ☄︎ ⬭ Audio: ${music.title ? music.title + ' -' : 'Desconocido'} ${music.author || ''}`
 
           medias.push({
             type: 'video',
@@ -139,7 +157,7 @@ export default {
         if (medias.length) {
           await sock.sendAlbumMessage(m.chat, medias, { quoted: m })
         } else {
-          await m.reply(`✿ No se pudieron procesar los resultados.`)
+          await m.reply('✿ No se pudieron procesar los resultados.')
         }
       } catch (e) {
         m.reply(msgglobal)
