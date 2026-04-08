@@ -4,15 +4,6 @@ export default {
   command: ['tiktok', 'tt'],
   category: 'downloader',
   run: async (sock, m, args, command) => {
-    const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
-    const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
-    const botSettings = await getSettings(botId)
-    const isPremiumBot = botSettings.botprem === 1
-    const isModBot = botSettings.botmod === 1
-
-    if (!isOficialBot && !isPremiumBot && !isModBot) {
-      return sock.reply(m.chat, mess.solosub, m)
-    }
 
     if (!args.length) {
       return m.reply(`✿ Ingresa un término o enlace de TikTok.`)
