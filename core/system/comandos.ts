@@ -74,7 +74,6 @@ export const commands = [
     {"name": "tiktok", "desc": "Descarga videos de tiktok.", "alias": ["/tiktok", "/tt"], "category": "download", "uso": "_<url|query>_"},
     {"name": "ytmp3", "desc": "Descarga videos de youtube.", "alias": ["/play", "/mp3", "/playaudio", "/ytaudio", "/ytmp3"], "category": "download", "uso": "_<url|query>_"},
     {"name": "spotify", "desc": "Descarga audios de spotify.", "alias": ["/spotify", "/sp"], "category": "download", "uso": "_<url|query>_"},
-    {"name": "applemusic", "desc": "Descarga audios de Apple Music.", "alias": ["/applemusic", "/am"], "category": "download", "uso": "_<query>_"},
     {"name": "ytmp4", "desc": "Descarga videos de youtube.", "alias": ["/play2", "/mp4", "/playvideo", "/ytvideo", "/ytmp4"], "category": "download", "uso": "_<url|query>_"},
     { "name": "mf", "desc": "Descarga archivos desde Mediafire.", "alias": ["/mf", "/mediafire"], "category": "download", "uso": "_<url>_" },
 
