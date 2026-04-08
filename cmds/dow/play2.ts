@@ -42,7 +42,7 @@ export default {
 
       await sock.sendMessage(m.chat, { image: thumbBuffer, caption }, { quoted: m })
 
-      const endpoint = `${api.url}/dl/ytmp4v2?url=${encodeURIComponent(url)}&key=${api.key}`
+      const endpoint = `${api.url}/dl/ytmp4?url=${encodeURIComponent(url)}&key=${api.key}`
       const res = await fetch(endpoint, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Linux; Android 15; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
@@ -50,13 +50,13 @@ export default {
         }
       }).then(r => r.json())
 
-      if (!res?.status || !res.download?.url) {
+      if (!res?.status || !res.result?.downloadUrl) {
         return m.reply('《✧》 No se pudo descargar el *video*, intenta más tarde.')
       }
 
       const mensaje = {
-        video: { url: res.download.url },
-        fileName: `${res.data?.title || 'video'}.mp4`,
+        video: { url: res.result.downloadUrl },
+        fileName: `${res.result?.title || 'video'}.mp4`,
         mimetype: 'video/mp4'
       }
 
