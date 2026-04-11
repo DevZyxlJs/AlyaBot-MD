@@ -19,7 +19,7 @@ import axios from 'axios';
 import moment from 'moment-timezone';
 import { sizeFormatter } from 'human-readable';
 import util from 'util';
-import Jimp from 'jimp';
+import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
 import path from 'path';
 import exif from './exif.ts';
