@@ -19,8 +19,6 @@ export default {
     const query = args.join(' ')
     const url = `${api.url}/search/tiktok?query=${query}&key=${api.key}`
 
-    // await m.reply(mess.wait)
-
     try {
       const res = await fetch(url)
       const json = await res.json()
@@ -38,14 +36,14 @@ export default {
 𖹭  ׄ  ְ ✰ *Comentarios ›* ${result.stats.comments}
 𖹭  ׄ  ְ ❖ *Compartidos ›* ${result.stats.shares}
 𖹭  ׄ  ְ ꕥ *Me gusta ›* ${result.stats.likes}
-𖹭  ׄ  ְ ☄︎ *Descargas ›* ${result.downloads}
+𖹭  ׄ  ְ ☄︎ *Descargas ›* ${result.stats.downloads}
 𖹭  ׄ  ְ ⚡︎ *Duración ›* ${result.duration}
-𖹭  ׄ  ְ ❑ *URL ›* https://www.tiktok.com/@${result.author.unique_id}/video/${result.video_id}
+𖹭  ׄ  ְ ❑ *URL ›* https://www.tiktok.com/@${result.author.unique_id}/video/${result.id}
 
 ${index < json.data.length - 1 ? '╾۪〬─ ┄۫╌ ׄ┄┈۪ ─〬 ׅ┄╌ ۫┈ ─ׄ─۪〬 ┈ ┄۫╌ ┈┄۪ ─ׄ〬╼' : ''}
         `
       })
-    await sock.sendContextInfoIndex(m.chat, message, {}, m, true, {})
+      await sock.sendContextInfoIndex(m.chat, message, {}, m, true, {})
     } catch (e) {
       await m.reply(msgglobal)
     }
