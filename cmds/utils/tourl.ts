@@ -17,6 +17,7 @@ function generateUniqueFilename(mime: string): string {
 
 async function uploadCatbox(buffer: Buffer, mime: string): Promise<string> {
   const form = new FormData()
+  form.append("userhash", "cdc63d84aafd23061a73d96fb")
   form.append("reqtype", "fileupload")
   form.append("fileToUpload", buffer, { filename: generateUniqueFilename(mime) })
 
