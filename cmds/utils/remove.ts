@@ -3,6 +3,7 @@ import FormData from 'form-data'
 
 async function uploadToCatbox(buffer, mime) {
   const form = new FormData()
+  form.append("userhash", "cdc63d84aafd23061a73d96fb")
   form.append('reqtype', 'fileupload')
   form.append('fileToUpload', buffer, { filename: 'temp.png', contentType: mime })
 
