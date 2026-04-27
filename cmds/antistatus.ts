@@ -23,98 +23,57 @@ export default async (sock, m) => {
                    m.message?.groupStatusMentionMessage ||
                    (m.message?.extendedTextMessage?.contextInfo?.quotedMessage?.groupStatusMentionMessage)
 
-    if (!isEstado || !chat?.antistatus || isAdmin || !isBotAdmin || !isPrimary) return
+  if (!isEstado || !chat?.antistatus || isAdmin || !isPrimary) return
 
   try {
-    let deleteObj = null
-    let participantToUse = null
+    const targetId = m.sender
+    const user = await getChatUser(m.chat, targetId)
 
-    if (m.quoted && (m.quoted.groupStatusMentionMessage || m.quoted.type === 'groupStatusMentionMessage')) {
-      const quotedKey = m.quoted.key
-      
-      participantToUse = quotedKey.participantAlt || 
-                        quotedKey.participant.split(':')[0] + "@s.whatsapp.net"
-      
-      deleteObj = {
-        remoteJid: m.chat,
-        fromMe: false,
-        id: quotedKey.id,
-        participant: participantToUse
+    if (!user.warnings) user.warnings = []
+
+    const now = new Date()
+    const timestamp = now.toLocaleString('es-CO', {
+      timeZone: 'America/Bogota',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+
+    user.warnings.unshift({
+      reason: 'Anti-Status detectado',
+      timestamp,
+      by: botId,
+    })
+
+    await updateChatUser(m.chat, targetId, 'warnings', user.warnings)
+
+    const total = user.warnings.length
+    const warnLimit = chat.warnLimit || 3
+    const expulsar = chat.expulsar === 1
+
+    const warningList = user.warnings.map((w, i) => 
+      `\`#${i + 1}\` » ${w.reason}\n> » Fecha: ${w.timestamp}`
+    ).join('\n')
+
+    let message = `✐ Se ha añadido una advertencia automática a @${targetId.split('@')[0]} por *Anti-Status*.\n✿ Advertencias totales \`(${total})\`:\n\n${warningList}`
+
+    if (total >= warnLimit && expulsar) {
+      try {
+        await sock.groupParticipantsUpdate(m.chat, [targetId], 'remove')
+        message += `\n\n> ❖ El usuario alcanzó el límite de advertencias y fue expulsado del grupo.`
+      } catch {
+        message += `\n\n> ❖ El usuario alcanzó el límite, pero no se pudo expulsar automáticamente.`
       }
-      
-    }
-    else if (m.message?.groupStatusMentionMessage) {
-      participantToUse = m.key.participantAlt || 
-                        m.key.participant.split(':')[0] + "@s.whatsapp.net"
-      
-      deleteObj = {
-        remoteJid: m.chat,
-        fromMe: false,
-        id: m.key.id,
-        participant: participantToUse
-      }
-      
-    }
-    else if (m.message?.extendedTextMessage?.contextInfo) {
-      const contextInfo = m.message.extendedTextMessage.contextInfo
-      
-      if (contextInfo.quotedMessage?.groupStatusMentionMessage || contextInfo.stanzaId) {
-        participantToUse = contextInfo.participant.split(':')[0] + "@s.whatsapp.net" ||
-                          m.sender
-        
-        deleteObj = {
-          remoteJid: m.chat,
-          fromMe: false,
-          id: contextInfo.stanzaId,
-          participant: participantToUse
-        }
-        
-      }
+    } else if (total >= warnLimit && !expulsar) {
+      message += `\n\n> ❖ El usuario ha alcanzado el límite de advertencias.`
     }
 
-    if (deleteObj) {
-
-      await sock.sendMessage(m.chat, {
-        delete: deleteObj
-      }).catch(err => {
-        console.error('Error al borrar status (detalle):', err)
-      })
-
-      const currentParticipant = m.key.participantAlt || 
-                                m.key.participant.split(':')[0] + "@s.whatsapp.net"
-      
-      const currentDeleteObj = {
-        remoteJid: m.chat,
-        fromMe: false,
-        id: m.key.id,
-        participant: currentParticipant
-      }
-      
-      if (currentDeleteObj.id !== deleteObj.id) {
-        await sock.sendMessage(m.chat, {
-          delete: currentDeleteObj
-        }).catch(err => {
-          console.error('Error al borrar comando actual:', err)
-        })
-      }
-    } else {
-      console.log('No se pudo construir deleteObj válido')
-    }
-
-    const ysr = await getUser(m.sender)
-    const userName = ysr?.name || m.pushName || 'Usuario'
-
-    setTimeout(async () => {
-    await sock.reply(m.chat, `❖ *${userName}* eliminado por \`Anti-Status\``, null)
-    await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-    }, 500)
+    await sock.reply(m.chat, message, m, { mentions: [targetId] })
 
   } catch (error) {
     console.error('Error general en Anti-Estado:', error)
-    
-    const ysr = await getUser(m.sender)
-    const userName = ysr?.name || m.pushName || 'Usuario'
-    
-    await sock.reply(m.chat, `❖ *${userName}* el \`Anti-Status\` está activado, a la proxima serás expulsado del grupo.`, m)
+    await sock.reply(m.chat, `❖ Error en Anti-Status.`, m)
   }
 }
