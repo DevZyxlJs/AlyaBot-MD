@@ -26,9 +26,25 @@ export default async (sock, m) => {
   if (!isEstado || !chat?.antistatus || isAdmin || !isPrimary) return
 
   try {
+    if (isBotAdmin) {
+      let deleteObj = null
+      if (isEstado) {
+        deleteObj = {
+          remoteJid: m.chat,
+          fromMe: false,
+          id: m.key.id,
+          participant: m.sender
+        }
+      }
+      if (deleteObj) {
+        await sock.sendMessage(m.chat, { delete: deleteObj }).catch(err => {
+          console.error('Error al borrar status:', err)
+        })
+      }
+    }
+
     const targetId = m.sender
     const user = await getChatUser(m.chat, targetId)
-
     if (!user.warnings) user.warnings = []
 
     const now = new Date()
