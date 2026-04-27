@@ -31,7 +31,8 @@ export default {
     const rawIndex = mentioned.length > 0 ? args[1] : args[0]
 
     if (rawIndex?.toLowerCase() === 'all') {
-      user.warnings = []
+    //  user.warnings = []
+      await updateChatUser(m.chat, targetId, 'warnings', '[]')
       return sock.reply(
         m.chat,
         `✎ Se han eliminado todas las advertencias del usuario @${targetId.split('@')[0]} (${name}).`,
@@ -50,7 +51,8 @@ export default {
     }
 
     const realIndex = total - index
-    user.warnings.splice(realIndex, 1)
+   // user.warnings.splice(realIndex, 1)
+    await updateChatUser(m.chat, targetId, 'warnings', user.warnings.splice(realIndex, 1))
 
     await sock.reply(
       m.chat,
