@@ -1,0 +1,58 @@
+{
+  "name": "alya",
+  "version": "4.0",
+  "description": "WhatsApp multi Device, updated with better performance",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "build": "tsc",
+    "start": "node index.js"
+  },
+  "imports": {
+    "#serialize": "./lib/serialize.js",
+    "#handler": "./handler.js",
+    "#database": "./lib/system/database.js",
+    "#cmdsloader": "./lib/system/cmdsloader.js",
+    "#events": "./cmds/events.js",
+    "#cmds/*": "./cmds/*.js"
+  },
+  "keywords": [
+    "whatsapp-bot",
+    "baileys-md",
+    "bot-wa",
+    "multi-device"
+  ],
+  "author": "DevZyxlJs",
+  "license": "MIT",
+  "engines": {
+    "node": ">=21.7.3",
+    "npm": ">=10.9.4"
+  },
+  "dependencies": {
+    "baileys": "github:this-xys/baileys",
+    "yargs": "^18.0.0",
+    "axios": "^1.16.1",
+    "chalk": "^4.1.2",
+    "http": "latest",
+    "fluent-ffmpeg": "^2.1.2",
+    "form-data": "^4.0.0",
+    "gradient-string": "^2.0.2",
+    "human-readable": "^0.2.1",
+    "jimp": "^0.22.12",
+    "moment-timezone": "^0.5.48",
+    "moment": "^2.29.4",
+    "mime-types": "^3.0.2",
+    "node-fetch": "^2.7.0",
+    "node-cache": "^5.1.2",
+    "node-webpmux": "^3.2.0",
+    "grapheme-splitter": "^1.0.4",
+    "pino": "^10.3.1",
+    "qrcode": "^1.5.3",
+    "qrcode-terminal": "^0.12.0",
+    "readline-sync": "^1.4.10",
+    "syntax-error": "^1.4.0",
+    "uuid": "^14.0.0",
+    "yt-search": "^2.10.4"
+  }
+}
