@@ -1,113 +1,127 @@
-import "./settings.js"
+import "./settings.ts"
 import handler from '#handler'
 import events from '#events'
-import makeWASocket, { Browsers, makeCacheableSignalKeyStore, useMultiFileAuthState, fetchLatestBaileysVersion, jidDecode, DisconnectReason } from 'baileys';
-import pino from "pino";
-import qrcode from "qrcode-terminal";
-import chalk from "chalk";
-import fs from "fs";
-import path from "path";
-import readlineSync from "readline-sync";
-import cmdsLoader from '#cmdsloader';
-import { smsg, setCachedMeta } from "#serialize";
-import database from "#db";
-import { startSubBot } from '#cmds/socket/subbot';
+import web from '#webs'
+import makeWASocket, { Browsers, makeCacheableSignalKeyStore, useMultiFileAuthState, fetchLatestBaileysVersion, jidDecode, DisconnectReason } from 'baileys'
+import { Boom } from '@hapi/boom'
+import pino from "pino"
+import qrcode from "qrcode-terminal"
+import chalk from "chalk"
+import fs from "fs"
+import path from "path"
+import readlineSync from "readline-sync"
+import cmdsLoader from '#cmdsloader'
+import { smsg, setCachedMeta } from "#serialize"
+import db from "#db"
+import { startModBot } from '#cmds/socket/codemod'
+import { startPremBot } from '#cmds/socket/codeprem'
+import { startSubBot } from '#cmds/socket/subbot'
 
 const log = {
   info: (msg) => console.log(chalk.bgBlue.white.bold(` INFO `), chalk.white(msg)),
   success: (msg) => console.log(chalk.bgGreen.white.bold(` SUCCESS `), chalk.greenBright(msg)),
-  warn: (msg) => console.log(chalk.bgYellow.black.bold(` WARNING `), chalk.yellow(msg)),
+  warn: (msg) => console.log(chalk.bgYellow.white.bold(` WARNING `), chalk.white(msg)),
   error: (msg) => console.log(chalk.bgRed.white.bold(` ERROR `), chalk.redBright(msg))
-};
+}
 
-const askQuestion = readlineSync;
-let usarCodigo = false;
-let numero = "";
-const msgStore = new Map();
-const msgLimit = 500;
-let bootTime = Date.now();
-let botReady = false;
-let isRestarting = false;
-let reconnectAttempts = 0;
-const maxReconnectAttempts = 5;
-let isUsingFallback = false;
+const askQuestion = readlineSync
+let opcion, phoneInput;
+let lineM = '⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》'
+let phoneNumber = ""
+const msgStore = new Map()
+const msgLimit = 500
+const methodCodeQR = process.argv.includes("--qr");
+const methodCode = process.argv.includes("code");
+let bootTime = Date.now()
+let botReady = false
+let isRestarting = false
+let reconnectAttempts = 0
+const maxReconnectAttempts = 5
+let isUsingFallback = false
 
-const DIGITS = (s = "") => String(s).replace(/\D/g, "");
+const DIGITS = (s = "") => String(s).replace(/\D/g, "")
 
-function normalizePhoneForPairing(input) {
-  let s = DIGITS(input);
-  if (!s) return "";
-  if (s.startsWith("0")) s = s.replace(/^0+/, "");
-  if (s.length === 10 && s.startsWith("3")) s = "57" + s;
-  if (s.startsWith("52") && !s.startsWith("521") && s.length >= 12) s = "521" + s.slice(2);
-  if (s.startsWith("54") && !s.startsWith("549") && s.length >= 11) s = "549" + s.slice(2);
-  return s;
+function normalizePhone(input) {
+  let s = DIGITS(input)
+  if (!s) return ""
+  if (s.startsWith("0")) s = s.replace(/^0+/, "")
+  if (s.length === 10 && s.startsWith("3")) s = "57" + s
+  if (s.startsWith("52") && !s.startsWith("521") && s.length >= 12) s = "521" + s.slice(2)
+  if (s.startsWith("54") && !s.startsWith("549") && s.length >= 11) s = "549" + s.slice(2)
+  return s
 }
 
 async function initData() {
   try {
-    database.initDB();
-    database.clearCache('user');
-    database.clearCache('chat');
-    database.clearCache('set');
-    database.clearCache('chatuser');
-    database.clearCache('packsticker');
-    log.info('Base de datos inicializada.');
+    db.initDB()
+    db.clearCache('user')
+    db.clearCache('chat')
+    db.clearCache('set')
+    db.clearCache('chatuser')
+    db.clearCache('packsticker')
+    log.info('Base de datos inicializada.')
   } catch (e) {
-    log.error(`Error DB: ${e.message}`);
+    log.error(`Error DB: ${e.message}`)
   }
 }
 
-console.log(chalk.blue.bold('\n INICIANDO SISTEMA ...'));
+console.log(chalk.blue.bold('\n INICIANDO SISTEMA ...'))
 console.log(chalk.cyan(`
-      Alya | Wa Bot
+      Stellar | Wa Bot
      Powered by I'm Diego ~
-`));
+`))
 
 const BOT_TYPES = [
+  { name: 'ModBot', folder: './Sessions/Mods', starter: startModBot },
+  { name: 'PremBot', folder: './Sessions/Prems', starter: startPremBot },
   { name: 'SubBot', folder: './Sessions/Subs', starter: startSubBot }
-];
+]
 
-global.conns = global.conns || [];
-const reconnectingSet = new Set();
+global.conns = global.conns || []
+const reconnectingSet = new Set()
 
 async function loadBots() {
   for (const { name, folder, starter } of BOT_TYPES) {
-    if (!fs.existsSync(folder)) continue;
-    const botIds = fs.readdirSync(folder);
+    if (!fs.existsSync(folder)) continue
+    const botIds = fs.readdirSync(folder)
     for (const userId of botIds) {
-      const sessionPath = path.join(folder, userId);
-      const credsPath = path.join(sessionPath, 'creds.json');
-      if (!fs.existsSync(credsPath)) continue;
-      if (global.conns.some((conn) => conn.userId === userId)) continue;
-      if (reconnectingSet.has(userId)) continue;
-
+      const sessionPath = path.join(folder, userId)
+      const credsPath = path.join(sessionPath, 'creds.json')
+      if (!fs.existsSync(credsPath)) continue
+      if (global.conns.some((conn) => conn.userId === userId)) continue
+      if (reconnectingSet.has(userId)) continue
       try {
-        reconnectingSet.add(userId);
-        await starter(null, null, '', false, userId, '');
+        reconnectingSet.add(userId)
+        await starter(null, null, '', false, userId, '')
       } catch (e) {
-        console.log(chalk.gray(`[ LOADBOTS ] Error ${name} ${userId}: ${e?.message || e}`));
-        reconnectingSet.delete(userId);
+        console.log(chalk.gray(`[ LOADBOTS ] Error ${name} ${userId}: ${e?.message || e}`))
+        reconnectingSet.delete(userId)
       }
-      await new Promise((res) => setTimeout(res, 2000));
+      await new Promise((res) => setTimeout(res, 2000))
     }
   }
-  setTimeout(loadBots, 60 * 1000);
+  // setTimeout(loadBots, 60 * 1000)
 }
 
 function askConnectionMethod() {
-  const ownerPath = './Sessions/Owner';
-  const credsExist = fs.existsSync(path.join(ownerPath, 'creds.json'));
-
+  const ownerPath = './Sessions/Owner'
+  const credsExist = fs.existsSync(path.join(ownerPath, 'creds.json'))
   if (credsExist) {
-    log.info("Sesion encontrada. Intentando conectar...");
-    return;
+    log.info("Sesion encontrada. Intentando conectar...")
+    return
   }
 
-  let lineM = '⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ 》';
-
-  while (true) {
-      const opcion = askQuestion.question(`╭${lineM}  
+if (methodCodeQR) {
+  opcion = "1";
+} else if (methodCode) {
+  opcion = "2";
+  if (!phoneNumber) {
+    console.log(chalk.bold.redBright(`\nPor favor, Ingrese el número de WhatsApp.\n${chalk.bold.yellowBright("Ejemplo: +57301******")}\n${chalk.bold.magentaBright('---> ')}`));
+    phoneInput = readlineSync.question("");
+    phoneNumber = normalizePhone(phoneInput);
+  }
+} else if (!fs.existsSync("./Sessions/Owner/creds.json")) {
+  opcion = readlineSync.question(`╭${lineM}  
 ┊ ${chalk.blueBright('╭┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅')}
 ┊ ${chalk.blueBright('┊')} ${chalk.blue.bgBlue.bold.cyan('METODO DE VINCULACION')}
 ┊ ${chalk.blueBright('╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅')}   
@@ -121,27 +135,21 @@ function askConnectionMethod() {
 ┊ ${chalk.blueBright('┊')} ${chalk.italic.magenta('la opcion para conectarse.')}
 ┊ ${chalk.blueBright('╰┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅')} 
 ╰${lineM}\n${chalk.bold.magentaBright('---> ')}`);
-
-      if (opcion === "1") {
-          usarCodigo = false;
-          break;
-      } else if (opcion === "2") {
-          usarCodigo = true;
-          console.log(chalk.bold.redBright(`\n\nIngrese el numero de WhatsApp.\n` +
-            `${chalk.bold.yellowBright("Ejemplo: +57301******")}\n` +
-            `${chalk.bold.magentaBright('---> ')} `));
-          let phoneInput = askQuestion.question("");
-          numero = normalizePhoneForPairing(phoneInput);
-          break;
-      } else {
-          console.log(chalk.redBright("Opcion invalida. Debe elegir 1 o 2."));
-      }
+  while (!/^[1-2]$/.test(opcion)) {
+    console.log(chalk.bold.redBright(`No se permiten numeros que no sean 1 o 2, tampoco letras o símbolos especiales.`));
+    opcion = readlineSync.question("--> ");
   }
+  if (opcion === "2") {
+    console.log(chalk.bold.redBright(`\nPor favor, Ingrese el número de WhatsApp.\n${chalk.bold.yellowBright("Ejemplo: +57301******")}\n${chalk.bold.magentaBright('---> ')}`));
+    phoneInput = readlineSync.question("");
+    phoneNumber = normalizePhone(phoneInput);
+  }
+}
 }
 
 async function warmupGroups(sock) {
   try {
-    const allChats = Object.values(database.db.db.getChat());
+    const allChats = Object.values(db.getChat());
     const chatIds = allChats.map(c => c.id).filter(id => typeof id === 'string' && id.endsWith('@g.us')).slice(0, 50)
     if (!chatIds.length) return;
     console.log(chalk.gray(`[ ✿ ] Precargando metadata de ${chatIds.length} grupos...`));
@@ -178,6 +186,8 @@ function copyFolderSync(source, target) {
 
 function getBackupSession() {
   const priorities = [
+    { type: 'Mod', folder: './Sessions/Mods' },
+    { type: 'Prem', folder: './Sessions/Prems' },
     { type: 'Sub', folder: './Sessions/Subs' }
   ];
 
@@ -208,39 +218,25 @@ function getBackupSession() {
 }
 
 async function startBot(fallbackInfo = null) {
-  if (isRestarting && !fallbackInfo) return;
-
+  if (isRestarting && !fallbackInfo) return
+  isRestarting = true
+  bootTime = Date.now()
+  let authStatePath = `./Sessions/Owner`
   if (fallbackInfo) {
-      isUsingFallback = true;
+    isUsingFallback = true
+    const ownerPath = './Sessions/Owner'
+    log.warn(`SESION PRINCIPAL PERDIDA. Restaurando respaldo: ${fallbackInfo.userId} (${fallbackInfo.type})`)
+       copyFolderSync(fallbackInfo.path, ownerPath);
+    log.success(`Respaldo copiado a Sessions/Owner.`)
   } else {
-      isUsingFallback = false;
+    isUsingFallback = false
   }
-
-  isRestarting = true;
-  bootTime = Date.now();
-
-  let authStatePath = `./Sessions/Owner`;
-
-  if (fallbackInfo) {
-    const ownerPath = './Sessions/Owner';
-    log.warn(`SESION PRINCIPAL PERDIDA. Restaurando respaldo: ${fallbackInfo.userId} (${fallbackInfo.type})`);
-
-    if (fs.existsSync(ownerPath)) {
-        fs.rmSync(ownerPath, { recursive: true, force: true });
-    }
-
-    copyFolderSync(fallbackInfo.path, ownerPath);
-    log.success(`Respaldo copiado a Sessions/Owner.`);
-  }
-
-  const credsPath = path.join(authStatePath, 'creds.json');
+  const credsPath = path.join(authStatePath, 'creds.json')
   if (!fs.existsSync(credsPath) && !fallbackInfo) {
-      askConnectionMethod();
+    askConnectionMethod()
   }
-
-  const { state, saveCreds } = await useMultiFileAuthState(authStatePath);
-  const { version } = await fetchLatestBaileysVersion();
-
+  const { state, saveCreds } = await useMultiFileAuthState(authStatePath)
+  const { version } = await fetchLatestBaileysVersion()
   const sock = makeWASocket({
     version,
     logger: pino({ level: 'silent' }),
@@ -251,192 +247,238 @@ async function startBot(fallbackInfo = null) {
     syncFullHistory: false,
     generateHighQualityLinkPreview: true,
     shouldIgnoreJid: (jid) => jid.endsWith('@broadcast'),
-    keepAliveIntervalMs: 25_000,
+    keepAliveIntervalMs: 25000,
     getMessage: async (key) => msgStore.get(key.remoteJid + ':' + key.id) ?? { conversation: '' },
-  });
+  })
 
-  global.sock = sock;
-  sock.ev.on("creds.update", saveCreds);
+  global.sock = sock
+  sock.ev.on("creds.update", saveCreds)
 
-  sock.sendText = (jid, text, quoted = "", options) => sock.sendMessage(jid, { text, ...options }, { quoted });
+  sock.sendText = (jid, text, quoted = "", options) => sock.sendMessage(jid, { text, ...options }, { quoted })
 
   sock.decodeJid = (jid) => {
-    if (!jid) return jid;
+    if (!jid) return jid
     if (/:\d+@/gi.test(jid)) {
-      const decode = jidDecode(jid) || {};
-      return (decode.user && decode.server && decode.user + "@" + decode.server) || jid;
+      const decode = jidDecode(jid) || {}
+      return (decode.user && decode.server && decode.user + "@" + decode.server) || jid
     }
-    return jid;
-  };
+    return jid
+  }
 
-  if (!state.creds.registered && !isUsingFallback) {
-      if (usarCodigo) {
-        setTimeout(async () => {
-          try {
-            const pairing = await sock.requestPairingCode(numero, 'STBOT004');
-            const codeBot = pairing?.match(/.{1,4}/g)?.join("-") || pairing;
-            console.log(chalk.bold.white(chalk.bgMagenta(`[ ✿ ] CODIGO:`)), chalk.bold.white(codeBot));
-          } catch (e) {
-            log.error(`Error generando codigo: ${e.message}`);
-            usarCodigo = false; 
-          }
-        }, 3000);
+  if (opcion === "2" && !state.creds.registered && !isUsingFallback) {
+    setTimeout(async () => {
+      try {
+        if (!state.creds.registered) {
+          const pairing = await sock.requestPairingCode(phoneNumber, 'STBOT004');
+          const codeBot = pairing?.match(/.{1,4}/g)?.join("-") || pairing;
+          console.log(chalk.bold.white(chalk.bgMagenta(`Código de emparejamiento:`)), chalk.bold.white(chalk.white(codeBot)));
+        }
+      } catch (err) {
+        console.log(chalk.red("Error al generar código:"), err);
       }
+    }, 3000);
   }
 
   sock.ev.on("messages.upsert", async ({ messages, type }) => {
-    if (!botReady || type !== 'notify') return;
+    if (!botReady || type !== 'notify') return
     for (const msg of messages) {
       if (msg?.message && msg?.key?.id) {
-        const sid = msg.key.remoteJid + ':' + msg.key.id;
-        msgStore.set(sid, msg.message);
-        if (msgStore.size > msgLimit) msgStore.delete(msgStore.keys().next().value);
+        const sid = msg.key.remoteJid + ':' + msg.key.id
+        msgStore.set(sid, msg.message)
+        if (msgStore.size > msgLimit) msgStore.delete(msgStore.keys().next().value)
       }
       try {
-        if (!msg?.message || msg.key?.remoteJid === "status@broadcast") continue;
-        if ((msg.messageTimestamp * 1000) < bootTime - 15_000) continue;
-        if (msg.message.ephemeralMessage) msg.message = msg.message.ephemeralMessage.message;
-        const m = await smsg(sock, msg);
-        if (typeof handler === 'function') handler(sock, m, messages).catch((err) => console.error('[ Handler ]', err));
+        if (!msg?.message || msg.key?.remoteJid === "status@broadcast") continue
+        if ((msg.messageTimestamp * 1000) < bootTime - 15000) continue
+        if (msg.message.ephemeralMessage) msg.message = msg.message.ephemeralMessage.message
+        const m = await smsg(sock, msg)
+        if (typeof handler === 'function') handler(sock, m, messages).catch((err) => console.error('[ Handler ]', err))
       } catch (err) {
-        console.error('Error Process:', err);
+        console.error('Error Process:', err)
       }
     }
-  });
+  })
 
-  try { await events(sock, null); } catch (err) { console.log(chalk.gray(`[ EVENT ERROR ] -> ${err}`)); }
+  try { await events(sock, null) } catch (err) { console.log(chalk.gray(`[ EVENT ERROR ] -> ${err}`)) }
 
   sock.ev.on("connection.update", async (update) => {
-  const { qr, connection, lastDisconnect, isNewLogin, receivedPendingNotifications, } = update
+    const { qr, connection, lastDisconnect, isNewLogin, receivedPendingNotifications } = update
 
-    if (qr && !usarCodigo && !isUsingFallback) {
-      log.info("ESCANEA ESTE CÓDIGO QR PARA CONECTARTE.")
-      qrcode.generate(qr, { small: true });
-    }
-
-    if (isNewLogin) log.info("Nuevo dispositivo detectado / Sesion restaurada");
-
-    if (receivedPendingNotifications === true) {
-      log.info("Por favor espere aproximadamente 1 minuto...");
-      sock.ev.flush();
-    }
-
-    if (connection === "close") {
-      const reason = lastDisconnect?.error?.output?.statusCode || 0;
-
-      const isLoggedOut = [
-          DisconnectReason.loggedOut, 
-          DisconnectReason.forbidden, 
-          DisconnectReason.multideviceMismatch,
-          DisconnectReason.badSession,
-          DisconnectReason.unauthorized
-      ].includes(reason);
-
-      if (isLoggedOut) {
-        log.error(`SESION PRINCIPAL CERRADA DEFINITIVAMENTE (${reason}).`);
-
-        if (isUsingFallback) {
-             log.error("El respaldo tambien fallo. Apagando sistema.");
-             process.exit(1);
-             return;
-        }
-
-        log.warn("Buscando sesion de respaldo para convertir en Owner...");
-        const backup = getBackupSession();
-
-        if (backup) {
-            log.success(`Respaldo encontrado: ${backup.userId} (${backup.type})`);
-
-            setTimeout(async () => {
-                try {
-                    await startBot(backup);
-
-                    setTimeout(async () => {
-                        if (global.sock && global.sock.user) {
-                            const ownerJid = global.sock.user.id.split(':')[0] + "@s.whatsapp.net";
-                            const targetJid = global.owner && global.owner[0] ? global.owner[0] + "@s.whatsapp.net" : ownerJid;
-
-                            const msg2 = `Bot Activo\n\nLa sesion principal murio.\nHe asumido el control como *${backup.type}*.`;
-                            await global.sock.sendMessage(targetJid, { text: msg2 }).catch(() => {});
-                        }
-                    }, 5000);
-                } catch (e) {
-                    log.error("Fallo inicio con respaldo");
-                    process.exit(1);
-                }
-            }, 2000);
-            return;
-        } else {
-            log.error("No hay sesiones de respaldo disponibles. El bot se detendra.");
-            process.exit(1);
-            return;
-        }
+    if (qr != 0 && qr != undefined || methodCodeQR) {
+      if (opcion == '1' || methodCodeQR) {
+        console.log(chalk.green.bold("[ ✿ ] Escanea este código QR"));
+        qrcode.generate(qr, { small: true });
       }
-
-      if (reason === DisconnectReason.connectionReplaced) {
-        log.warn("Conexion reemplazada por otra instancia.");
-        isRestarting = false;
-        return;
-      }
-
-      reconnectAttempts++;
-      if (reconnectAttempts > maxReconnectAttempts) {
-        log.error(`Maximo de reintentos (${maxReconnectAttempts}) alcanzado. La conexion es inestable.`);
-        reconnectAttempts = 0;
-        isRestarting = false;
-        return;
-      }
-
-      const delay = Math.min(2000 * reconnectAttempts, 15000);
-      const reasonMessages = {
-        [DisconnectReason.connectionLost]: "Conexion perdida.",
-        [DisconnectReason.connectionClosed]: "Conexion cerrada.",
-        [DisconnectReason.restartRequired]: "Reinicio requerido.",
-        [DisconnectReason.timedOut]: "Tiempo agotado.",
-        [DisconnectReason.badSession]: "Sesion inestable.",
-      };
-
-      log.warn(`${reasonMessages[reason] || `Desconexion (${reason})`} Reintentando en ${delay/1000}s... (${reconnectAttempts}/${maxReconnectAttempts})`);
-
-      setTimeout(() => {
-          isRestarting = false;
-          startBot(null);
-      }, delay);
-    }
+   }
 
     if (connection == "open") {
-     reconnectAttempts = 0; 
-     isRestarting = false;
+      web(sock)
+      reconnectAttempts = 0
+      isRestarting = false
+      if (isUsingFallback && fallbackInfo) {
+        log.success(`Operando con sesion de respaldo (${fallbackInfo.type}).`)
+      }
+      const userName = sock.user.name || "Desconocido"
+      bootTime = Date.now()
+      if (global?.sock) {
+        const ownerBotId = global?.sock?.user?.id?.split(':')[0] + '@s.whatsapp.net'
+        db.updateSettings(ownerBotId, 'type', isUsingFallback ? (fallbackInfo?.type || 'Owner') : 'Owner')
+      }
+      log.success(`Conectado exitosamente como: ${userName}`)
+      if (!botReady) {
+        botReady = true
+        warmupGroups(sock)
+      }
+  } 
 
-     if (isUsingFallback && fallbackInfo) {
-        try {
-            log.success(`Operando con sesion de respaldo (${fallbackInfo.type}).`);
-        } catch (e) {
-            log.error(`Error post-fallback: ${e.message}`);
-        }
-     }
+let reason = new Boom(lastDisconnect?.error)?.output?.statusCode
 
-     const userName = sock.user.name || "Desconocido";
-     bootTime = Date.now();
-
-     if (global.sock && global.sock.user) {
-         const ownerBotId = global.sock.user.id.split(':')[0] + '@s.whatsapp.net';
-         database.db.db.updateSettings(ownerBotId, 'type', isUsingFallback ? (fallbackInfo?.type || 'Owner') : 'Owner');
-     }
-
-     log.success(`Conectado exitosamente como: ${userName}`);
-
-     if (!botReady) {
-        botReady = true;
-        warmupGroups(sock);
-     }
+if (connection === 'close') {
+  if (reason === DisconnectReason.badSession) {
+    log.info("Sesión inválida.")
+  } else if (reason === DisconnectReason.connectionClosed) {
+    log.error("Sesión cerrada.")
+    if (isUsingFallback) {
+      log.error("El respaldo también falló. Apagando sistema.")
+      process.exit(1)
+      return
     }
-  });
+    log.warn("Buscando sesión de respaldo...")
+    const backup = getBackupSession()
+    if (backup) {
+      log.success(`Respaldo encontrado: ${backup.userId} (${backup.type})`)
+      setTimeout(async () => {
+        try {
+          await startBot(backup)
+          setTimeout(async () => {
+            if (global.sock && global.sock.user) {
+              const ownerJid = global.sock.user.id.split(':')[0] + "@s.whatsapp.net"
+              const targetJid = global.owner && global.owner[0] ? global.owner[0] + "@s.whatsapp.net" : ownerJid
+              const msg2 = `Bot Activo\n\nLa sesión principal murió.\nHe asumido el control como *${backup.type}*.`
+              await global.sock.sendMessage(targetJid, { text: msg2 }).catch(() => {})
+            }
+          }, 5000)
+        } catch (e) {
+          log.error("Falló inicio con respaldo")
+          process.exit(1)
+        }
+      }, 2000)
+      return
+    } else {
+      log.error("No hay sesiones de respaldo disponibles. El bot se detendrá.")
+      process.exit(1)
+      return
+    }
+  } else if (reason === DisconnectReason.connectionLost) {
+    reconnectAttempts++
+    const delay = Math.min(2000 * reconnectAttempts, 15000) 
+    log.warn(`Conexión perdida, reconectando en ${delay/1000}s... (${reconnectAttempts}/${maxReconnectAttempts})`)
+    setTimeout(async () => {
+      await startBot()
+    }, delay)
+
+    if (reconnectAttempts >= maxReconnectAttempts) { 
+      log.info("Máximo de reinicios alcanzado. Buscando respaldo...")
+      if (isUsingFallback) {
+        log.error("El respaldo también falló. Apagando sistema.")
+        process.exit(1)
+        return
+      }
+      log.warn("Buscando sesión de respaldo...")
+      const backup = getBackupSession()
+      if (backup) {
+        log.success(`Respaldo encontrado: ${backup.userId} (${backup.type})`)
+        setTimeout(async () => {
+          try {
+            await startBot(backup)
+            setTimeout(async () => {
+              if (global.sock && global.sock.user) {
+                const ownerJid = global.sock.user.id.split(':')[0] + "@s.whatsapp.net"
+                const targetJid = global.owner && global.owner[0] ? global.owner[0] + "@s.whatsapp.net" : ownerJid
+                const msg2 = `Bot Activo\n\nLa sesión principal murió.\nHe asumido el control como *${backup.type}*.`
+                await global.sock.sendMessage(targetJid, { text: msg2 }).catch(() => {})
+              }
+            }, 5000)
+          } catch (e) {
+            log.error("Falló inicio con respaldo")
+            process.exit(1)
+          }
+        }, 2000)
+        return
+      } else {
+        log.error("No hay sesiones de respaldo disponibles. El bot se detendrá.")
+        process.exit(1)
+        return
+      }
+    }
+  } else if (reason === DisconnectReason.connectionReplaced) {
+    log.warn(`Conexión reemplazada por otra instancia.\n→ Mi número: ${sock.user.id.split(':')[0]}`)
+  } else if (reason === DisconnectReason.loggedOut) {
+    log.error("Sesión cerrada.")
+    if (isUsingFallback) {
+      log.error("El respaldo también falló. Apagando sistema.")
+      process.exit(1)
+      return
+    }
+    log.warn("Buscando sesión de respaldo...")
+    const backup = getBackupSession()
+    if (backup) {
+      log.success(`Respaldo encontrado: ${backup.userId} (${backup.type})`)
+      setTimeout(async () => {
+        try {
+          await startBot(backup)
+          setTimeout(async () => {
+            if (global.sock && global.sock.user) {
+              const ownerJid = global.sock.user.id.split(':')[0] + "@s.whatsapp.net"
+              const targetJid = global.owner && global.owner[0] ? global.owner[0] + "@s.whatsapp.net" : ownerJid
+              const msg2 = `Bot Activo\n\nLa sesión principal murió.\nHe asumido el control como *${backup.type}*.`
+              await global.sock.sendMessage(targetJid, { text: msg2 }).catch(() => {})
+            }
+          }, 5000)
+        } catch (e) {
+          log.error("Falló inicio con respaldo")
+          process.exit(1)
+        }
+      }, 2000)
+      return
+    } else {
+      log.error("No hay sesiones de respaldo disponibles. El bot se detendrá.")
+      process.exit(1)
+      return
+    }
+  } else if (reason === DisconnectReason.restartRequired) {
+    log.info("Reinicio requerido.")
+    await startBot()
+  } else if (reason === DisconnectReason.timedOut) {
+    log.warn("Conexión expirada.")
+  } else {
+    log.error(`Desconexión (${reason}).`)
+    const backup = getBackupSession()
+    if (backup) {
+      log.success(`Respaldo encontrado: ${backup.userId} (${backup.type})`)
+      setTimeout(async () => {
+        try {
+          await startBot(backup)
+        } catch (e) {
+          log.error("Falló inicio con respaldo")
+          process.exit(1)
+        }
+      }, 2000)
+    }
+  }
 }
 
-(async () => {
-    await initData();
-    await cmdsLoader();
-    loadBots();
-    await startBot();
-})();
+    if (isNewLogin) log.info("Nuevo dispositivo detectado / Sesion restaurada")
+    if (receivedPendingNotifications === true) {
+      log.info("Por favor espere aproximadamente 1 minuto...")
+      sock.ev.flush()
+    }
+  })
+}
+
+;(async () => {
+  await initData()
+  await cmdsLoader()
+  loadBots()
+  await startBot()
+})()
