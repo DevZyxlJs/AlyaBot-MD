@@ -26,6 +26,7 @@
     "npm": ">=10.9.4"
   },
   "dependencies": {
+    "@hapi/boom": "latest",
     "baileys": "github:this-xys/baileys",
     "yargs": "^18.0.0",
     "axios": "^1.16.1",
