@@ -310,8 +310,8 @@ async function startBot(fallbackInfo = null) {
   const { qr, connection, lastDisconnect, isNewLogin, receivedPendingNotifications, } = update
 
     if (qr && !usarCodigo && !isUsingFallback) {
-      qrcode.generate(qr, { small: true });
       log.info("ESCANEA ESTE CÓDIGO QR PARA CONECTARTE.")
+      qrcode.generate(qr, { small: true });
     }
 
     if (isNewLogin) log.info("Nuevo dispositivo detectado / Sesion restaurada");
