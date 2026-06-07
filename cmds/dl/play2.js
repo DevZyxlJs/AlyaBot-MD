@@ -25,6 +25,7 @@ export default {
         return msg.reply('《✧》 No se encontró información del video.')
       }
 
+      const { timestamp: duration } = videoInfo
       const url = videoInfo.url
       const title = videoInfo.title
       const vistas = (videoInfo.views || 0).toLocaleString()
