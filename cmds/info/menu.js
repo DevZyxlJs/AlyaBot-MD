@@ -140,7 +140,7 @@ function formatearMs(ms) {
   const minutos = Math.floor(segundos / 60);
   const horas = Math.floor(minutos / 60);
   const dias = Math.floor(horas / 24);
-  return [dias && `${dias}d`, `${horas % 24}h`, `${minutos % 60}msg`, `${segundos % 60}s`]
+  return [dias && `${dias}d`, `${horas % 24}h`, `${minutos % 60}m`, `${segundos % 60}s`]
     .filter(Boolean)
     .join(' ');
 }
