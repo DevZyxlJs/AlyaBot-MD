@@ -41,7 +41,7 @@ export default {
       return msg.reply('《✤》 Ingresa el enlace para invitar al bot a tu grupo.')
     }
 
-    const isOficialBot = botId === global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
+    const isOficialBot = botId === global?.sock ? global?.sock?.user?.id?.split(':')[0] + '@s.whatsapp.net' : ''
     const isPremiumBot = botSettings?.botprem === 1
     const isModBot = botSettings?.botmod === 1
 
