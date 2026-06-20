@@ -1,4 +1,4 @@
-import "./settings.ts";
+import "./settings.js";
 import "#db";
 import handler from '#handler';
 import events from '#events';
