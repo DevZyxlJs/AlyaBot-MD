@@ -16,8 +16,8 @@ export default async (sock, msg) => {
 const from = msg.key.remoteJid
 const botJid = sock.user.id.split(':')[0] + '@s.whatsapp.net' || sock.user.lid
 
-const chatData = await db.db.getChat(msg.chat)
-const settings = await db.db.getSettings(botJid)  
+const chatData = await db.getChat(msg.chat)
+const settings = await db.getSettings(botJid)  
 
   const isOwner = global.owner.map(num => num + '@s.whatsapp.net').includes(sender);
   const isROwner = [botJid, ...(settings.owner ? [settings.owner] : []), ...global.owner.map(num => num + '@s.whatsapp.net')].includes(sender);
@@ -41,13 +41,13 @@ const settings = await db.db.getSettings(botJid)
 
   Promise.allSettled((global.cmdsExecute ?? []).filter(p => p.type === 'all').map(p => p.fn({ msg, sock, groupMetadata, participants, isAdmins, isBotAdmins, isOwner, __dirname: p.dirname }).catch(e => console.error(chalk.gray(`[ ✿ ] Error all-plugin ${p.key}: ${e.message}`)))));
 
-const tf = await db.db.getChatUser(msg.chat, msg.sender)
+const tf = await db.getChatUser(msg.chat, msg.sender)
 const to = new Date().toLocaleDateString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' }).split('/').reverse().join('-') 
 if (!tf.stats) tf.stats = {}
 if (!tf.stats[to]) tf.stats[to] = { msgs: 0, cmds: 0 }
 tf.stats[to].msgs++
 
-await db.db.updateChatUser(msg.chat, msg.sender, 'stats', tf.stats)
+await db.updateChatUser(msg.chat, msg.sender, 'stats', tf.stats)
 
   const rawBotname = settings.namebot2 || 'Stellar';
   const tipo = settings.type || 'Sub';
@@ -177,7 +177,7 @@ if (chatData.adminonly && !isAdmins) return
 
 if ((msg.id.startsWith("3EB0") || (msg.id.startsWith("BAE5") && msg.id.length === 16) || (msg.id.startsWith("B24E") && msg.id.length === 20))) return
 
-const user = await db.db.getChatUser(msg.chat, msg.sender)
+const user = await db.getChatUser(msg.chat, msg.sender)
 
 const today = new Date().toLocaleDateString('es-CO', { 
   timeZone: 'America/Bogota',
@@ -209,7 +209,7 @@ if (cmdData.botAdmin && !isBotAdmins) return sock.reply(msg.chat, mess.botAdmin,
 try {
   await sock.sendPresenceUpdate('composing', msg.chat)
   await sock.readMessages([msg.key])
-  const user2 = await db.db.getUser(msg.sender)
+  const user2 = await db.getUser(msg.sender)
 
   user2.usedcommands = (user2.usedcommands || 0) + 1
   settings.commandsejecut = (settings.commandsejecut || 0) + 1
@@ -217,14 +217,14 @@ try {
   user2.exp = (user2.exp || 0) + Math.floor(Math.random() * 100)
   user2.name = msg.pushName
 
-  await db.db.updateChatUser(msg.chat, msg.sender, 'usedTime', user.usedTime)
-  await db.db.updateUser(msg.sender, 'exp', user2.exp)
-  await db.db.updateUser(msg.sender, 'name', user2.name)
-  await db.db.updateUser(msg.sender, 'usedcommands', user2.usedcommands)
-  await db.db.updateSettings(botJid, 'commandsejecut', settings.commandsejecut)
+  await db.updateChatUser(msg.chat, msg.sender, 'usedTime', user.usedTime)
+  await db.updateUser(msg.sender, 'exp', user2.exp)
+  await db.updateUser(msg.sender, 'name', user2.name)
+  await db.updateUser(msg.sender, 'usedcommands', user2.usedcommands)
+  await db.updateSettings(botJid, 'commandsejecut', settings.commandsejecut)
 
   user.stats[today].cmds++
-  await db.db.updateChatUser(msg.chat, msg.sender, 'stats', user.stats)
+  await db.updateChatUser(msg.chat, msg.sender, 'stats', user.stats)
 
   await cmdData.run({ msg, sock, args, command, usedPrefix, text, groupMetadata, participants, isAdmins, isBotAdmins, isOwner, __dirname: global.plugins[cmdData.pluginKey]?.dirname });
 } catch (error) {
