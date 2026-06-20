@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import fetch from 'node-fetch';
 
 const obtenerImagen = async (keyword) => {
-  const endpoints = ["gelbooru", "safebooru", "danbooru"];
+  const endpoints = ["safebooru", "gelbooru", "danbooru"];
 
   for (const endpoint of endpoints) {
     try {
