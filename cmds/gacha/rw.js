@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fetch from 'node-fetch';
 
 const obtenerImagen = async (keyword) => {
-  const endpoints = ["gelbooru", "safebooru", "danbooru"];
+  const endpoints = ["safebooru", "gelbooru", "danbooru"];
 
   for (const endpoint of endpoints) {
     try {
