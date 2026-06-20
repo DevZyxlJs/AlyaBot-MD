@@ -75,7 +75,7 @@ async function loadBots() {
  // setTimeout(loadBots, 60 * 1000);
 }
 
-async function initData() {
+async function initDB() {
   try {
     db.initDB()
     db.clearCache('user')
