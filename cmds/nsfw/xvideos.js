@@ -1,6 +1,5 @@
 import db from "#db"
 import { getBuffer } from '#serialize'
-import sharp from 'sharp'
 import fetch from "node-fetch"
 
 export default {
