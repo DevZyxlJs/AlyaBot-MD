@@ -1,7 +1,6 @@
 import db from "#db"
 import fetch from 'node-fetch'
 import { getBuffer } from "#serialize"
-import sharp from "sharp"
 
 export default {
   command: ['sp', 'spotify'],
@@ -61,21 +60,13 @@ export default {
       }
       const audioBuffer = Buffer.from(await audioRes.arrayBuffer())
 
-      const bannerBuffer = await getBuffer(resultAudio.data.cover)
+const mensaje = {
+  document: audioBuffer, 
+  mimetype: "audio/mpeg", 
+  fileName: `${resultAudio.data.title || 'music'}.mp3` 
+};
 
-      const thumbBuffer2 = await sharp(bannerBuffer)
-        .resize(300, 300)
-        .jpeg({ quality: 80 })
-        .toBuffer()
-
-      const mensaje = {
-        document: audioBuffer,
-        mimetype: "audio/mpeg",
-        fileName: `${resultAudio.data.title || 'music'}.mp3`,
-        jpegThumbnail: thumbBuffer2
-      }
-
-      await sock.sendMessage(msg.chat, mensaje, { quoted: msg })
+await sock.sendMessage(msg.chat, mensaje, { quoted: msg });
 
     } catch (e) {
       await msg.reply(msgglobal)
