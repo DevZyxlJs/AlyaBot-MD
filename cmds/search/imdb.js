@@ -1,82 +1,41 @@
-import axios from 'axios'
+const axios = require('axios');
 
-interface Rating {
-  Source: string
-  Value: string
-}
-
-interface MovieDetail {
-  Title: string
-  Year: string
-  Rated: string
-  Released: string
-  Runtime: string
-  Genre: string
-  Director: string
-  Writer: string
-  Actors: string
-  Plot: string
-  Language: string
-  Country: string
-  Awards: string
-  Poster: string
-  Ratings: Rating[]
-  BoxOffice?: string
-  imdbID: string
-  Response: string
-}
-
-interface SearchMovie {
-  imdbID: string
-  Title: string
-  Year: string
-  Type: string
-  Poster: string
-}
-
-interface SearchResponse {
-  Search: SearchMovie[]
-  Response: string
-  Error?: string
-}
-
-export default {
+module.exports = {
   command: ['imdb'],
   category: 'search',
   isSocket: true,
-  run: async ({ msg, sock }: { msg: any; sock: any }) => {
-    const args = msg.text.split(' ').slice(1)
+  run: async ({ msg, sock }) => {
+    const args = msg.text.split(' ').slice(1);
     if (args.length < 1) {
       return sock.reply(msg.chat, 
         `✎ Ingresa el nombre de la *pelicula*.`, 
-        msg)
+        msg);
     }
 
-    const pelicula = args.join(' ')
+    const pelicula = args.join(' ');
 
     try {
-
-      const searchRes = await axios.get<SearchResponse>(
+      const searchRes = await axios.get(
         `https://www.omdbapi.com/?apikey=7035c60c&s=${encodeURIComponent(pelicula)}&type=movie`
-      )
+      );
 
       if (searchRes.data.Response === 'False') {
         return sock.reply(msg.chat, 
           `✿ No se encontró "${pelicula}" en IMDb.`, 
-          msg)
+          msg);
       }
 
-      const movie = searchRes.data.Search[0]
-      const detailRes = await axios.get<MovieDetail>(
+      const movie = searchRes.data.Search[0];
+      const detailRes = await axios.get(
         `https://www.omdbapi.com/?apikey=7035c60c&i=${movie.imdbID}&plot=full`
-      )
-      const d = detailRes.data
+      );
+      const d = detailRes.data;
 
-       const streamURL = `https://streamimdb.ru/embed/movie/${d.imdbID}`
+      const streamURL = `https://streamimdb.ru/embed/movie/${d.imdbID}`;
 
-      const ratingsText: string = d.Ratings?.length > 0
-        ? d.Ratings.map((r: Rating) => `▸ ${r.Source}: ${r.Value}`).join('\n')
-        : '▸ No disponible'
+      const ratingsText = d.Ratings?.length > 0
+        ? d.Ratings.map(r => `▸ ${r.Source}: ${r.Value}`).join('\n')
+        : '▸ No disponible';
 
       const mensaje =
         `【　✿　】 _\`୨୧  Titulo\` ───── *${d.Title}* (${d.Year})_
@@ -103,20 +62,19 @@ ${d.Plot}
 > _✿ \`VIDEO\` ── ${streamURL}_
 > _✿ \`ID\` ── *${d.imdbID}*_
 
-${dev}`
+${dev}`;
 
       if (d.Poster && d.Poster !== 'N/A') {
         await sock.sendMessage(msg.chat, {
           image: { url: d.Poster },
           caption: mensaje
-        }, { quoted: msg })
+        }, { quoted: msg });
       } else {
-        await sock.reply(msg.chat, mensaje, msg)
+        await sock.reply(msg.chat, mensaje, msg);
       }
 
     } catch (error) {
-      sock.reply(msg.chat, msgglobal, 
-        msg)
+      sock.reply(msg.chat, msgglobal, msg);
     }
   }
-}
+};
