@@ -20,7 +20,7 @@ export default {
         const medias = []
         for (const url of urls.slice(0, 10)) {
           try {
-            const apiUrl = `${api.url}/dl/facebookv2?url=${url}&key=${api.key}`
+            const apiUrl = `${api.url}/dl/facebook?url=${url}&key=${api.key}`
             const res = await fetch(apiUrl)
             if (!res.ok) throw new Error(`HTTP ${res.status}`)
             const buffer = await res.buffer()
@@ -40,7 +40,7 @@ export default {
         }
       } else {
         const url = urls[0]
-        const apiUrl = `${api.url}/dl/facebookv2?url=${url}&key=${api.key}`
+        const apiUrl = `${api.url}/dl/facebook?url=${url}&key=${api.key}`
         const res = await fetch(apiUrl)
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const buffer = await res.buffer()
