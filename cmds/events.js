@@ -1,5 +1,5 @@
 import { normalizeJid, resolveParticipantJid, resolveJidSync, deleteCachedMeta, getCachedMeta, setCachedMeta } from '#serialize';
-import db from "#db"
+import db from "#db";
 import chalk from 'chalk';
 import moment from 'moment-timezone';
 import { prepareWAMessageMedia } from 'baileys';
@@ -33,13 +33,13 @@ export default async (sock, msg) => {
 
       const groupAdmins = metadata ? getGroupAdmins(metadata.participants) : [];
       const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net';
-      
+
       const chat = await db.getChat(anu.id);
       const botSettings = await db.getSettings(botId);
-      
+
       const primaryBotId = chat?.primaryBot;
       const isSelf = (botSettings?.self ?? 0) || (chat?.isMute ?? false);
-      
+
       if (isSelf) return;
 
       const now = new Date();
@@ -51,11 +51,11 @@ export default async (sock, msg) => {
       for (const p of anu.participants) {
         const jid = resolveEventParticipant(p, sock);
         if (!jid) continue;
-        
+
         const phone = jid.split('@')[0];
         const userData = await db.getUser(jid);
         const name = userData?.name || phone;
-        
+
         const avatar = await sock.profilePictureUrl(jid, 'image').catch(() => "https://cloud.stellarwa.xyz/i6AeOyYU.jpeg");
 
         const contextBase = {
@@ -65,7 +65,7 @@ export default async (sock, msg) => {
 
         if (anu.action === 'add' && chat?.welcome && (!primaryBotId || primaryBotId === botId)) {
           if (!metadata) continue;
-          
+
           let caption;
           if (chat.welcomeMessage && chat.welcomeMessage.trim() !== '') {
             caption = chat.welcomeMessage
