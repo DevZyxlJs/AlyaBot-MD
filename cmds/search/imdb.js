@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-module.exports = {
+export default {
   command: ['imdb'],
   category: 'search',
   isSocket: true,
