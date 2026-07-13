@@ -31,6 +31,8 @@ export async function before({ msg, sock, groupMetadata, participants, isAdmins,
       await sock.sendMessage(msg.chat, { 
         delete: deletePayload
       });
+
+       return
     } catch (error) {
       console.error('Error al borrar mensaje de muteado:', error);
     }
