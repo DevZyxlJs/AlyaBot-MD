@@ -191,8 +191,8 @@ if (!user.stats[today]) user.stats[today] = { msgs: 0, cmds: 0 }
 
   const cmdData = global.comandos.get(command);
 
-if (!cmdData) {
-  if (settings.prefijo === 1) return
+if (!cmdData || user.muted === 1 || user.muted === true) {
+  if (settings.prefijo === 1 || settings.prefijo === true || user.muted === 1 || user.muted === true) return
   await sock.readMessages([msg.key])
   return msg.reply(`ꕤ El comando *${command}* no existe.\n✎ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
 }
