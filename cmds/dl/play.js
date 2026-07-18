@@ -46,7 +46,8 @@ export default {
       const mensaje = {
         audio: audioBuffer,
         mimetype: 'audio/mpeg',
-        fileName: resDl.data.fileName || `${title}.mp3`
+        fileName: resDl.data.fileName || `${title}.mp3`,
+        ptt: true
       }
 
       await sock.sendMessage(msg.chat, mensaje, { quoted: msg })
