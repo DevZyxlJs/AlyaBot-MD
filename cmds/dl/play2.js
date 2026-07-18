@@ -51,11 +51,11 @@ export default {
         }
       }).then(r => r.json())
 
-      if (!res?.status || !res.result?.downloadUrl) {
+      if (!res?.status || !res.data?.dl) {
         return msg.reply('《✧》 No se pudo descargar el *video*, intenta más tarde.')
       }
 
-      const videoBuffer = await getBuffer(res.result.downloadUrl)
+      const videoBuffer = await getBuffer(res.data.dl)
 
       const mensaje = {
         video: { url: res.result.downloadUrl },
