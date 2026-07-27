@@ -35,18 +35,18 @@ export default {
 
       await sock.sendMessage(msg.chat, { image: thumbBuffer, caption }, { quoted: msg })
 
-      const dlEndpoint = `${api.url}/dl/ytmp3v2?url=${encodeURIComponent(url)}&key=${api.key}`
+      const dlEndpoint = `${api.url}/dl/ytmp3?url=${encodeURIComponent(url)}&key=${api.key}`
       const resDl = await fetch(dlEndpoint).then(r => r.json())
-      if (!resDl?.status || !resDl.data?.dl) {
+      if (!resDl?.status || !resDl.dl) {
         return msg.reply("《✧》 No se pudo descargar el *audio*, intenta más tarde.")
       }
 
-      const audioBuffer = await getBuffer(resDl.data.dl)
+      const audioBuffer = await getBuffer(resDl.dl)
 
       const mensaje = {
         audio: audioBuffer,
         mimetype: 'audio/mpeg',
-        fileName: resDl.data.fileName || `${title}.mp3`,
+        fileName: `${title}.mp3`,
         ptt: true
       }
 
