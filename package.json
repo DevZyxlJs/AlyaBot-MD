@@ -2,7 +2,7 @@
   "name": "alya",
   "version": "4.0",
   "description": "WhatsApp multi Device, updated with better performance",
-  "main": "index.ts",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js"
@@ -28,9 +28,7 @@
   },
   "dependencies": {
     "@hapi/boom": "latest",
-    "@aws-sdk/client-s3": "^3.1053.0",
     "baileys": "github:this-xys/bails",
-    "better-sqlite3": "latest",
     "yargs": "^18.0.0",
     "axios": "^1.16.1",
     "chalk": "^4.1.2",
@@ -45,8 +43,6 @@
     "mime-types": "^3.0.2",
     "node-fetch": "^2.7.0",
     "node-cache": "^5.1.2",
-    "tough-cookie": "latest",
-    "got-scraping": "latest",
     "node-webpmux": "^3.2.0",
     "grapheme-splitter": "^1.0.4",
     "pino": "^10.3.1",
