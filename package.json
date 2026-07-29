@@ -25,7 +25,7 @@
   "engines": {
     "node": ">=25.0.0",
     "npm": ">=10.9.4"
-  }
+  },
   "dependencies": {
     "@hapi/boom": "latest",
     "baileys": "github:this-xys/bails",
