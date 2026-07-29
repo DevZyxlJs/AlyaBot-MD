@@ -43,11 +43,15 @@ const settings = await db.getSettings(botJid)
 
 const tf = await db.getChatUser(msg.chat, msg.sender)
 const to = new Date().toLocaleDateString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' }).split('/').reverse().join('-') 
-if (!tf.stats) tf.stats = {}
-if (!tf.stats[to]) tf.stats[to] = { msgs: 0, cmds: 0 }
-tf.stats[to].msgs++
 
-await db.updateChatUser(msg.chat, msg.sender, 'stats', tf.stats)
+if (!tf) {
+  await db.setChatUser(msg.chat, msg.sender, { stats: { [to]: { msgs: 0, cmds: 0 } } });
+} else {
+  if (!tf.stats) tf.stats = {}
+  if (!tf.stats[to]) tf.stats[to] = { msgs: 0, cmds: 0 }
+  tf.stats[to].msgs++
+  await db.setChatUser(msg.chat, msg.sender, 'stats', tf.stats)
+}
 
   const rawBotname = settings.namebot2 || 'Stellar';
   const tipo = settings.type || 'Sub';
@@ -113,12 +117,12 @@ console.log(`
 𝄢 · • —– ٠ ✤ ٠ —– • · · • —– ٠ ✤ ٠ —– • ·✧༄`.trim())
 }
 
-  const hasPrefix = settings.prefijo === 1 ? 1 : (Array.isArray(settings.prefijo) ? settings.prefijo : typeof settings.prefijo === 'string' ? [settings.prefijo] : []).some(p => msg.text?.startsWith(p));
+   const hasPrefix = (settings.prefijo === 1 || settings.prefijo === true) ? true : (Array.isArray(settings.prefijo) ? settings.prefijo : typeof settings.prefijo === 'string' ? [settings.prefijo] : []).some(p => msg.text?.startsWith(p));
   const botprimaryId = chatData?.primaryBot;
   if (botprimaryId && botprimaryId !== botJid) {
     if (hasPrefix) {
       const groupJids = participants.map(p => p.id);
-      const sessionDirs = ['./Sessions/Subs']
+      const sessionDirs = ['./Sessions/Subs', './Sessions/Mods', './Sessions/Prems']
       function getAllSessionBots() {
         const bots = [];
         for (const dir of sessionDirs) {
@@ -161,7 +165,7 @@ if (settings.self) {
 }
 
 if (msg.chat && !msg.chat.endsWith('g.us')) {
-  const allowedInPrivateForUsers = ['report', 'reporte', 'sug', 'suggest', 'invite', 'invitar', 'setusername', 'setpfp', 'setimage', 'setstatus', 'reload', 'setname', 'setbotname', 'setmenubanner', 'setbanner', 'setbotcurrency', 'code', 'qr', 'setbotowner', 'setlink', 'setbotlink', 'setbotprefix', 'seticon']
+  const allowedInPrivateForUsers = ['report', 'reporte', 'sug', 'suggest', 'invite', 'invitar', 'setusername', 'setpfp', 'setimage', 'setstatus', 'reload', 'setname', 'setbotname', 'setmenubanner', 'setbanner', 'setbotcurrency', 'code', 'qr', 'setbotowner', 'setlink', 'setbotlink', 'setbotprefix', 'codemod', 'codepremium', 'qrmod', 'qrpremium']
   const owners = settings.owner
   if (
     sender !== owners &&
@@ -186,8 +190,12 @@ const today = new Date().toLocaleDateString('es-CO', {
   day: '2-digit'
 }).split('/').reverse().join('-') 
 
-if (!user.stats) user.stats = {}
-if (!user.stats[today]) user.stats[today] = { msgs: 0, cmds: 0 }
+if (!user) {
+  await db.setChatUser(msg.chat, msg.sender, { stats: { [today]: { msgs: 0, cmds: 0 } } });
+} else {
+  if (!user.stats) user.stats = {}
+  if (!user.stats[today]) user.stats[today] = { msgs: 0, cmds: 0 }
+}
 
   const cmdData = global.comandos.get(command);
 
@@ -198,33 +206,47 @@ if (!cmdData || user.muted === 1 || user.muted === true) {
 }
 
 const comando = msg.text.slice(usedPrefix.length)
+const botOfc = global?.sock?.user?.id?.split(':')[0] + '@s.whatsapp.net' || ''
+const isOficialBot = botJid === botOfc || ''
+const isPremiumBot = settings.botprem === 1 || ''
+const isModBot = settings.botmod === 1 || ''
 
 if (cmdData.isOwner && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
+  return msg.reply(`ꕤ El comando *${command}* no existe.\n✎ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
+}
+
+if (cmdData.isModeration && !(global.mods.map(num => num + '@s.whatsapp.net').includes(sender) || global.owner.map(num => num + '@s.whatsapp.net').includes(sender))) {
   return msg.reply(`ꕤ El comando *${command}* no existe.\n✎ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
 }
 
 if (cmdData.isAdmin && !isAdmins) return sock.reply(msg.chat, mess.admin, msg)
 if (cmdData.botAdmin && !isBotAdmins) return sock.reply(msg.chat, mess.botAdmin, msg)
 
+if (cmdData.isSocket && !isOficialBot && !isPremiumBot && !isModBot) return sock.reply(msg.chat, mess.solosub, msg)
+
 try {
-  await sock.sendPresenceUpdate('composing', msg.chat)
   await sock.readMessages([msg.key])
   const user2 = await db.getUser(msg.sender)
 
-  user2.usedcommands = (user2.usedcommands || 0) + 1
+  if (!user2) {
+    await db.setUser(msg.sender, { usedcommands: 1, exp: Math.floor(Math.random() * 100), name: msg.pushName })
+  } else {
+    user2.usedcommands = (user2.usedcommands || 0) + 1
+    user2.exp = (user2.exp || 0) + Math.floor(Math.random() * 100)
+    user2.name = msg.pushName
+    await db.setUser(msg.sender, 'exp', user2.exp)
+    await db.setUser(msg.sender, 'name', user2.name)
+    await db.setUser(msg.sender, 'usedcommands', user2.usedcommands)
+  }
+
   settings.commandsejecut = (settings.commandsejecut || 0) + 1
-  user.usedTime = new Date()
-  user2.exp = (user2.exp || 0) + Math.floor(Math.random() * 100)
-  user2.name = msg.pushName
+  await db.setSettings(botJid, 'commandsejecut', settings.commandsejecut)
 
-  await db.updateChatUser(msg.chat, msg.sender, 'usedTime', user.usedTime)
-  await db.updateUser(msg.sender, 'exp', user2.exp)
-  await db.updateUser(msg.sender, 'name', user2.name)
-  await db.updateUser(msg.sender, 'usedcommands', user2.usedcommands)
-  await db.updateSettings(botJid, 'commandsejecut', settings.commandsejecut)
-
-  user.stats[today].cmds++
-  await db.updateChatUser(msg.chat, msg.sender, 'stats', user.stats)
+  const userStats = await db.getChatUser(msg.chat, msg.sender)
+  if (userStats && userStats.stats && userStats.stats[today]) {
+    userStats.stats[today].cmds++
+    await db.setChatUser(msg.chat, msg.sender, 'stats', userStats.stats)
+  }
 
   await cmdData.run({ msg, sock, args, command, usedPrefix, text, groupMetadata, participants, isAdmins, isBotAdmins, isOwner, __dirname: global.plugins[cmdData.pluginKey]?.dirname });
 } catch (error) {
