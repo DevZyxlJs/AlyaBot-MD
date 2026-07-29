@@ -23,9 +23,9 @@
   "author": "DevZyxlJs",
   "license": "MIT",
   "engines": {
-    "node": ">=22.13.0",
+    "node": ">=25.0.0",
     "npm": ">=10.9.4"
-  },
+  }
   "dependencies": {
     "@hapi/boom": "latest",
     "baileys": "github:this-xys/bails",
