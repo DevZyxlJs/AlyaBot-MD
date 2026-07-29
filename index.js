@@ -78,7 +78,7 @@ async function loadBots() {
 async function initDB() {
   try {
   db.initDB();
-  db.clearDB();
+  // db.clearDB();
   log.info('Base de datos cargada correctamente.');
   } catch (e) {
   log.error('La Base de datos no fué cargada.');
@@ -225,13 +225,6 @@ export async function startBot() {
       }
     }
     if (connection === "open") {
-      let numBotDir = global.sock.user.id.split(':')[0] + "@s.whatsapp.net"
-      let PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
-
-      await db.setSettings(numBotDir, 'botmod', 0);
-      await db.setSettings(numBotDir, 'botprem', 0);
-      await db.setSettings(numBotDir, 'type', "Owner");
-      await db.setSettings(numBotDir, 'srv', PORT);
 
       bootTime = Date.now();
       reconexion = 0;
