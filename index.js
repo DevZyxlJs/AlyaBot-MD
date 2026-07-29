@@ -11,7 +11,7 @@ import readlineSync from "readline-sync";
 import { smsg, deleteCachedMeta } from "#serialize";
 import cmdsLoader from '#cmdsloader';
 import "#db";
-import { startModBot, startPremBot, startSubBot } from '#subs';
+import { startSubBot } from '#subs';
 import db from '#db';
 
 const log = {
