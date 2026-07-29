@@ -122,7 +122,7 @@ console.log(`
   if (botprimaryId && botprimaryId !== botJid) {
     if (hasPrefix) {
       const groupJids = participants.map(p => p.id);
-      const sessionDirs = ['./Sessions/Subs', './Sessions/Mods', './Sessions/Prems']
+      const sessionDirs = ['./Sessions/Subs']
       function getAllSessionBots() {
         const bots = [];
         for (const dir of sessionDirs) {
@@ -165,7 +165,7 @@ if (settings.self) {
 }
 
 if (msg.chat && !msg.chat.endsWith('g.us')) {
-  const allowedInPrivateForUsers = ['report', 'reporte', 'sug', 'suggest', 'invite', 'invitar', 'setusername', 'setpfp', 'setimage', 'setstatus', 'reload', 'setname', 'setbotname', 'setmenubanner', 'setbanner', 'setbotcurrency', 'code', 'qr', 'setbotowner', 'setlink', 'setbotlink', 'setbotprefix', 'codemod', 'codepremium', 'qrmod', 'qrpremium']
+  const allowedInPrivateForUsers = ['report', 'reporte', 'sug', 'suggest', 'invite', 'invitar', 'setusername', 'setpfp', 'setimage', 'setstatus', 'reload', 'setname', 'setbotname', 'setmenubanner', 'setbanner', 'setbotcurrency', 'code', 'qr', 'setbotowner', 'setlink', 'setbotlink', 'setbotprefix']
   const owners = settings.owner
   if (
     sender !== owners &&
@@ -206,23 +206,14 @@ if (!cmdData || user.muted === 1 || user.muted === true) {
 }
 
 const comando = msg.text.slice(usedPrefix.length)
-const botOfc = global?.sock?.user?.id?.split(':')[0] + '@s.whatsapp.net' || ''
-const isOficialBot = botJid === botOfc || ''
-const isPremiumBot = settings.botprem === 1 || ''
-const isModBot = settings.botmod === 1 || ''
 
 if (cmdData.isOwner && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
   return msg.reply(`ꕤ El comando *${command}* no existe.\n✎ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
 }
 
-if (cmdData.isModeration && !(global.mods.map(num => num + '@s.whatsapp.net').includes(sender) || global.owner.map(num => num + '@s.whatsapp.net').includes(sender))) {
-  return msg.reply(`ꕤ El comando *${command}* no existe.\n✎ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
-}
 
 if (cmdData.isAdmin && !isAdmins) return sock.reply(msg.chat, mess.admin, msg)
 if (cmdData.botAdmin && !isBotAdmins) return sock.reply(msg.chat, mess.botAdmin, msg)
-
-if (cmdData.isSocket && !isOficialBot && !isPremiumBot && !isModBot) return sock.reply(msg.chat, mess.solosub, msg)
 
 try {
   await sock.readMessages([msg.key])
