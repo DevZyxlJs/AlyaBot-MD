@@ -1,5 +1,4 @@
 import "./settings.js";
-import "#db";
 import handler from '#handler';
 import events from '#events';
 import makeWASocket, { Browsers, makeCacheableSignalKeyStore, useMultiFileAuthState, fetchLatestBaileysVersion, jidDecode, DisconnectReason } from 'baileys';
@@ -9,9 +8,10 @@ import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 import readlineSync from "readline-sync";
-import { smsg, getCachedMeta, setCachedMeta } from "#serialize";
+import { smsg, deleteCachedMeta } from "#serialize";
 import cmdsLoader from '#cmdsloader';
-import { startSubBot } from '#cmds/socket/subbot';
+import "#db";
+import { startModBot, startPremBot, startSubBot } from '#subs';
 import db from '#db';
 
 const log = {
@@ -72,21 +72,17 @@ async function loadBots() {
       await new Promise((res) => setTimeout(res, 2500));
     }
   }
- // setTimeout(loadBots, 60 * 1000);
+  setTimeout(loadBots, 60 * 1000);
 }
 
 async function initDB() {
   try {
-    db.initDB()
-    db.clearCache('user')
-    db.clearCache('chat')
-    db.clearCache('set')
-    db.clearCache('chatuser')
-    db.clearCache('packsticker')
-    log.info('Base de datos inicializada.')
+  db.initDB();
+  db.clearDB();
+  log.info('Base de datos cargada correctamente.');
   } catch (e) {
-    log.error(`Error DB: ${e.message}`)
-  }
+  log.error('La Base de datos no fué cargada.');
+   }
 }
 
 function clearSession() {
@@ -143,33 +139,15 @@ let reconexion = 0;
 let botReady = false;
 let isRestarting = false;
 const retriesLimit = 15;
-async function warmupGroups(sock) {
-  try {
-    const allChats = db.getChat()
-    const chatIds = allChats.map(c => c.id).filter(id => typeof id === 'string' && id.endsWith('@g.us')).slice(0, 50)
-    if (!chatIds.length) return
-    console.log(chalk.gray(`[ ✿ ] Precargando metadata de ${chatIds.length} grupos...`))
-    const t = Date.now()
-    const batches = []
-    for (let i = 0; i < chatIds.length; i += 10) {
-      batches.push(chatIds.slice(i, i + 10))
-    }
-    await Promise.allSettled(batches.map(batch => Promise.allSettled(batch.map(async id => {
-    try {
-    const meta = await sock.groupMetadata(id)
-    if (meta) setCachedMeta(id, meta) } catch {}}))))
-    console.log(chalk.gray(`[ ✿ ] Warmup completado en ${Date.now() - t}ms`))
-  } catch (e) {
-    console.log(chalk.gray(`[ ✿ ] warmupGroups → ${e?.message || e}`))
-  }
-}
 
 export async function startBot() {
   if (isRestarting) return;
   isRestarting = true;
   bootTime = Date.now();
-  const { state, saveCreds } = await useMultiFileAuthState('./Sessions/Owner');
+  const { state, saveCreds: saveCredsDB } = await useMultiFileAuthState('./Sessions/Owner');
   const { version } = await fetchLatestBaileysVersion();
+  let saveCredsTimer = null;
+  const saveCreds = () => { clearTimeout(saveCredsTimer); saveCredsTimer = setTimeout(saveCredsDB, 2000); };
   console.info = () => {};
   console.debug = () => {};
   const sock = makeWASocket({
@@ -235,6 +213,9 @@ export async function startBot() {
 
   try { await events(sock, null); } catch (err) { console.log(chalk.gray(`[ EVENT ERROR ] → ${err}`)); }
 
+  sock.ev.on("group-participants.update", ({ id }) => { deleteCachedMeta(id); });
+  sock.ev.on("groups.update", (updates) => { for (const update of updates) deleteCachedMeta(update.id); });
+
   sock.ev.on("connection.update", async (update) => {
     const { qr, connection, lastDisconnect, isNewLogin, receivedPendingNotifications } = update;
     if (qr != 0 && qr != undefined || methodCodeQR) {
@@ -244,6 +225,14 @@ export async function startBot() {
       }
     }
     if (connection === "open") {
+      let numBotDir = global.sock.user.id.split(':')[0] + "@s.whatsapp.net"
+      let PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
+
+      await db.setSettings(numBotDir, 'botmod', 0);
+      await db.setSettings(numBotDir, 'botprem', 0);
+      await db.setSettings(numBotDir, 'type', "Owner");
+      await db.setSettings(numBotDir, 'srv', PORT);
+
       bootTime = Date.now();
       reconexion = 0;
       isRestarting = false;
@@ -251,7 +240,6 @@ export async function startBot() {
       log.success(`Conectado a: ${userName}`);
       if (!botReady) {
         botReady = true;
-        warmupGroups(sock);
       }
     }
     if (isNewLogin) log.info("Nuevo dispositivo detectado");
