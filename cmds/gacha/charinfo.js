@@ -7,7 +7,7 @@ const obtenerImagen = async (keyword) => {
 
   for (const endpoint of endpoints) {
     try {
-      const url = `${api.url}/nsfw/${endpoint}?keyword=${keyword}`;
+      const url = `${api.url}/nsfw/${endpoint}?keyword=${keyword}&key=${api.key}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`${endpoint} HTTP ${res.status}`);
 
