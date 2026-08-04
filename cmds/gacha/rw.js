@@ -88,7 +88,7 @@ export default {
         estado = `Reservado por ${userData.name || 'Alguien'}`
       }
 
-      await db.setChatUser(chatId, userId, 'rwCooldown', now + 15 * 60000)
+      await db.updateChatUser(chatId, userId, 'rwCooldown', now + 15 * 60000)
 
       const valorPersonaje =
         typeof personaje.value === 'number' ? personaje.value.toLocaleString() : '0'
@@ -141,10 +141,10 @@ const sent = await sock.sendMessage(chatId, payload, { quoted: msg });
           personajesReservados.push(nuevoReservado)
         }
 
-        await db.setChat(chatId, 'personajesReservados', personajesReservados)
+        await db.updateChat(chatId, 'personajesReservados', personajesReservados)
       }
     } catch (e) {
-      await db.setChatUser(chatId, userId, 'rwCooldown', 0)
+      await db.updateChatUser(chatId, userId, 'rwCooldown', 0)
       return msg.reply(msgglobal)
     }
   },
