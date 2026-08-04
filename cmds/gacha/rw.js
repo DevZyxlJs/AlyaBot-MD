@@ -8,7 +8,7 @@ const obtenerImagen = async (keyword) => {
 
   for (const endpoint of endpoints) {
     try {
-      const url = `${api.url}/nsfw/${endpoint}?keyword=${keyword}`;
+      const url = `${api.url}/nsfw/${endpoint}?keyword=${keyword}&key=${api.key}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`${endpoint} HTTP ${res.status}`);
 
@@ -88,7 +88,7 @@ export default {
         estado = `Reservado por ${userData.name || 'Alguien'}`
       }
 
-      await db.updateChatUser(chatId, userId, 'rwCooldown', now + 15 * 60000)
+      await db.setChatUser(chatId, userId, 'rwCooldown', now + 15 * 60000)
 
       const valorPersonaje =
         typeof personaje.value === 'number' ? personaje.value.toLocaleString() : '0'
@@ -129,22 +129,22 @@ const sent = await sock.sendMessage(chatId, payload, { quoted: msg });
           expiresAt: now + 60000,
           messageId: sent.key.id
         }
-        
+
         let personajesReservados = chat.personajesReservados || []
         const indexExistente = personajesReservados.findIndex(
           p => p.name === personaje.name
         )
-        
+
         if (indexExistente !== -1) {
           personajesReservados[indexExistente] = nuevoReservado
         } else {
           personajesReservados.push(nuevoReservado)
         }
-        
-        await db.updateChat(chatId, 'personajesReservados', personajesReservados)
+
+        await db.setChat(chatId, 'personajesReservados', personajesReservados)
       }
     } catch (e) {
-      await db.updateChatUser(chatId, userId, 'rwCooldown', 0)
+      await db.setChatUser(chatId, userId, 'rwCooldown', 0)
       return msg.reply(msgglobal)
     }
   },
