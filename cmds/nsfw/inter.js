@@ -94,7 +94,7 @@ export default {
         : `${fromName} ${captionText} ${getRandomSymbol()}.`;
 
     try {
-      const response = await fetch(`${api.url}/nsfw/interaction?inter=${baseCommand}`);
+      const response = await fetch(`${api.url}/nsfw/interaction?inter=${baseCommand}&key=${api.key}`);
       const json = await response.json();
       const { result } = json;
 
