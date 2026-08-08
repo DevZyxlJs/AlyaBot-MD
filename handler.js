@@ -45,12 +45,12 @@ const tf = await db.getChatUser(msg.chat, msg.sender)
 const to = new Date().toLocaleDateString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' }).split('/').reverse().join('-') 
 
 if (!tf) {
-  await db.setChatUser(msg.chat, msg.sender, { stats: { [to]: { msgs: 0, cmds: 0 } } });
+  await db.updateChatUser(msg.chat, msg.sender, { stats: { [to]: { msgs: 0, cmds: 0 } } });
 } else {
   if (!tf.stats) tf.stats = {}
   if (!tf.stats[to]) tf.stats[to] = { msgs: 0, cmds: 0 }
   tf.stats[to].msgs++
-  await db.setChatUser(msg.chat, msg.sender, 'stats', tf.stats)
+  await db.updateChatUser(msg.chat, msg.sender, 'stats', tf.stats)
 }
 
   const rawBotname = settings.namebot2 || 'Stellar';
@@ -191,7 +191,7 @@ const today = new Date().toLocaleDateString('es-CO', {
 }).split('/').reverse().join('-') 
 
 if (!user) {
-  await db.setChatUser(msg.chat, msg.sender, { stats: { [today]: { msgs: 0, cmds: 0 } } });
+  await db.updateChatUser(msg.chat, msg.sender, { stats: { [today]: { msgs: 0, cmds: 0 } } });
 } else {
   if (!user.stats) user.stats = {}
   if (!user.stats[today]) user.stats[today] = { msgs: 0, cmds: 0 }
@@ -236,7 +236,7 @@ try {
   const userStats = await db.getChatUser(msg.chat, msg.sender)
   if (userStats && userStats.stats && userStats.stats[today]) {
     userStats.stats[today].cmds++
-    await db.setChatUser(msg.chat, msg.sender, 'stats', userStats.stats)
+    await db.updateChatUser(msg.chat, msg.sender, 'stats', userStats.stats)
   }
 
   await cmdData.run({ msg, sock, args, command, usedPrefix, text, groupMetadata, participants, isAdmins, isBotAdmins, isOwner, __dirname: global.plugins[cmdData.pluginKey]?.dirname });
