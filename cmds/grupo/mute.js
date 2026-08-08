@@ -50,8 +50,8 @@ export default {
           return msg.reply(`《✤》 El usuario @${targetId.split('@')[0]} ya está muteado.`, { mentions: [targetId] })
         }
 
-        await db.setChatUser(msg.chat, targetId, 'muted', 1)
-        await db.setChatUser(msg.chat, targetId, 'mutedReason', reason)
+        await db.updateChatUser(msg.chat, targetId, 'muted', 1)
+        await db.updateChatUser(msg.chat, targetId, 'mutedReason', reason)
 
         const nam = await db.getUser(targetId)
         const name = nam.name || 'Usuario'
@@ -79,8 +79,8 @@ export default {
           return msg.reply(`《✤》 El usuario @${targetId.split('@')[0]} no está muteado.`, { mentions: [targetId] })
         }
 
-        await db.setChatUser(msg.chat, targetId, 'muted', 0)
-        await db.setChatUser(msg.chat, targetId, 'mutedReason', '')
+        await db.updateChatUser(msg.chat, targetId, 'muted', 0)
+        await db.updateChatUser(msg.chat, targetId, 'mutedReason', '')
 
         const nam = await db.getUser(targetId)
         const name = nam.name || 'Usuario'
