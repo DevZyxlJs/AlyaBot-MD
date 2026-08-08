@@ -220,14 +220,14 @@ try {
   const user2 = await db.getUser(msg.sender)
 
   if (!user2) {
-    await db.setUser(msg.sender, { usedcommands: 1, exp: Math.floor(Math.random() * 100), name: msg.pushName })
+    await db.updateUser(msg.sender, { usedcommands: 1, exp: Math.floor(Math.random() * 100), name: msg.pushName })
   } else {
     user2.usedcommands = (user2.usedcommands || 0) + 1
     user2.exp = (user2.exp || 0) + Math.floor(Math.random() * 100)
     user2.name = msg.pushName
-    await db.setUser(msg.sender, 'exp', user2.exp)
-    await db.setUser(msg.sender, 'name', user2.name)
-    await db.setUser(msg.sender, 'usedcommands', user2.usedcommands)
+    await db.updateUser(msg.sender, 'exp', user2.exp)
+    await db.updateUser(msg.sender, 'name', user2.name)
+    await db.updateUser(msg.sender, 'usedcommands', user2.usedcommands)
   }
 
   settings.commandsejecut = (settings.commandsejecut || 0) + 1
