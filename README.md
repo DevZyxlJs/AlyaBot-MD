@@ -10,13 +10,13 @@
 
 ---
 
-## ˶o̴̶̷᷄‸o̴̶̷̥᷅˶ Descripción 
+## 🫧 Descripción 
 
 Alya Bot es un bot de WhatsApp multifuncional basado en `baileys`. Este bot ofrece una variedad de características para mejorar tu experiencia en WhatsApp.
 
 ---
 
-## ≽^• ˕ • ྀི≼ Características
+## 🫗 Características
 
 - Comandos Gacha (Y más juegos)
 - Comandos de economia
@@ -29,7 +29,7 @@ Alya Bot es un bot de WhatsApp multifuncional basado en `baileys`. Este bot ofre
 ## Informaciones Importantes
 
 <details>
-<summary><strong>ฅ^·ﻌ·^ฅ Información</strong> — Recomendado</summary>
+<summary><strong>🫘 Información</strong> — Recomendado</summary>
 
 Evita completamente usar forks, mods o versiones alteradas de Baileys.
 No utilices “baileys mods” ni variantes no oficiales.
@@ -38,7 +38,7 @@ Siempre usa la librería principal y oficial de Baileys.
 </details>
 
 <details>
-<summary><strong>ฅ^·ﻌ·^ฅ Información</strong> — Oficial</summary>
+<summary><strong>🫘 Información</strong> — Oficial</summary>
 
 Quiero dejar algo completamente claro: mi base es única, original y desarrollada por mí.  
 Fue creada desde cero por **Carlos (AzamiJs)**, quien posteriormente se retiró del proyecto.  
@@ -56,7 +56,7 @@ Ninguna réplica, modificación o derivado externo tiene relación con mi trabaj
 ### Instalaciónes Básicas
 
 <details>
-<summary><strong>(*ᴗ͈ˬᴗ͈)ꕤ Cloud</strong> — Shell</summary>
+<summary><strong>🪷 Cloud</strong> — Shell</summary>
 
 ```bash
 git clone https://github.com/DevZyxlJs/AlyaBot-MD
@@ -81,7 +81,7 @@ npm start
 </details>
 
 <details>
-<summary><strong>(*ᴗ͈ˬᴗ͈)ꕤ Termux</strong> — Manualmente</summary>
+<summary><strong>🪷 Termux</strong> — Manualmente</summary>
 
 ```bash
 termux-setup-storage
@@ -115,7 +115,7 @@ npm start
 </details>
 
 <details>
-<summary><strong>(*ᴗ͈ˬᴗ͈)ꕤ Comandos para tener mas tiempo activo</strong> — el Bot</summary>
+<summary><strong>🪷 Comandos para tener mas tiempo activo</strong> — el Bot</summary>
 
 > *Ejecutar estos comandos dentro de la carpeta AlyaBot-MD*
 ```bash
@@ -165,7 +165,7 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 ### Patrocinadores del Proyecto
 
 <details>
-<summary><strong>ଘ(੭ˊᵕˋ)੭*  Stellar</strong> — API</summary>
+<summary><strong>🪼 Stellar</strong> — API</summary>
 
 <div align="center">
   <a href="https://api.stellarwa.xyz">
@@ -173,7 +173,7 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
   </a>
 </div>
 
-### ღゝ◡╹ )ノ Enlaces Principales
+### 🪈 Enlaces Principales
 | Servicio | Enlace |
 |------------|-----------|
 | Dashboard | [Abrir](https://api.stellarwa.xyz) |
@@ -185,7 +185,7 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 </details>
 
 <details>
-<summary><strong>ଘ(੭ˊᵕˋ)੭*  Cafirexos</strong> — Hosting</summary>
+<summary><strong>🪼  Cafirexos</strong> — Hosting</summary>
 
 <div align="center">
   <a href="https://cafirexos.com">
@@ -193,7 +193,7 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
   </a>
 </div>
 
-### ღゝ◡╹ )ノ Enlaces Principales
+### 🪈 Enlaces Principales
 | Servicio | Enlace |
 |------------|-----------|
 | Sitio Web | [Visitar](https://cafirexos.com) |
@@ -207,13 +207,13 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 
 ---
 
-### ˃ 𖥦 ˂ Colaboradores
+### 🍋‍🟩 Colaboradores
 <a href="https://stellarwa.xyz/about">
   <img src="https://contrib.rocks/image?repo=DevZyxlJs/AlyaBot-MD" />
 </a>
 
-### ˃ 𖥦 ˂ Agradecimientos
+### 🫛 Agradecimientos
 [![Zam](https://github.com/AzamiJs.png?size=120)](https://stellarwa.xyz/about)
 
-### ˃ 𖥦 ˂ Propietario
+### 👒 Propietario
 [![ZyxlJs](https://github.com/DevZyxlJs.png?size=120)](https://stellarwa.xyz/about) 
