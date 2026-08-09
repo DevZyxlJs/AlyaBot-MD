@@ -4,16 +4,14 @@ import { fileURLToPath } from 'url'
 
 global.owner = ['5492916450307', '573019448245']
 
+/*  ⚠︎ INFORMATION ⚠︎
+Esta key solo está disponible en *cafirexos.com*.  
+Si intentas usarla en otros hosts, no funcionará.  
+Para acceder a la API en otro host, debes crear una cuenta en api.stellarwa.xyz y adquirir un plan Premium. */
+
 global.api = {
   url: 'https://api.stellarwa.xyz',
   key: 'stellarwa-2026.xyz@maia@20-12-2025' 
-/*
-  ⚠︎ INFORMATION ⚠︎
-
-Esta key solo está disponible en *cafirexos.com*.  
-Si intentas usarla en otros hosts, no funcionará.  
-Para acceder a la API en otro host, debes crear una cuenta en api.stellarwa.xyz y adquirir un plan Premium.
-*/
 }
 
 global.msgglobal = '✿⸝꙳.˖ Ocurrió un problema, contacte al creador'
