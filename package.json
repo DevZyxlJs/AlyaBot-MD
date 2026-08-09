@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@hapi/boom": "latest",
-    "baileys": "github:this-xys/bails",
+    "baileys": "github:this-xys/WaSocket",
     "yargs": "^18.0.0",
     "axios": "^1.16.1",
     "chalk": "^4.1.2",
