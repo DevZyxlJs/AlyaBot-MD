@@ -29,7 +29,7 @@ Alya Bot es un bot de WhatsApp multifuncional basado en `baileys`. Este bot ofre
 ## Informaciones Importantes
 
 <details>
-<summary><strong>(•ૢ⚈͒⌄⚈͒•ૢ) Información</strong> — Recomendado</summary>
+<summary><strong>ฅ^·ﻌ·^ฅ Información</strong> — Recomendado</summary>
 
 Evita completamente usar forks, mods o versiones alteradas de Baileys.
 No utilices “baileys mods” ni variantes no oficiales.
@@ -38,7 +38,7 @@ Siempre usa la librería principal y oficial de Baileys.
 </details>
 
 <details>
-<summary><strong>(•ૢ⚈͒⌄⚈͒•ૢ) Información</strong> — Oficial</summary>
+<summary><strong>ฅ^·ﻌ·^ฅ Información</strong> — Oficial</summary>
 
 Quiero dejar algo completamente claro: mi base es única, original y desarrollada por mí.  
 Fue creada desde cero por **Carlos (AzamiJs)**, quien posteriormente se retiró del proyecto.  
@@ -207,13 +207,13 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 
 ---
 
-### ｡ﾟ+.ღ(ゝ◡ ⚈᷀᷁ღ) Colaboradores
+### ˃ 𖥦 ˂ Colaboradores
 <a href="https://stellarwa.xyz/about">
   <img src="https://contrib.rocks/image?repo=DevZyxlJs/AlyaBot-MD" />
 </a>
 
-### ｡ﾟ+.ღ(ゝ◡ ⚈᷀᷁ღ) Agradecimientos
+### ˃ 𖥦 ˂ Agradecimientos
 [![Zam](https://github.com/AzamiJs.png?size=120)](https://stellarwa.xyz/about)
 
-### ｡ﾟ+.ღ(ゝ◡ ⚈᷀᷁ღ) Propietario
+### ˃ 𖥦 ˂ Propietario
 [![ZyxlJs](https://github.com/DevZyxlJs.png?size=120)](https://stellarwa.xyz/about) 
