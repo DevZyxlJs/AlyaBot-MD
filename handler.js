@@ -231,7 +231,7 @@ try {
   }
 
   settings.commandsejecut = (settings.commandsejecut || 0) + 1
-  await db.setSettings(botJid, 'commandsejecut', settings.commandsejecut)
+  await db.updateSettings(botJid, 'commandsejecut', settings.commandsejecut)
 
   const userStats = await db.getChatUser(msg.chat, msg.sender)
   if (userStats && userStats.stats && userStats.stats[today]) {
