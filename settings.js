@@ -11,7 +11,7 @@ Para acceder a la API en otro host, debes crear una cuenta en api.stellarwa.xyz 
 
 global.api = {
   url: 'https://api.stellarwa.xyz',
-  key: 'stellarwa-2026.xyz@maia@20-12-2025' 
+  key: 'NekoWare#2026#StellarWa' 
 }
 
 global.msgglobal = '✿⸝꙳.˖ Ocurrió un problema, contacte al creador'
