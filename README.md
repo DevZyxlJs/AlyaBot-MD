@@ -2,7 +2,7 @@
 > **Este proyecto está en constante evolución. Estamos comprometidos en ofrecer a nuestra comunidad un Bot increíble. Te invitamos a instalarlo y para estar al tanto de todas las novedades. [¡Únete a nuestro canal oficial!](https://web.stellarwa.xyz/channel)**
 
 <p align="center"> 
-<img src="https://nube.stellarwa.xyz/rf/Jc67xTcLF2Il.jpg" alt="AlyaBot-MD" style="width: 75%; height: auto; max-width: 100px;">
+<img src="https://cloud.stellarwa.xyz/ydR4s5dR.jpeg" alt="AlyaBot-MD" style="width: 75%; height: auto; max-width: 100px;">
 
 <p align="center"> 
 <a href="#"><img title="AlyaBot-MD" src="https://img.shields.io/badge/¡Disfruta de un Bot totalmente gratuito, con múltiples funciones y de código abierto! -purple?colorA=%239b33b0&colorB=%231c007b&style=for-the-badge"></a> 
