@@ -162,6 +162,32 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 
 ---
 
+## 🍃 APIs utilizadas
+
+Parte de las funciones multimedia y de descarga del bot se apoyan en servicios externos. Si alguno de estos servicios llega a estar caído, los comandos que dependan de él pueden fallar temporalmente.
+
+<table align="center">
+<tr>
+<td align="center" width="200">
+<a href="https://api.stellarwa.xyz/">
+<img src="https://api.stellarwa.xyz/favicon.ico" width="64px" alt="AlyaCore API"><br>
+<sub><b>Stellar Suite</b></sub>
+</a>
+</td>
+<td align="center" width="200">
+<a href="https://api.alyacore.xyz/">
+<img src="https://api.alyacore.xyz/favicon.ico" width="64px" alt="Alya API"><br>
+<sub><b>AlyaCore Api</b></sub>
+</a>
+</td>
+</tr>
+</table>
+
+> [!TIP]
+> Se agradece a los desarrolladores de estas APIs por mantener sus servicios disponibles para la comunidad.
+
+---
+
 ### Patrocinadores del Proyecto
 
 <details>
