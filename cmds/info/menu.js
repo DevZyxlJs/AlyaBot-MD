@@ -33,15 +33,11 @@ export default {
       const owner = botSettings.owner || '';
       const link = botSettings.link || '';
 
-const oficialId = global?.sock ? global?.sock?.user?.id?.split(':')[0] + '@s.whatsapp.net' : ''
-const isOficialBot = botId === oficialId
-
-const isPremiumBot = botSettings.botprem === 1
-const isModBot = botSettings.botmod === 1
-
-const botType = isOficialBot
-  ? 'Owner'
-      : 'Sub Bot'
+      const isOficialBot =
+        botId === global?.sock ? global?.sock?.user?.id?.split(':')[0] + '@s.whatsapp.net' : ''
+      const botType = isOficialBot
+        ? 'Owner'
+        : 'Sub Bot';
 
       const userr = await db.getUser();
       const users = Object.keys(userr).length || 0;
@@ -53,9 +49,9 @@ const botType = isOficialBot
 
       const own = await db.getUser(owner);
 
-      let menu = `──ㅤׅ   ˙ ੭    _¡𝑯𝐨𝐥𝐚! *@${msg.pushName}*, 𝐜ó𝐦𝐨 𝐯𝐚𝐬?, 𝐞𝐧𝐜𝐚𝐧𝐭𝐚𝐝𝐚 𝐦𝐢 𝐧𝐨𝐦𝐛𝐫𝐞 𝐞𝐬 *${botname2}*_
+      let menu = `> *¡ʜᴏʟᴀ!* ${msg.pushName}, como está tu día?, mucho gusto mi nombre es *${botname2}* ʚ♡⃛ɞ(ू•ᴗ•ू❁)*
 
-‿    ׅ   𝆬     ε❤︎︭з   𝆬     ׅ      ‿
+   ⌒࣪᷼⏜͡  ۪  ࿚ꨪᰰ࿙  ࣭࣪⢏࣭۟⢢࣭ׄ᎐፝֟᎐࣭ׄ⡔࣭۟⡹࣭ׄ  ࿚ꨪᰰ࿙  ۪  ͡⏜ׄ᷼⌒
 
 : ̗̀〄 *ᴅᴇᴠᴇʟᴏᴘᴇʀ ::* ${
         owner
@@ -72,8 +68,8 @@ const botType = isOficialBot
 : ̗̀❖ *ᴍɪ ᴛɪᴇᴍᴘᴏ ::* ${time}
 : ̗̀❖ *ᴜʀʟ ::* ${link}
 
-‿    ׅ   𝆬     ε❤︎︭з   𝆬     ׅ      ‿
-${String.fromCharCode(8206).repeat(4000)}\n
+   ⌒࣪᷼⏜͡  ۪  ࿚ꨪᰰ࿙  ࣭࣪⢏࣭۟⢢࣭ׄ᎐፝֟᎐࣭ׄ⡔࣭۟⡹࣭ׄ  ࿚ꨪᰰ࿙  ۪  ͡⏜ׄ᷼⌒
+
 ⋆｡ﾟ☁︎ ｡° *ᴄᴏᴍ꯭ᴀ꯭ɴᴅᴏs* ﾟ｡˚₊ 𓂃\n`;
 
       const categoryArg = args[0]?.toLowerCase();
@@ -85,12 +81,6 @@ ${String.fromCharCode(8206).repeat(4000)}\n
         categories[category].push(command);
       }
 
-      const categoryEmojisList = [
-        '☁️', '🖌️', '🛍️', '🪃', '☕', '🪼', '🫘', '🪷', '🍂', '🌾', '🧈', '🪡', '🍚'
-      ];
-
-      let emojiIndex = 0;
-
       if (categoryArg && !categories[categoryArg]) {
         return msg.reply(
           `《✤》 La categoría *${categoryArg}* no fue encontrada.`
@@ -100,10 +90,7 @@ ${String.fromCharCode(8206).repeat(4000)}\n
       for (const [category, cmds] of Object.entries(categories)) {
         if (categoryArg && category.toLowerCase() !== categoryArg) continue;
         const catName = category.charAt(0).toUpperCase() + category.slice(1);
-
-        const catEmoji = categoryEmojisList[emojiIndex % categoryEmojisList.length];
-        emojiIndex++;
-        menu += `\n☕︎  𝀢  塞缪尔ᅟ֪   ﹙ *\`${catName}\`* ﹚ᅟ ㅤ✿\n\n`;
+         menu += `\n╭╼ׅࣶ፝֟╾╌ֵ╾͜─ํ͜┈ְ ࣭࣪⢏࣭ࣧ⢢࣭ׄ᎐፝֟͟͝᎐࣭ׄ⡔࣭ࣧ⡹࣭࣭ׄ࣪ ְ┈ํ͜─͜╼ꨪᰰ╾࣮╌╼ࣶׅ፝֟╾╮\n│❀ *${catName} ☆(ﾉ◕ヮ◕)ﾉ*\n├╾ׅ╴ׂ╌╶ׅ╌ׂ─ 〫─ׂ┄ׅ╴ׂ╌ׅ╶╼.  ╾ׅ╴ׂ╌╶ׅ╌ׂ\n`;
         cmds.forEach((cmd) => {
           const cleanPrefix = prefix
           const aliases = cmd.alias
@@ -115,13 +102,13 @@ ${String.fromCharCode(8206).repeat(4000)}\n
               return `${prefix}${aliasClean}`
             })
             .join(' › ')
-          menu += `❀   ᠀᠀ㅤ۟ ${catEmoji}  ${aliases} ${cmd.uso ? `+ ${cmd.uso}` : ''}\n`
-          menu += `> ── 𑁪ㅤׅㅤ۫  ${cmd.desc}\n`
+          menu += `│✿ ${aliases} ${cmd.uso ? `+ ${cmd.uso}` : ''}\n`
+          menu += `> ✺ ${cmd.desc}\n`
         })
-        menu += `\n ㅤׅㅤ۫ㅤㅤ      ﹙❀﹚ㅤׅㅤㅤ˚ㅤ\n`
+          menu += `╰╼ׅࣶ፝֟╾╌ֵ╾͜─ํ͜┈ְ ࣭࣪⢏࣭ࣧ⢢࣭ׄ᎐፝֟͟͝᎐࣭ׄ⡔࣭ࣧ⡹࣭ׄ ְ┈ํ͜─͜╼ꨪᰰ╾࣮╌╼ࣶׅ፝֟╾╯ \n`
       }
 
-      menu += `\n> sɪᴍᴘʟᴇ ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ ツ`;
+      menu += `\n> *${botname2} desarrollado por Diego* ૮(˶ᵔᵕᵔ˶)ა`;
 
       const isVideo = banner.includes('.mp4') || banner.includes('.gif') || banner.includes('.webm');
       const contextBase = {
@@ -132,11 +119,11 @@ ${String.fromCharCode(8206).repeat(4000)}\n
       if (isVideo) {
         await sock.sendMessage(
           msg.chat,
-          { video: { url: banner }, caption: menu, contextInfo: contextBase },
+          { video: { url: banner }, caption: menu.trim(), contextInfo: contextBase },
           { quoted: msg }
         );
       } else {
-await sock.sendMessage(msg.chat, { 
+        await sock.sendMessage(msg.chat, { 
           text: menu.trim(), 
           linkPreview: link && banner ? (await prepareWAMessageMedia({ image: { url: banner } }, { upload: sock.waUploadToServer, mediaTypeOverride: 'thumbnail-link' }).then(({ imageMessage }) => ({ 'canonical-url': link, 'matched-text': link, title: botname, description: `${botname2}, Built With 💛 By Stellar`, jpegThumbnail: imageMessage?.jpegThumbnail ? Buffer.from(imageMessage.jpegThumbnail) : undefined, highQualityThumbnail: imageMessage || undefined }))) : undefined, 
           contextInfo: contextBase
