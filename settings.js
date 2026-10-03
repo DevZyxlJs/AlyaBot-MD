@@ -2,7 +2,7 @@ import fs from 'fs';
 import { watchFile, unwatchFile } from 'fs'
 import { fileURLToPath } from 'url'
 
-global.owner = ['5492916450307', '573019448245']
+global.owner = ['5492916450307']
 
 /*  ⚠︎ INFORMATION ⚠︎
 Esta key solo está disponible en *cafirexos.com*.  
