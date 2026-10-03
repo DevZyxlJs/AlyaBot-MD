@@ -2,7 +2,7 @@ import { normalizeJid, resolveParticipantJid, resolveJidSync, deleteCachedMeta, 
 import db from "#db";
 import chalk from 'chalk';
 import moment from 'moment-timezone';
-import { prepareWAMessageMedia } from 'baileys';
+import { linksPreview } from '#serialize';
 
 function getGroupAdmins(participants) {
   return (participants ?? []).filter(p => p.admin === 'admin' || p.admin === 'superadmin').map(p => p.id).filter(Boolean);
@@ -42,10 +42,9 @@ export default async (sock, msg) => {
 
       if (isSelf) return;
 
-      const now = new Date();
-      const colombianTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Bogota' }));
-      const tiempo = colombianTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/,/g, '');
-      const tiempo2 = moment.tz('America/Bogota').format('hh:mm A');
+      const ahoraColombia = moment.tz('America/Bogota');
+      const tiempo = ahoraColombia.format('DD MMM YYYY');
+      const tiempo2 = ahoraColombia.format('hh:mm A');
       const memberCount = metadata?.participants?.length || 0;
 
       for (const p of anu.participants) {
@@ -56,7 +55,7 @@ export default async (sock, msg) => {
         const userData = await db.getUser(jid);
         const name = userData?.name || phone;
 
-        const avatar = await sock.profilePictureUrl(jid, 'image').catch(() => "https://cloud.stellarwa.xyz/i6AeOyYU.jpeg");
+        const avatar = await sock.profilePictureUrl(jid, 'image').catch(() => botSettings.banner);
 
         const contextBase = {
           mentionedJid: [jid].filter(Boolean),
@@ -91,25 +90,38 @@ export default async (sock, msg) => {
 > ✐ 𝐋𝐢𝐧𝐤 » ${botSettings.link || ''}`;
           }
 
-          const linkPreview = botSettings.link && avatar ? (
-            await prepareWAMessageMedia(
-              { image: { url: avatar } },
-              { upload: sock.waUploadToServer, mediaTypeOverride: 'thumbnail-link' }
-            ).then(({ imageMessage }) => ({
-              'canonical-url': botSettings.link,
-              'matched-text': botSettings.link,
-              title: "˚₊·—̳͟͞͞♡ 𝐖 𝐄 𝐋 𝐂 𝐎 𝐌 𝐄 ₍ᐢ..ᐢ₎♡",
-              description: `${botSettings.namebot2 || 'Stellar Bot'}, Built With 💛 By Stellar`,
-              jpegThumbnail: imageMessage?.jpegThumbnail ? Buffer.from(imageMessage.jpegThumbnail) : undefined,
-              highQualityThumbnail: imageMessage || undefined
-            }))
-          ) : undefined;
+          let mediaUrl = avatar;
+          if (chat.welcomeContenido && chat.welcomeContenido.trim() !== '') {
+            mediaUrl = chat.welcomeContenido;
+          }
 
-          await sock.sendMessage(anu.id, { 
-            text: caption.trim(), 
-            linkPreview: linkPreview, 
-            contextInfo: contextBase
-          }, { quoted: null });
+          const isVideo = mediaUrl.match(/\.(mp4|webm|mov|avi|mkv|gif)/i);
+
+          if (isVideo) {
+            await sock.sendMessage(anu.id, {
+              video: { url: mediaUrl },
+              gifPlayback: true,
+              caption: caption,
+              contextInfo: contextBase
+            }, { quoted: null });
+          } else {
+            const linkPreview = botSettings.link && mediaUrl
+              ? await linksPreview(sock, mediaUrl).then((imageMessage) => ({
+                  'canonical-url': botSettings.link,
+                  'matched-text': botSettings.link,
+                  title: `${botSettings.namebot} | ${metadata.subject}`,
+                  description: `${botSettings.namebot2 || 'Stellar Bot'}, Built With 🤍 By Stellar`,
+                  jpegThumbnail: imageMessage?.jpegThumbnail ? Buffer.from(imageMessage.jpegThumbnail) : undefined,
+                  highQualityThumbnail: imageMessage || undefined
+                }))
+              : undefined;
+
+            await sock.sendMessage(anu.id, {
+              text: caption.trim(),
+              linkPreview: linkPreview,
+              contextInfo: contextBase
+            }, { quoted: null });
+          }
         }
 
         if ((anu.action === 'remove' || anu.action === 'leave') && chat?.goodbye && (!primaryBotId || primaryBotId === botId)) {
@@ -140,50 +152,63 @@ export default async (sock, msg) => {
 > ✐ 𝐋𝐢𝐧𝐤 » ${botSettings.link || ''}`;
           }
 
-          const linkPreview = botSettings.link && avatar ? (
-            await prepareWAMessageMedia(
-              { image: { url: avatar } },
-              { upload: sock.waUploadToServer, mediaTypeOverride: 'thumbnail-link' }
-            ).then(({ imageMessage }) => ({
-              'canonical-url': botSettings.link,
-              'matched-text': botSettings.link,
-              title: "˚₊·—̳͟͞͞♡ 𝐁 𝐘 𝐄 ₍ᐢ..ᐢ₎♡",
-              description: `${botSettings.namebot2 || 'Stellar Bot'}, Built With 💛 By Stellar`,
-              jpegThumbnail: imageMessage?.jpegThumbnail ? Buffer.from(imageMessage.jpegThumbnail) : undefined,
-              highQualityThumbnail: imageMessage || undefined
-            }))
-          ) : undefined;
+          let mediaUrl = avatar;
+          if (chat.byeContenido && chat.byeContenido.trim() !== '') {
+            mediaUrl = chat.byeContenido;
+          }
 
-          await sock.sendMessage(anu.id, { 
-            text: caption.trim(), 
-            linkPreview: linkPreview, 
-            contextInfo: contextBase
-          }, { quoted: null });
+          const isVideo = mediaUrl.match(/\.(mp4|webm|mov|avi|mkv|gif)/i);
+
+          if (isVideo) {
+            await sock.sendMessage(anu.id, {
+              video: { url: mediaUrl },
+              gifPlayback: true,
+              caption: caption,
+              contextInfo: contextBase
+            }, { quoted: null });
+          } else {
+            const linkPreview = botSettings.link && mediaUrl
+              ? await linksPreview(sock, mediaUrl).then((imageMessage) => ({
+                  'canonical-url': botSettings.link,
+                  'matched-text': botSettings.link,
+                  title: `${botSettings.namebot} | ${metadata.subject}`,
+                  description: `${botSettings.namebot2 || 'Stellar Bot'}, Built With 🤍 By Stellar`,
+                  jpegThumbnail: imageMessage?.jpegThumbnail ? Buffer.from(imageMessage.jpegThumbnail) : undefined,
+                  highQualityThumbnail: imageMessage || undefined
+                }))
+              : undefined;
+
+            await sock.sendMessage(anu.id, {
+              text: caption.trim(),
+              linkPreview: linkPreview,
+              contextInfo: contextBase
+            }, { quoted: null });
+          }
         }
 
         if (anu.action === 'remove' || anu.action === 'leave') {
           const user = chat?.users?.[jid];
           if (user && typeof user.afk === 'number' && user.afk > -1) {
-             if(chat && chat.users && chat.users[jid]) {
-                chat.users[jid].afk = -1;
-                chat.users[jid].afkReason = '';
-             }
+            if (chat && chat.users && chat.users[jid]) {
+              chat.users[jid].afk = -1;
+              chat.users[jid].afkReason = '';
+            }
           }
         }
 
         if (anu.action === 'promote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
           const authorJid = normalizeJid(anu.author) || anu.author;
-          await sock.sendMessage(anu.id, { 
-            text: `「✎」 *@${phone}* ha sido promovido a Administrador por *@${authorJid.split('@')[0]}.*`, 
-            mentions: [jid, authorJid, ...groupAdmins] 
+          await sock.sendMessage(anu.id, {
+            text: `「✎」 *@${phone}* ha sido promovido a Administrador por *@${authorJid.split('@')[0]}.*`,
+            mentions: [jid, authorJid, ...groupAdmins]
           });
         }
 
         if (anu.action === 'demote' && chat?.alerts && (!primaryBotId || primaryBotId === botId)) {
           const authorJid = normalizeJid(anu.author) || anu.author;
-          await sock.sendMessage(anu.id, { 
-            text: `「✎」 *@${phone}* ha sido degradado de Administrador por *@${authorJid.split('@')[0]}.*`, 
-            mentions: [jid, authorJid, ...groupAdmins] 
+          await sock.sendMessage(anu.id, {
+            text: `「✎」 *@${phone}* ha sido degradado de Administrador por *@${authorJid.split('@')[0]}.*`,
+            mentions: [jid, authorJid, ...groupAdmins]
           });
         }
       }
