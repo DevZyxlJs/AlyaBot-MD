@@ -1,7 +1,7 @@
 {
-  "name": "alya",
+  "name": "alisa-kujou",
   "version": "4.0",
-  "description": "WhatsApp multi Device, updated with better performance",
+  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -10,12 +10,11 @@
   "imports": {
     "#serialize": "./lib/serialize.js",
     "#handler": "./handler.js",
-    "#utils": "./lib/utils.js",
     "#db": "./lib/system/database.js",
+    "#utils": "./lib/utils.js",
     "#cmdsloader": "./lib/system/cmdsloader.js",
-    "#subs": "./cmds/socket/subbot.js",
-    "#events": "./cmds/events.js",
-    "#cmds/*": "./cmds/*.js"
+    "#subs": "./lib/bots.js",
+    "#events": "./cmds/events.js"
   },
   "keywords": [
     "whatsapp",
@@ -28,31 +27,34 @@
     "npm": ">=10.9.4"
   },
   "dependencies": {
-    "@hapi/boom": "latest",
+    "@hapi/boom": "^10.0.1",
+    "@aws-sdk/client-s3": "^3.750.0",
     "baileys": "github:this-xys/bails",
-    "yargs": "^18.0.0",
-    "axios": "^1.16.1",
-    "chalk": "^4.1.2",
-    "http": "latest",
-    "fluent-ffmpeg": "^2.1.2",
-    "form-data": "^4.0.0",
+    "yargs": "^17.7.2",
+    "axios": "^1.8.4",
+    "chalk": "^5.4.1",
+    "http": "^0.0.1-security",
+    "fluent-ffmpeg": "^2.1.3",
+    "form-data": "^4.0.2",
     "gradient-string": "^2.0.2",
     "human-readable": "^0.2.1",
     "jimp": "latest",
     "moment-timezone": "^0.5.48",
-    "moment": "^2.29.4",
-    "mime-types": "^3.0.2",
-    "node-fetch": "^2.7.0",
+    "moment": "^2.30.1",
+    "mime-types": "^2.1.35",
+    "node-fetch": "^3.3.2",
     "node-cache": "^5.1.2",
+    "tough-cookie": "^5.1.2",
+    "got-scraping": "^4.1.0",
     "node-webpmux": "^3.2.0",
     "grapheme-splitter": "^1.0.4",
-    "pino": "^10.3.1",
-    "qrcode": "^1.5.3",
+    "pino": "^9.6.0",
+    "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
     "readline-sync": "^1.4.10",
     "syntax-error": "^1.4.0",
-    "uuid": "^14.0.0",
-    "yt-search": "^2.10.4",
-    "pg": "^8.11.3"
+    "uuid": "^11.1.0",
+    "yt-search": "^2.12.0",
+    "ws": "^8.18.0"
   }
 }
