@@ -13,7 +13,7 @@
     "#db": "./lib/system/database.js",
     "#utils": "./lib/utils.js",
     "#cmdsloader": "./lib/system/cmdsloader.js",
-    "#subs": "./lib/bots.js",
+    "#subs": "./cmds/socket/subbot.js",
     "#events": "./cmds/events.js"
   },
   "keywords": [
