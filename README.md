@@ -1,649 +1,205 @@
-# AlyaBot-MD
-
-<p align="center">
-  <img src="https://cloud.stellarwa.xyz/a5i2dp5V.jpeg" alt="AlyaBot-MD" width="160">
-</p>
-
-<h2 align="center">AlyaBot-MD</h2>
-
-<p align="center">
-  Bot multifuncional para WhatsApp basado en Baileys.
-  <br>
-  Gratuito, de código abierto y en constante desarrollo.
-</p>
-
-<p align="center">
-  <a href="https://web.stellarwa.xyz/channel">
-    <img src="https://img.shields.io/badge/Canal%20Oficial-9b33b0?style=for-the-badge&logo=whatsapp&logoColor=white">
-  </a>
-  <a href="https://github.com/DevZyxlJs/AlyaBot-MD">
-    <img src="https://img.shields.io/github/stars/DevZyxlJs/AlyaBot-MD?style=for-the-badge&color=9b33b0">
-  </a>
-  <a href="https://github.com/DevZyxlJs/AlyaBot-MD">
-    <img src="https://img.shields.io/github/forks/DevZyxlJs/AlyaBot-MD?style=for-the-badge&color=6f42c1">
-  </a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/WhatsApp-Bot-25D366?style=flat-square&logo=whatsapp&logoColor=white">
-  <img src="https://img.shields.io/badge/Node.js-18%2B-339933?style=flat-square&logo=node.js&logoColor=white">
-  <img src="https://img.shields.io/badge/Baileys-Compatible-6f42c1?style=flat-square">
-  <img src="https://img.shields.io/badge/Open%20Source-Yes-9b33b0?style=flat-square">
-</p>
-
----
-
 > [!NOTE]
-> AlyaBot-MD se encuentra en constante desarrollo. Se añaden nuevas funciones, mejoras y correcciones con el tiempo.
->
-> Para conocer las novedades del proyecto, visita nuestro canal oficial:
->
-> **[Canal oficial](https://web.stellarwa.xyz/channel)**
+> **Este proyecto está en constante evolución. Estamos comprometidos en ofrecer a nuestra comunidad un Bot increíble. Te invitamos a instalarlo y para estar al tanto de todas las novedades. [¡Únete a nuestro canal oficial!](https://web.stellarwa.xyz/channel)**
+
+<p align="center"> 
+<img src="https://cloud.stellarwa.xyz/a5i2dp5V.jpeg" alt="AlyaBot-MD" style="width: 75%; height: auto; max-width: 100px;">
+
+<p align="center"> 
+<a href="#"><img title="AlyaBot-MD" src="https://img.shields.io/badge/¡Disfruta de un Bot totalmente gratuito, con múltiples funciones y de código abierto! -purple?colorA=%239b33b0&colorB=%231c007b&style=for-the-badge"></a> 
+</p>
 
 ---
 
-## 📚 Contenido
+## 🫧 Descripción 
+
+Alya Bot es un bot de WhatsApp multifuncional basado en `baileys`. Este bot ofrece una variedad de características para mejorar tu experiencia en WhatsApp.
+
+---
+
+## 🫗 Características
+
+- Comandos Gacha (Y más juegos)
+- Comandos de economia
+- Respuestas automáticas
+- Gestión de grupos
+- Integración con APIs externas
+
+---
+
+## Informacion Importante
 
 <details>
-<summary><strong>Abrir menú</strong></summary>
+<summary><strong>🫘 Información</strong> — Recomendado</summary>
 
-<br>
-
-- [💠 Descripción](#-descripción)
-- [⚙️ Características](#️-características)
-- [📦 Requisitos](#-requisitos)
-- [🚀 Instalación](#-instalación)
-- [☁️ Cloud / VPS](#️-cloud--vps)
-- [📱 Termux](#-instalación-en-termux)
-- [⚠️ Información importante](#️-información-importante-sobre-baileys)
-- [🔄 Mantener el bot activo](#-mantener-el-bot-activo)
-- [🛠️ Comandos PM2](#️-comandos-de-pm2)
-- [🔧 Solución de problemas](#-si-el-bot-se-detiene)
-- [🔐 Nueva sesión](#-obtener-una-nueva-sesión)
-- [💜 Patrocinadores](#-patrocinadores)
-- [👥 Colaboradores](#-colaboradores)
-- [👤 Equipo](#-equipo-del-proyecto)
-- [🤝 Agradecimientos](#-agradecimientos)
-- [🌐 Comunidad](#-comunidad)
-
-<br>
+Evita completamente usar forks, mods o versiones alteradas de Baileys.
+No utilices “baileys mods” ni variantes no oficiales.
+Siempre usa la librería principal y oficial de Baileys.
 
 </details>
 
 ---
 
-## 💠 Descripción
-
-AlyaBot-MD es un bot multifuncional para WhatsApp desarrollado con Baileys.
-
-El proyecto reúne diferentes sistemas de entretenimiento, economía, administración y automatización en un mismo bot.
-
-Su estructura permite personalizar el proyecto, modificar funciones y añadir nuevos sistemas según las necesidades de la comunidad.
-
----
-
-## ⚙️ Características
-
-| Sistema | Descripción |
-| :-- | :-- |
-| Gacha | Sistema de colección de personajes y funciones relacionadas. |
-| Juegos | Diferentes comandos de entretenimiento. |
-| Economía | Sistema económico para usuarios y grupos. |
-| Respuestas automáticas | Respuestas y acciones automáticas. |
-| Administración | Herramientas para la gestión de grupos. |
-| APIs externas | Integración con servicios externos. |
-| Personalización | Código preparado para añadir nuevas funciones. |
-| Código abierto | Proyecto disponible para la comunidad. |
-
----
-
-## 📦 Requisitos
-
-Antes de instalar AlyaBot-MD asegúrate de contar con:
-
-- Node.js 18 o superior
-- Git
-- Yarn o npm
-- FFmpeg
-- ImageMagick
-- Conexión estable a Internet
-
-> [!TIP]
-> Si utilizas Termux, procura mantener sus paquetes actualizados antes de comenzar la instalación.
-
----
-
-## 🚀 Instalación
+### Instalaciónes Básicas
 
 <details>
-<summary><strong>Ver opciones de instalación</strong></summary>
-
-<br>
-
-| Plataforma | Guía |
-| :-- | :-- |
-| ☁️ Cloud / VPS | [Ver instalación](#️-cloud--vps) |
-| 📱 Termux | [Ver instalación](#-instalación-en-termux) |
-
-<br>
-
-</details>
-
----
-
-## ☁️ Cloud / VPS
-
-<details>
-<summary><strong>Ver instalación para Cloud / VPS</strong></summary>
-
-<br>
-
-### 1. Clonar el repositorio
+<summary><strong>🪷 Cloud</strong> — Shell</summary>
 
 ```bash
 git clone https://github.com/DevZyxlJs/AlyaBot-MD
 ```
 
-### 2. Entrar al proyecto
-
 ```bash
 cd AlyaBot-MD
 ```
-
-### 3. Instalar dependencias
 
 ```bash
 yarn install
 ```
 
-También puedes utilizar:
-
 ```bash
 npm install
 ```
-
-### 4. Iniciar el bot
 
 ```bash
 npm start
 ```
 
-> [!TIP]
-> En un VPS puedes utilizar PM2 para mantener el proceso ejecutándose durante más tiempo.
-
-<br>
-
 </details>
 
----
-
-## 📱 Instalación en Termux
-
 <details>
-<summary><strong>Ver instalación completa</strong></summary>
-
-<br>
-
-### 1. Permisos de almacenamiento
+<summary><strong>🪷 Termux</strong> — Manualmente</summary>
 
 ```bash
 termux-setup-storage
 ```
-
-### 2. Actualizar Termux
-
 ```bash
-apt update && apt upgrade
+apt update && apt upgrade && pkg install -y git nodejs ffmpeg imagemagick yarn
 ```
-
-### 3. Instalar dependencias
-
-```bash
-pkg install -y git nodejs ffmpeg imagemagick yarn
-```
-
-### 4. Clonar el proyecto
 
 ```bash
 git clone https://github.com/DevZyxlJs/AlyaBot-MD
 ```
 
-### 5. Entrar en la carpeta
-
 ```bash
 cd AlyaBot-MD
 ```
-
-### 6. Instalar dependencias
 
 ```bash
 yarn install
 ```
 
-También puedes utilizar:
-
 ```bash
 npm install
 ```
 
-### 7. Iniciar el bot
-
 ```bash
 npm start
 ```
 
-> [!TIP]
-> Durante la instalación puede aparecer:
->
-> ```text
-> (Y/I/N/O/D/Z) [default=N] ?
-> ```
->
-> Escribe `y` y presiona `ENTER` para continuar.
-
-> [!IMPORTANT]
-> No cierres Termux mientras se estén instalando las dependencias. El tiempo de instalación puede variar dependiendo del dispositivo y de la conexión.
-
-<br>
+> *Si aparece **(Y/I/N/O/D/Z) [default=N] ?** use la letra **"y"** y luego **"ENTER"** para continuar con la instalación.*
 
 </details>
 
----
-
-## ⚠️ Información importante sobre Baileys
-
-> [!WARNING]
-> Evita utilizar forks, mods o versiones alteradas de Baileys.
->
-> No utilices:
->
-> - Baileys modificados
-> - Forks desconocidos
-> - Versiones no oficiales
-> - Librerías obtenidas de fuentes poco confiables
->
-> Utiliza una versión legítima y compatible con el proyecto.
-
-> [!CAUTION]
-> No reemplaces las dependencias originales por versiones modificadas sin comprobar previamente su compatibilidad.
-
----
-
-## 🔄 Mantener el bot activo
-
 <details>
-<summary><strong>Abrir configuración de PM2</strong></summary>
+<summary><strong>🪷 Comandos para tener mas tiempo activo</strong> — el Bot</summary>
 
-<br>
-
-Para mantener AlyaBot-MD ejecutándose durante más tiempo en Termux puedes utilizar PM2.
-
-Ejecuta los siguientes comandos dentro de la carpeta del proyecto:
-
+> *Ejecutar estos comandos dentro de la carpeta AlyaBot-MD*
 ```bash
-termux-wake-lock
-```
+termux-wake-lock && npm i -g pm2 && pm2 start index.js && pm2 save && pm2 logs 
+``` 
 
-```bash
-npm i -g pm2
-```
-
-```bash
-pm2 start index.js
-```
-
-```bash
-pm2 save
-```
-
-```bash
-pm2 logs
-```
-
-> [!TIP]
-> PM2 permite administrar el proceso del bot sin tener que ejecutar manualmente `npm start` cada vez.
-
-<br>
-
-</details>
-
----
-
-## 🛠️ Comandos de PM2
-
-<details>
-<summary><strong>Abrir comandos disponibles</strong></summary>
-
-<br>
-
-### Eliminar el proceso
-
-```bash
+#### Opciones Disponibles
+> *Esto eliminará todo el historial que hayas establecido con PM2:*
+```bash 
 pm2 delete index
-```
+``` 
 
-### Ver registros
+> *Si tienes cerrado Termux y quiere ver de nuevo la ejecución use:*
+```bash 
+pm2 logs 
+``` 
 
-```bash
-pm2 logs
-```
-
-### Detener el bot
-
-```bash
+> *Si desea detener la ejecución de Termux use:*
+```bash 
 pm2 stop index
-```
+``` 
 
-### Iniciar nuevamente
-
-```bash
+> *Si desea iniciar de nuevo la ejecución de Termux use:*
+```bash 
 pm2 start index
 ```
 
-### Ver procesos activos
+--- 
 
+### En caso de detenerse
+> _Si despues que ya instalastes tu bot y termux te salta en blanco, se fue tu internet o reiniciaste tu celular, solo realizaras estos pasos:_
 ```bash
-pm2 list
+cd && cd AlyaBot-MD && npm start
 ```
+---
 
-<br>
-
+### Obtener nuevo inicio de Sessión 
+> *Detén el bot, haz click en el símbolo (ctrl) [default=z] usar la letra "z" + "ENTER" hasta que salga algo verdes similar a: `AlyaBot-MD $`*
+ 
+```bash 
+cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
+```
 </details>
 
 ---
 
-## 🔧 Si el bot se detiene
-
-> [!NOTE]
-> Si el bot deja de ejecutarse después de perder conexión, cerrar Termux o reiniciar el dispositivo, vuelve a entrar en la carpeta del proyecto.
-
-```bash
-cd && cd AlyaBot-MD
-```
-
-Después inicia nuevamente:
-
-```bash
-npm start
-```
-
-Si utilizas PM2:
-
-```bash
-pm2 start index
-```
-
----
-
-## 🔐 Obtener una nueva sesión
+### Patrocinadores del Proyecto
 
 <details>
-<summary><strong>Abrir instrucciones</strong></summary>
-
-<br>
-
-Primero detén el bot:
-
-```text
-Ctrl + C
-```
-
-Si Termux muestra:
-
-```text
-(Y/I/N/O/D/Z) [default=N] ?
-```
-
-escribe:
-
-```text
-z
-```
-
-y presiona `ENTER` hasta volver a la terminal del proyecto.
-
-Después elimina la sesión anterior:
-
-```bash
-cd && cd AlyaBot-MD && rm -rf Sessions/Owner
-```
-
-Finalmente inicia nuevamente:
-
-```bash
-npm start
-```
-
-> [!WARNING]
-> Al eliminar `Sessions/Owner` tendrás que realizar nuevamente el proceso de inicio de sesión del propietario.
-
-<br>
-
-</details>
-
----
-
-# 💜 Patrocinadores
-
-## Stellar
-
-<details>
-<summary><strong>Ver servicios de Stellar</strong></summary>
-
-<br>
+<summary><strong>🪼 Stellar</strong> — API</summary>
 
 <div align="center">
-
-<a href="https://api.stellarwa.xyz">
-  <img src="https://api.stellarwa.xyz/favicon.ico" alt="Stellar API" height="100">
-</a>
-
-<br><br>
-
-<strong>API y servicios utilizados por AlyaBot-MD</strong>
-
+  <a href="https://api.stellarwa.xyz">
+    <img src="https://api.stellarwa.xyz/favicon.ico" alt="Logo" height="125px">
+  </a>
 </div>
 
-<br>
-
+### 🪈 Enlaces Principales
 | Servicio | Enlace |
-| :-- | :-- |
+|------------|-----------|
 | Dashboard | [Abrir](https://api.stellarwa.xyz) |
-| Shop | [Abrir](https://api.stellarwa.xyz/store) |
-| Ticket | [Visitar](https://api.stellarwa.xyz/ticket) |
-| Estado | [Ver estado](https://api.stellarwa.xyz/stats) |
-| Canal | [Abrir canal](https://web.stellarwa.xyz/channel/api) |
-
-<br>
+| Shop | [Abrir](https://api.stellarwa.xyz/store) 
+| Ticket | [Visitar](https://api.stellarwa.xyz/ticket)  
+| Estado de Servicios | [Ver](https://api.stellarwa.xyz/stats) | 
+| Canal | [Abrir](https://web.stellarwa.xyz/channel/api) |
 
 </details>
 
----
-
-## Cafirexos
-
 <details>
-<summary><strong>Ver servicios de Cafirexos</strong></summary>
-
-<br>
+<summary><strong>🪼  Cafirexos</strong> — Hosting</summary>
 
 <div align="center">
-
-<a href="https://cafirexos.com">
-  <img src="https://cdn.cafirexos.com/logos/logo_cfros_2000x2000.png" alt="Cafirexos" height="100">
-</a>
-
-<br><br>
-
-<strong>Hosting y servicios utilizados por el proyecto</strong>
-
+  <a href="https://cafirexos.com">
+    <img src="https://cdn.cafirexos.com/logos/logo_cfros_2000x2000.png" alt="Logo" height="125px">
+  </a>
 </div>
 
-<br>
-
+### 🪈 Enlaces Principales
 | Servicio | Enlace |
-| :-- | :-- |
-| Sitio web | [Visitar](https://cafirexos.com) |
-| Área de clientes | [Abrir](https://cafirexos.com/clientarea.php) |
+|------------|-----------|
+| Sitio Web | [Visitar](https://cafirexos.com) |
+| Area de clientes | [Abrir](https://cafirexos.com/clientarea.php) |
 | Panel | [Abrir](https://panel.cafirexos.com) |
-| Estado | [Ver estado](https://estado.cafirexos.com) |
-| Canal | [Ver canal](https://links.cafirexos.com/whatsapp/canal) |
-| Soporte | [Contactar](https://cafirexos.com/contactenos) |
-
-<br>
+| Estado de Servicios | [Ver](https://estado.cafirexos.com) 
+| Canal de WhatsApp | [Ver](https://links.cafirexos.com/whatsapp/canal) 
+| Soporte | [Ver](https://cafirexos.com/contactenos)
 
 </details>
 
 ---
 
-# 👥 Colaboradores
-
-<details>
-<summary><strong>Ver colaboradores</strong></summary>
-
-<br>
-
-<div align="center">
-
+### 🍋‍🟩 Colaboradores
 <a href="https://stellarwa.xyz/about">
-  <img src="https://contrib.rocks/image?repo=DevZyxlJs/AlyaBot-MD" alt="Colaboradores">
+  <img src="https://contrib.rocks/image?repo=DevZyxlJs/AlyaBot-MD" />
 </a>
 
-<br><br>
+### 🫛 Agradecimientos
+[![Zam](https://github.com/AzamiJs.png?size=120)](https://stellarwa.xyz/about)
 
-<sub>
-Cada aporte, corrección y mejora ayuda a que AlyaBot-MD siga creciendo.
-</sub>
-
-</div>
-
-<br>
-
-</details>
-
----
-
-# 👤 Equipo del proyecto
-
-<details>
-<summary><strong>Ver equipo</strong></summary>
-
-<br>
-
-<div align="center">
-
-<a href="https://stellarwa.xyz/about">
-  <img src="https://github.com/DevZyxlJs.png?size=160" width="120" alt="ZyxlJs">
-</a>
-
-<br><br>
-
-<strong>ZyxlJs</strong>
-
-<br>
-
-<sub>Propietario · Desarrollador principal</sub>
-
-<br><br>
-
-<a href="https://github.com/DevZyxlJs">
-  <img src="https://img.shields.io/badge/GitHub-DevZyxlJs-181717?style=flat-square&logo=github">
-</a>
-
-</div>
-
-<br>
-
-</details>
-
----
-
-# 🤝 Agradecimientos
-
-<details>
-<summary><strong>Ver agradecimientos</strong></summary>
-
-<br>
-
-<div align="center">
-
-<a href="https://stellarwa.xyz/about">
-  <img src="https://github.com/AzamiJs.png?size=160" width="120" alt="Zam">
-</a>
-
-<br><br>
-
-<strong>Zam</strong>
-
-<br>
-
-<sub>Colaborador del proyecto</sub>
-
-</div>
-
-<br>
-
-<p align="center">
-  Gracias a todas las personas que han probado, apoyado, compartido y contribuido al proyecto.
-</p>
-
-<br>
-
-</details>
-
----
-
-# 🌐 Comunidad
-
-<details>
-<summary><strong>Ver enlaces de la comunidad</strong></summary>
-
-<br>
-
-<div align="center">
-
-<a href="https://web.stellarwa.xyz/channel">
-  <img src="https://img.shields.io/badge/CANAL%20OFICIAL-9b33b0?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Canal Oficial">
-</a>
-
-<br><br>
-
-<sub>
-Novedades, actualizaciones y anuncios de AlyaBot-MD.
-</sub>
-
-</div>
-
-<br>
-
-</details>
-
----
-
-<div align="center">
-
-### AlyaBot-MD
-
-Bot multifuncional para WhatsApp.
-
-<br>
-
-<sub>
-Desarrollado y mantenido por el equipo de AlyaBot-MD.
-</sub>
-
-<br><br>
-
-<a href="https://github.com/DevZyxlJs/AlyaBot-MD">
-  <img src="https://img.shields.io/github/stars/DevZyxlJs/AlyaBot-MD?style=for-the-badge&label=Stars&color=9b33b0" alt="GitHub Stars">
-</a>
-
-<a href="https://github.com/DevZyxlJs/AlyaBot-MD">
-  <img src="https://img.shields.io/github/forks/DevZyxlJs/AlyaBot-MD?style=for-the-badge&label=Forks&color=6f42c1" alt="GitHub Forks">
-</a>
-
-<br><br>
-
-<sub>© AlyaBot-MD · Todos los derechos reservados.</sub>
-
-</div>
+### 👒 Propietario
+[![ZyxlJs](https://github.com/DevZyxlJs.png?size=120)](https://stellarwa.xyz/about) 
