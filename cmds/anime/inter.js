@@ -139,6 +139,36 @@ const captions = {
     from === to
       ? `se guiñó a sí ${genero === 'Hombre' ? 'mismo' : genero === 'Mujer' ? 'misma' : 'mismx'} en el espejo.`
       : 'le guiñó a',
+
+  // ─── NUEVAS INTERACCIONES ───
+  yawn: (from, to) =>
+    from === to ? 'está bostezando del aburrimiento.' : 'le contagió el bostezo a',
+  talk: (from, to) =>
+    from === to ? 'está hablando solo otra vez.' : 'está conversando animadamente con',
+  study: (from, to) =>
+    from === to ? 'está estudiando muy concentrado.' : 'está estudiando junto a',
+  sneeze: (from, to) =>
+    from === to ? 'estornudó y se asustó a sí mismo.' : 'le estornudó encima a',
+  sick: (from, to, genero) =>
+    from === to
+      ? `está ${genero === 'Hombre' ? 'enfermo' : genero === 'Mujer' ? 'enferma' : 'enfermx'}, necesita cuidados.`
+      : `está cuidando a`,
+  scrub: (from, to) =>
+    from === to ? 'se está restregando la cara con fuerza.' : 'le está restregando la cara a',
+  psycho: (from, to) =>
+    from === to ? 'adoptó una mirada psicópata de la nada.' : 'le lanzó una mirada psicópata a',
+  poke: (from, to) =>
+    from === to ? 'se picó a sí mismo por curiosidad.' : 'le dio un toquecito con el dedo a',
+  lewd: (from, to) =>
+    from === to ? 'tuvo un pensamiento nada santo.' : 'le lanzó una mirada nada santa a',
+  kisshead: (from, to) =>
+    from === to ? 'se dio un beso en su propia cabeza.' : 'le dio un beso en la cabeza a',
+  kicked: (from, to) =>
+    from === to ? 'se pateó a sí mismo por accidente.' : 'le dio una patada a',
+  facepalm: (from, to) =>
+    from === to ? 'se hizo facepalm por su propio error.' : 'le hizo facepalm por lo que hizo',
+  cook: (from, to) =>
+    from === to ? 'está cocinando algo rico.' : 'está cocinando junto a',
 }
 
 const symbols = [
@@ -185,6 +215,19 @@ const commandAliases = {
   comer: 'eat',
   nom: 'eat',
   feliz: 'happy',
+  bostezo: 'yawn',
+  hablar: 'talk',
+  estudiar: 'study',
+  estornudar: 'sneeze',
+  enfermo: 'sick',
+  restregar: 'scrub',
+  psicopata: 'psycho',
+  picar: 'poke',
+  lascivo: 'lewd',
+  cabezabeso: 'kisshead',
+  pateado: 'kicked',
+  facepalm: 'facepalm',
+  cocinar: 'cook',
 }
 
 export default {
@@ -275,6 +318,31 @@ export default {
     'thinkhard',
     'comfort',
     'peek',
+    'yawn',
+    'bostezo',
+    'talk',
+    'hablar',
+    'study',
+    'estudiar',
+    'sneeze',
+    'estornudar',
+    'sick',
+    'enfermo',
+    'scrub',
+    'restregar',
+    'psycho',
+    'psicopata',
+    'poke',
+    'picar',
+    'lewd',
+    'lascivo',
+    'kisshead',
+    'cabezabeso',
+    'kicked',
+    'pateado',
+    'facepalm',
+    'cook',
+    'cocinar',
   ],
   category: 'anime',
   run: async ({ msg, sock, args, command, text, usedPrefix: prefix }) => {
@@ -289,7 +357,7 @@ export default {
       who = msg.quoted ? msg.quoted.sender : msg.sender
     }
 
-     const user = await db.getUser(who)
+    const user = await db.getUser(who)
     const fromName = msg.pushName || 'Alguien'
     const toName = user.name || 'alguien'
 
@@ -303,24 +371,24 @@ export default {
         : `${fromName} ${captionText} ${getRandomSymbol()}.`
 
     try {
-const response = await fetch(
-  `${api.url}/sfw/interaction?inter=${currentCommand}&key=${api.key}`
-)
+      const response = await fetch(
+        `${api.url}/sfw/interaction?inter=${currentCommand}&key=${api.key}`
+      )
 
-const videoBuffer = await response.buffer()
+      const videoBuffer = await response.buffer()
 
-await sock.sendMessage(
-  msg.chat,
-  {
-    video: videoBuffer, 
-    gifPlayback: true,
-    caption,
-    mentions: [who, msg.sender],
-  },
-  { quoted: msg },
-)
+      await sock.sendMessage(
+        msg.chat,
+        {
+          video: videoBuffer,
+          gifPlayback: true,
+          caption,
+          mentions: [who, msg.sender],
+        },
+        { quoted: msg },
+      )
     } catch {
       await msg.reply(msgglobal)
     }
   },
-};
+}
