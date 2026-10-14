@@ -14,7 +14,7 @@ global.api = {
   key: 'NekoWare@Stellar' 
 }
 
-global.msgglobal = '✿⸝꙳.˖ Ocurrió un problema, contacte al creador'
+global.msgglobal = '《✧》 Se encontró un error en este comando, intenta mas tarde.\n> ✿ Si el error persiste, reportalo con el comando *#report*.'
 global.dev = `ʙᴜɪʟᴛ ʙʏ ɪ'ᴍ ᴅɪᴇɢᴏ ♡`
 
 global.mess = {
