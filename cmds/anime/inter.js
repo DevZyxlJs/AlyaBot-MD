@@ -139,8 +139,6 @@ const captions = {
     from === to
       ? `se guiñó a sí ${genero === 'Hombre' ? 'mismo' : genero === 'Mujer' ? 'misma' : 'mismx'} en el espejo.`
       : 'le guiñó a',
-
-  // ─── NUEVAS INTERACCIONES ───
   yawn: (from, to) =>
     from === to ? 'está bostezando del aburrimiento.' : 'le contagió el bostezo a',
   talk: (from, to) =>
