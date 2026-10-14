@@ -1,17 +1,37 @@
 import db from "#db"
 import axios from "axios"
 
+async function resolveUrl(shortUrl) {
+  try {
+    const res = await axios.get(shortUrl, {
+      maxRedirects: 0,
+      validateStatus: (status) => status >= 300 && status < 400,
+    })
+    const finalUrl = res.headers.location
+    if (finalUrl && finalUrl.includes('tiktok.com')) {
+      return finalUrl
+    }
+  } catch (error) {
+    try {
+      const res = await axios.get(shortUrl)
+      return res.request.res.responseUrl || null
+    } catch (e) {
+      console.error('Error resolviendo URL:', e)
+    }
+  }
+  return null
+}
+
 export default {
   command: ["tiktok", "tt"],
   category: "downloader",
-  isSocket: true,
   run: async ({ msg, sock, args, command }) => {
     if (!args.length) {
       return msg.reply("✿ Ingresa un término o enlace de TikTok.")
     }
 
     const isMp3 = args.includes("--mp3")
-    const urls = args.filter(arg => arg.includes("tiktok.com"))
+    const urls = args.filter(arg => arg.includes("tiktok.com") || arg.includes("tt.site"))
 
     const buildCaption = (data) => {
       const {
@@ -27,7 +47,7 @@ export default {
       const tiktokLink = `https://www.tiktok.com/@${author.unique_id || "unknown"}/video/${id}`
 
       return (
-        `ㅤ۟∩　ׅ　★ ໌　ׅ　🅣𝗂𝗄𝖳𝗈𝗸 🅓ownload　ᰙ\n\n` +
+        `ㅤ۟∩　ׅ　★ ໌　ׅ　🅣𝗂𝗄𝖳𝗈𝗄 🅓ownload　ᰙ\n\n` +
         `𖣣ֶㅤ֯⌗ ✿ ⬭ Título: ${title}\n` +
         `𖣣ֶㅤ֯⌗ ★ ⬭ Autor: ${author.nickname || author.unique_id || "Desconocido"}\n` +
         `𖣣ֶㅤ֯⌗ ❖ ⬭ Duración: ${duration || music_info?.duration || music?.duration || "N/A"}\n` +
@@ -41,7 +61,17 @@ export default {
     }
 
     if (urls.length) {
-      const url = urls[0]
+      let url = urls[0]
+
+      if (url.includes('tt.site')) {
+        const resolved = await resolveUrl(url)
+        if (resolved) {
+          url = resolved
+        } else {
+          return msg.reply("✿ No se pudo resolver el enlace corto. Asegúrate de que sea válido.")
+        }
+      }
+
       try {
         const apiUrl = isMp3
           ? `${api.url}/dl/tiktokmp3?url=${encodeURIComponent(url)}&key=${api.key}`
@@ -61,7 +91,7 @@ export default {
             audio: { url: data.dl }, 
             mimetype: "audio/mpeg", 
             fileName: `${data.title || "audio"}.mp3`, 
-            ptt: true 
+            ptt: false
           }, { quoted: msg })
         } else {
           await sock.sendMessage(msg.chat, { 
