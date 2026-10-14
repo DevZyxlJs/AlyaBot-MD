@@ -7,7 +7,7 @@ export default {
   run: async ({ msg, sock, args }) => {
     const botId = sock.user.id.split(':')[0] + '@s.whatsapp.net'
     const botSettings = await db.getSettings(botId)
-    const banner = botSettings.icon
+    const banner = botSettings.banner
 
     if (!args || !args.length) {
       return sock.reply(
