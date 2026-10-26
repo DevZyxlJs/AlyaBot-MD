@@ -14,7 +14,7 @@ export default {
       const banner = botSettings.banner || '';
       const owner = botSettings.owner || '';
       const links = botSettings.link || '';
-      const link = `https://web.stellarwa.xyz/home`
+      const link = `https://stellarwa.xyz/home`
 
       const oficialId = global?.sock
         ? global.sock.user.id.split(':')[0] + '@s.whatsapp.net'
