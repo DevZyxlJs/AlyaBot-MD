@@ -1,5 +1,5 @@
 > [!NOTE]
-> **Este proyecto está en constante evolución. Estamos comprometidos en ofrecer a nuestra comunidad un Bot increíble. Te invitamos a instalarlo y para estar al tanto de todas las novedades. [¡Únete a nuestro canal oficial!](https://web.stellarwa.xyz/channel)**
+> **Este proyecto está en constante evolución. Estamos comprometidos en ofrecer a nuestra comunidad un Bot increíble. Te invitamos a instalarlo y para estar al tanto de todas las novedades. [¡Únete a nuestro canal oficial!](https://stellarwa.xyz/channel)**
 
 <p align="center"> 
 <img src="https://cloud.stellarwa.xyz/eyTUvhr9.jpeg" alt="AlyaBot-MD" style="width: 75%; height: auto; max-width: 100px;">
@@ -166,7 +166,7 @@ cd && cd AlyaBot-MD && rm -rf Sessions/Owner && npm start
 | Shop | [Abrir](https://api.stellarwa.xyz/store) 
 | Ticket | [Visitar](https://api.stellarwa.xyz/ticket)  
 | Estado de Servicios | [Ver](https://api.stellarwa.xyz/stats) | 
-| Canal | [Abrir](https://web.stellarwa.xyz/channel/api) |
+| Canal | [Abrir](https://stellarwa.xyz/channel/api) |
 
 </details>
 
